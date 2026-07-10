@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Radio — Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  font-family: 'Instrument Sans', -apple-system, system-ui, sans-serif;
+  background: #EFEDE8;
+  display: grid; place-items: center;
+}
+#app {
+  position: relative;
+  width: 100vw; height: 100vh; height: 100dvh;
+  background: #FFFFFF;
+  overflow: hidden;
+}
+@media (min-width: 520px) {
+  #app {
+    width: 390px;
+    height: min(844px, calc(100vh - 48px));
+    border-radius: 44px;
+    box-shadow:
+      0 1px 2px rgba(39,28,18,.05),
+      0 12px 40px rgba(39,28,18,.10),
+      0 32px 90px rgba(39,28,18,.10);
+  }
+}
+canvas#c { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+
+/* Concept tabs — faceplate labels */
+.tabs {
+  position: absolute;
+  top: calc(22px + env(safe-area-inset-top));
+  left: 0; right: 0;
+  display: flex; justify-content: center; gap: 20px;
+}
+.tab {
+  font: 500 10px/1 'Instrument Sans', sans-serif;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(39,28,18,.30);
+  background: none; border: 0; cursor: pointer;
+  padding: 6px 2px;
+  position: relative;
+  transition: color .3s ease;
+}
+.tab:hover { color: rgba(39,28,18,.6); }
+.tab.on { color: #271C12; }
+.tab.on::after {
+  content: ""; position: absolute;
+  left: 50%; bottom: -3px;
+  width: 4px; height: 4px; margin-left: -2px;
+  border-radius: 50%;
+  background: #E5482D;
+}
+
+/* Mood pills */
+.pills {
+  position: absolute;
+  left: 16px; right: 16px;
+  bottom: calc(28px + env(safe-area-inset-bottom));
+  display: flex; gap: 8px;
+  overflow-x: auto;
+  padding: 2px 6px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.pills::-webkit-scrollbar { display: none; }
+.pills::before, .pills::after { content: ""; margin: auto; }
+.pill {
+  flex: none;
+  font: 500 14px/1 'Instrument Sans', sans-serif;
+  letter-spacing: -0.005em;
+  color: #271C12;
+  background: #F7F3EA;
+  border: 0; border-radius: 100px;
+  padding: 11px 16px;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 0.5px rgba(39,28,18,.08);
+  transition: background .25s ease, color .25s ease;
+}
+.pill:hover { background: #F1ECE2; }
+.pill.on { background: #271C12; color: #FBF8F2; }
+
+.lab-note {
+  position: absolute;
+  left: 20px; right: 20px;
+  bottom: calc(8px + env(safe-area-inset-bottom));
+  text-align: center;
+  font: 500 9px/1 'Instrument Sans', sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(39,28,18,.22);
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <canvas id="c"></canvas>
+  <div class="tabs" id="tabs"></div>
+  <div class="pills" id="pills"></div>
+  <div class="lab-note">visualizer lab · 1–4 concepts · tap a mood</div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const BG = '#FFFFFF';
+  const TAU = Math.PI * 2;
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ========================= moods (shared with radio) ================== */
+  const MOODS = {
+    flow: {
+      label: '⚡ Focus',
+      pal: [[38, 76, 210], [24, 166, 178]],
+      gait: { speed: 1.9, amp: .62, ripple: .30, cycles: 3.0, travel: 2.6,
+              breath: .03, breathRate: .50, grain: .55 }
+    },
+    overload: {
+      label: '☁️ Overwhelmed',
+      pal: [[54, 58, 90], [120, 132, 152]],
+      gait: { speed: .25, amp: 1.05, ripple: .12, cycles: 1.2, travel: .35,
+              breath: .14, breathRate: .21, grain: .15 }
+    },
+    cozy: {
+      label: '🌧️ Rainy Day',
+      pal: [[124, 72, 46], [201, 148, 122]],
+      gait: { speed: .75, amp: .55, ripple: .18, cycles: 1.6, travel: .70,
+              breath: .06, breathRate: .30, grain: .30 }
+    },
+    light: {
+      label: '☕ Morning',
+      pal: [[216, 138, 40], [238, 192, 78]],
+      gait: { speed: 1.6, amp: .55, ripple: .42, cycles: 4.2, travel: 3.4,
+              breath: .04, breathRate: .65, grain: .25 }
+    }
+  };
+  let mood = 'cozy';
+
+  /* ============================== canvas =============================== */
+  const app = document.getElementById('app');
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  let W = 0, H = 0, dpr = 1, cx = 0, cy = 0, radius = 0;
+
+  // offscreen buffer for concepts that keep trails (flock)
+  const buf = document.createElement('canvas');
+  const bctx = buf.getContext('2d');
+
+  function size() {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    W = app.clientWidth; H = app.clientHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    buf.width = canvas.width; buf.height = canvas.height;
+    bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    bctx.fillStyle = BG; bctx.fillRect(0, 0, W, H);
+    cx = W / 2;
+    cy = H * 0.42;
+    radius = Math.min(W * 0.42, H * 0.30);
+  }
+  size();
+  new ResizeObserver(size).observe(app);
+
+  /* ============================== noise ================================ */
+  function hash(x, y, s) {
+    const v = Math.sin(x * 12.9898 + y * 78.233 + s * 43.7) * 43758.5453;
+    return v - Math.floor(v);
+  }
+  function smoothNoise(x, y, s) {
+    const xi = Math.floor(x), yi = Math.floor(y);
+    const xf = x - xi, yf = y - yi;
+    const u = xf * xf * (3 - 2 * xf);
+    const v = yf * yf * (3 - 2 * yf);
+    const tl = hash(xi, yi, s), tr = hash(xi + 1, yi, s);
+    const bl = hash(xi, yi + 1, s), br = hash(xi + 1, yi + 1, s);
+    return tl + (tr - tl) * u + ((bl - tl) + (br - bl - tr + tl) * u) * v;
+  }
+  function fbm(x, y, s) {                       // 2 octaves is plenty
+    return smoothNoise(x, y, s) * 0.68 + smoothNoise(x * 2.7, y * 2.7, s + 11) * 0.32;
+  }
+
+  /* ==================== synthetic music energy ========================= */
+  const BANDS = [
+    { sp: 0.55, ph: 0.30 }, { sp: 0.40, ph: 2.40 }, { sp: 0.85, ph: 0.70 },
+    { sp: 1.10, ph: 1.20 }, { sp: 0.55, ph: 3.10 }, { sp: 1.00, ph: 1.80 }
+  ];
+  const energy = new Float32Array(BANDS.length);
+  function tickEnergy(t, an) {
+    for (let k = 0; k < BANDS.length; k++) {
+      const s = Math.sin(t * an.speed * (0.6 + BANDS[k].sp) * 1.6 + BANDS[k].ph);
+      const e = an.amp * (0.30 + 0.62 * Math.pow((s + 1) / 2, 1.6));
+      energy[k] += (Math.max(0, e) - energy[k]) * 0.08;
+    }
+  }
+
+  /* ================== eased mood state (gait + palette) ================= */
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const gaitNow = Object.assign({}, MOODS[mood].gait);
+  const colNow = [MOODS[mood].pal[0].slice(), MOODS[mood].pal[1].slice()];
+
+  function easeMood(dt) {
+    const g = MOODS[mood].gait, pal = MOODS[mood].pal;
+    const ge = Math.min(1, dt * 0.9), ce = Math.min(1, dt * 1.1);
+    for (const k in gaitNow) gaitNow[k] += (g[k] - gaitNow[k]) * ge;
+    for (let p = 0; p < 2; p++)
+      for (let c = 0; c < 3; c++)
+        colNow[p][c] += (pal[p][c] - colNow[p][c]) * ce;
+  }
+  function colAt(k) {                            // gradient stop at 0..1
+    k = Math.max(0, Math.min(1, k));
+    return 'rgb(' + (lerp(colNow[0][0], colNow[1][0], k) | 0) + ',' +
+                    (lerp(colNow[0][1], colNow[1][1], k) | 0) + ',' +
+                    (lerp(colNow[0][2], colNow[1][2], k) | 0) + ')';
+  }
+
+  /* ============================ CONCEPT 1 — PULSAR ====================== */
+  // The production visualizer, compact: stacked lines, center peaks.
+  const P_LINES = 52, P_SAMP = 160;
+  const pMask = new Float32Array(P_SAMP + 1);
+  for (let s = 0; s <= P_SAMP; s++) {
+    const d = (s / P_SAMP - 0.5) / 0.37;
+    pMask[s] = Math.exp(-Math.pow(d, 4));
+  }
+  const pPresence = [0.22, 0.34, 0.46, 0.56, 0.66, 0.78].map((f, i) => {
+    const w = [.07, .08, .08, .09, .09, .10][i];
+    const row = new Float32Array(P_SAMP + 1);
+    for (let s = 0; s <= P_SAMP; s++) {
+      const d = (s / P_SAMP - f) / w;
+      row[s] = Math.exp(-d * d * 0.55);
+    }
+    return row;
+  });
+  const pBase = [.62, .80, .70, .58, .52, .42];
+  const pX = new Float32Array(P_SAMP + 1), pY = new Float32Array(P_SAMP + 1);
+
+  function drawPulsar(t) {
+    const an = gaitNow;
+    const spacing = (radius * 2) / (P_LINES - 1);
+    const peak = spacing * 5.2;
+    const left = cx - radius - 4, width = radius * 2 + 8;
+    const gMix = 0.5 + 0.5 * Math.sin(t * 0.09);
+    for (let i = 0; i < P_LINES; i++) {
+      const ty = 1 - i / (P_LINES - 1);
+      const byY = cy - radius + i * spacing;
+      const phase = i * 0.35;
+      for (let s = 0; s <= P_SAMP; s++) {
+        const fx = s / P_SAMP;
+        let a = 0;
+        for (let k = 0; k < 6; k++)
+          a += pPresence[k][s] * pBase[k] * (0.26 + 0.95 * energy[k] *
+               (0.6 + 0.4 * Math.abs(Math.sin(ty * BANDS[k].sp * 2.8 + BANDS[k].ph + t * 0.5 * an.speed))));
+        a *= pMask[s];
+        a *= 1 + an.ripple * Math.sin(fx * TAU * an.cycles - t * an.travel + phase);
+        a += (fbm(fx * 9 + gMix, ty * 11, 3.7) - 0.5) * an.grain * (0.25 + 0.75 * a) * pMask[s];
+        a += a * a * 0.4;
+        pY[s] = byY - Math.max(0, a) * peak;
+        pX[s] = left + fx * width;
+      }
+      ctx.beginPath();
+      ctx.moveTo(pX[0], pY[0]);
+      for (let s = 1; s <= P_SAMP; s++) ctx.lineTo(pX[s], pY[s]);
+      ctx.lineTo(left + width, cy + radius + 50);
+      ctx.lineTo(left, cy + radius + 50);
+      ctx.closePath();
+      ctx.fillStyle = BG; ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(pX[0], pY[0]);
+      for (let s = 1; s <= P_SAMP; s++) ctx.lineTo(pX[s], pY[s]);
+      ctx.strokeStyle = colAt(i / (P_LINES - 1));
+      ctx.lineWidth = 0.85;
+      ctx.globalAlpha = 0.94;
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* ============================ CONCEPT 2 — TERRAIN ===================== */
+  // A living contour map: iso-lines around drifting peaks. The landscape
+  // breathes; the mood is the terrain.
+  const T_RINGS = 26, T_TH = 100;
+
+  function drawTerrain(t) {
+    const an = gaitNow;
+    const drift = t * 0.05 * an.speed;
+    const e = (energy[1] + energy[2] + energy[3]) / 3;
+    const harm = Math.max(1, Math.round(an.cycles));       // integer → seamless loop
+    for (let k = T_RINGS - 1; k >= 0; k--) {
+      const lvl = k / (T_RINGS - 1);                       // 0 center → 1 edge
+      const base = radius * (0.10 + 0.90 * lvl);
+      ctx.beginPath();
+      for (let i = 0; i <= T_TH; i++) {
+        const th = (i / T_TH) * TAU;
+        const sx = Math.cos(th), sy = Math.sin(th);
+        // one shared field, sampled where the ring actually sits →
+        // neighbouring rings nest instead of crossing, like real contours
+        const sc = 0.35 + 1.5 * lvl * (0.6 + an.grain);
+        let n = fbm(sx * sc + drift, sy * sc - drift * 0.7, 5.2);
+        n += 0.35 * Math.sin(th * harm + t * an.travel * 0.5) * an.ripple;
+        const dr = (n - 0.5) * radius * 0.60 * an.amp * (0.55 + 0.9 * e) * (0.35 + 0.65 * lvl);
+        const rr = Math.min(base + dr, radius * 0.985);
+        const x = cx + sx * rr, y = cy + sy * rr;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = colAt(1 - lvl);
+      ctx.lineWidth = (k % 5 === 0) ? 1.1 : 0.7;           // index contours, like real maps
+      ctx.globalAlpha = 0.9;
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* ============================ CONCEPT 3 — SPHERE ====================== */
+  // The circle turns out to be a planet: a wireframe globe, slowly turning,
+  // its surface deformed by the music.
+  const S_LAT = 13, S_LON = 12, S_SEG = 72;
+
+  function spherePoint(th, ph, t, an, out) {
+    // deform radius with a noise field pinned to the sphere surface
+    const e = (energy[0] + energy[2] + energy[4]) / 3;
+    const def = 1 +
+      (fbm(th * 0.9 + t * an.travel * 0.12, ph * 1.1, 7.3) - 0.5) * an.amp * 0.34 * (0.5 + e) +
+      an.breath * Math.sin(t * an.breathRate * TAU) * 0.8;
+    const cph = Math.cos(ph);
+    let x = Math.cos(th) * cph, y = Math.sin(ph), z = Math.sin(th) * cph;
+    const ry = t * 0.10 * (0.4 + an.speed);                // slow spin
+    const ca = Math.cos(ry), sa = Math.sin(ry);
+    let x2 = x * ca + z * sa, z2 = -x * sa + z * ca;
+    const tilt = -0.42, ct = Math.cos(tilt), st = Math.sin(tilt);
+    let y2 = y * ct - z2 * st, z3 = y * st + z2 * ct;
+    const R = radius * 0.94 * def;
+    out[0] = cx + x2 * R; out[1] = cy + y2 * R; out[2] = z3;
+  }
+
+  const sp = [0, 0, 0];
+  function strokeRuns(pts) {
+    // split a polyline into front/back runs so the far side fades
+    let run = null, front = null;
+    for (let i = 0; i < pts.length; i += 3) {
+      const f = pts[i + 2] > -0.06;
+      if (front === null || f !== front) {
+        if (run && run.length > 2) {
+          ctx.globalAlpha = front ? 0.85 : 0.16;
+          ctx.beginPath();
+          ctx.moveTo(run[0], run[1]);
+          for (let j = 2; j < run.length; j += 2) ctx.lineTo(run[j], run[j + 1]);
+          ctx.stroke();
+        }
+        run = [pts[i], pts[i + 1]];
+        front = f;
+      } else {
+        run.push(pts[i], pts[i + 1]);
+      }
+    }
+    if (run && run.length > 2) {
+      ctx.globalAlpha = front ? 0.85 : 0.16;
+      ctx.beginPath();
+      ctx.moveTo(run[0], run[1]);
+      for (let j = 2; j < run.length; j += 2) ctx.lineTo(run[j], run[j + 1]);
+      ctx.stroke();
+    }
+  }
+
+  function drawSphere(t) {
+    const an = gaitNow;
+    ctx.lineWidth = 0.8;
+    for (let li = 0; li < S_LAT; li++) {                   // latitude rings
+      const ph = (-0.5 + (li + 1) / (S_LAT + 1)) * Math.PI;
+      const pts = new Float32Array((S_SEG + 1) * 3);
+      for (let i = 0; i <= S_SEG; i++) {
+        spherePoint((i / S_SEG) * TAU, ph, t, an, sp);
+        pts[i * 3] = sp[0]; pts[i * 3 + 1] = sp[1]; pts[i * 3 + 2] = sp[2];
+      }
+      ctx.strokeStyle = colAt(li / (S_LAT - 1));
+      strokeRuns(pts);
+    }
+    for (let lo = 0; lo < S_LON; lo++) {                   // longitude arcs
+      const th = (lo / S_LON) * TAU;
+      const pts = new Float32Array((S_SEG + 1) * 3);
+      for (let i = 0; i <= S_SEG; i++) {
+        const ph = -Math.PI / 2 + (i / S_SEG) * Math.PI;
+        spherePoint(th, ph, t, an, sp);
+        pts[i * 3] = sp[0]; pts[i * 3 + 1] = sp[1]; pts[i * 3 + 2] = sp[2];
+      }
+      ctx.strokeStyle = colAt(0.5);
+      strokeRuns(pts);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* ============================ CONCEPT 4 — FLOCK ====================== */
+  // A murmuration held inside the circle: hundreds of short strokes
+  // following an invisible wind. The mood is the weather.
+  const F_N = 620;
+  const flock = new Float32Array(F_N * 3);                 // x, y, life
+  let flockSeeded = false;
+  function respawn(i) {
+    const a = Math.random() * TAU, r = Math.sqrt(Math.random()) * radius * 0.88;
+    flock[i * 3] = cx + Math.cos(a) * r;
+    flock[i * 3 + 1] = cy + Math.sin(a) * r;
+    flock[i * 3 + 2] = 1.5 + Math.random() * 4;            // seconds to live
+  }
+  function seedFlock() {
+    for (let i = 0; i < F_N; i++) {
+      respawn(i);
+      flock[i * 3 + 2] *= Math.random();                   // stagger first deaths
+    }
+    flockSeeded = true;
+  }
+
+  function drawFlock(t, dt) {
+    if (!flockSeeded) seedFlock();
+    const an = gaitNow;
+    const e = (energy[2] + energy[3]) / 2;
+    const spd = (30 + 130 * an.speed * (0.4 + e)) * (reduceMotion ? 0.3 : 1);
+    const sc = 0.006 * (0.6 + an.cycles * 0.25);
+    const drift = t * 0.03 * an.speed;
+    const eps = 8;
+
+    // fade the buffer, not the page — trails live inside the circle only
+    bctx.fillStyle = 'rgba(255,255,255,0.05)';
+    bctx.fillRect(0, 0, W, H);
+    bctx.lineWidth = 1.2;
+
+    const gain = spd * 16;
+    for (let i = 0; i < F_N; i++) {
+      let x = flock[i * 3], y = flock[i * 3 + 1];
+      flock[i * 3 + 2] -= dt;
+      // curl of the noise field — the wind these birds ride
+      const gx = fbm((x + eps) * sc + drift, y * sc, 9.1) - fbm((x - eps) * sc + drift, y * sc, 9.1);
+      const gy = fbm(x * sc + drift, (y + eps) * sc, 9.1) - fbm(x * sc + drift, (y - eps) * sc, 9.1);
+      let vx = gy * gain, vy = -gx * gain;
+      const m = Math.sqrt(vx * vx + vy * vy) || 1;
+      if (m > spd * 1.4) { vx = vx / m * spd * 1.4; vy = vy / m * spd * 1.4; }
+      if (m < spd * 0.4) { vx = vx / m * spd * 0.4; vy = vy / m * spd * 0.4; }
+      // gentle orbit around the center keeps the flock swirling as one
+      const dx = x - cx, dy = y - cy;
+      const d = Math.sqrt(dx * dx + dy * dy) || 1;
+      vx += (-dy / d) * spd * 0.3;
+      vy += (dx / d) * spd * 0.3;
+      const nx = x + vx * dt, ny = y + vy * dt;
+      const nd = Math.sqrt((nx - cx) * (nx - cx) + (ny - cy) * (ny - cy));
+      // birds age out and are reborn elsewhere — coverage stays even
+      if (flock[i * 3 + 2] <= 0 || nd > radius * 0.97) { respawn(i); continue; }
+      bctx.strokeStyle = colAt((ny - (cy - radius)) / (radius * 2));
+      bctx.globalAlpha = 0.8;
+      bctx.beginPath(); bctx.moveTo(x, y);
+      bctx.lineTo(x + vx * dt * 2.4, y + vy * dt * 2.4);   // elongated stroke — motion blur
+      bctx.stroke();
+      flock[i * 3] = nx; flock[i * 3 + 1] = ny;
+    }
+    bctx.globalAlpha = 1;
+    ctx.drawImage(buf, 0, 0, buf.width, buf.height, 0, 0, W, H);
+  }
+
+  /* ========================== concept registry ========================= */
+  const CONCEPTS = [
+    { name: 'Pulsar', draw: drawPulsar },
+    { name: 'Terrain', draw: drawTerrain },
+    { name: 'Sphere', draw: drawSphere },
+    { name: 'Flock', draw: drawFlock }
+  ];
+  let active = 0;
+
+  const tabsEl = document.getElementById('tabs');
+  CONCEPTS.forEach((c, i) => {
+    const b = document.createElement('button');
+    b.className = 'tab' + (i === active ? ' on' : '');
+    b.textContent = c.name;
+    b.addEventListener('click', () => setConcept(i));
+    tabsEl.appendChild(b);
+  });
+  function setConcept(i) {
+    active = i;
+    [...tabsEl.children].forEach((b, j) => b.classList.toggle('on', j === i));
+    if (i === 3) { flockSeeded = false; }                  // fresh murmuration
+    bctx.fillStyle = BG; bctx.fillRect(0, 0, W, H);
+  }
+  addEventListener('keydown', e => {
+    const n = parseInt(e.key, 10);
+    if (n >= 1 && n <= CONCEPTS.length) setConcept(n - 1);
+  });
+
+  const pillsEl = document.getElementById('pills');
+  Object.keys(MOODS).forEach(key => {
+    const b = document.createElement('button');
+    b.className = 'pill' + (key === mood ? ' on' : '');
+    b.textContent = MOODS[key].label;
+    b.addEventListener('click', () => {
+      mood = key;
+      [...pillsEl.children].forEach(x => x.classList.toggle('on', x === b));
+    });
+    pillsEl.appendChild(b);
+  });
+
+  /* ============================= main loop ============================= */
+  let last = performance.now();
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    const t = now / 1000;
+
+    easeMood(dt);
+    tickEnergy(t, gaitNow);
+
+    ctx.fillStyle = BG;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, TAU);
+    ctx.clip();
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    CONCEPTS[active].draw(t, dt);
+    ctx.restore();
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+
+</body>
+</html>

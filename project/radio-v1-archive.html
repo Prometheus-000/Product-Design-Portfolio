@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Radio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  font-family: 'Instrument Sans', -apple-system, system-ui, sans-serif;
+  background: #EFEDE8;                 /* Braun studio gray, seen on desktop only */
+  display: grid; place-items: center;
+}
+
+/* The device. Fullscreen on phones; a phone-sized object on desktop. */
+#app {
+  position: relative;
+  width: 100vw; height: 100vh;
+  height: 100dvh;
+  background: #FFFFFF;
+  overflow: hidden;
+}
+@media (min-width: 520px) {
+  #app {
+    width: 390px;
+    height: min(844px, calc(100vh - 48px));
+    border-radius: 44px;
+    box-shadow:
+      0 1px 2px rgba(39,28,18,.05),
+      0 12px 40px rgba(39,28,18,.10),
+      0 32px 90px rgba(39,28,18,.10);
+  }
+}
+
+canvas#membrane { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+
+/* Off-state hint under the circle */
+.hint {
+  position: absolute;
+  left: 0; right: 0;
+  top: calc(40% + var(--r, 160px) * 1px + 26px);
+  text-align: center;
+  font: 400 13.5px/1 'Instrument Sans', sans-serif;
+  letter-spacing: .01em;
+  color: rgba(39,28,18,.34);
+  pointer-events: none;
+  transition: opacity .6s ease;
+}
+.hint.hidden { opacity: 0; }
+
+/* Braun power dot — one point of red, only when alive */
+.led {
+  position: absolute;
+  left: 50%;
+  top: calc(40% + var(--r, 160px) * 1px + 30px);
+  width: 6px; height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: #E5482D;
+  opacity: 0;
+  transition: opacity .8s ease;
+  pointer-events: none;
+}
+.led.on { opacity: 1; }
+
+/* Now playing — tiny, letterspaced, a label on the device */
+.nowline {
+  position: absolute;
+  left: 20px; right: 20px;
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  text-align: center;
+  font: 500 10px/1.4 'Instrument Sans', sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(39,28,18,.35);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  opacity: 0;
+  transition: opacity .8s ease;
+  pointer-events: none;
+}
+.nowline.on { opacity: 1; }
+
+/* Prompt — summoned by a tap outside the circle, leaves after input */
+.controls {
+  position: absolute;
+  left: 16px; right: 16px;
+  bottom: calc(44px + env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; gap: 12px;
+  opacity: 0; transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity .4s ease, transform .4s ease;
+}
+.controls.shown { opacity: 1; transform: none; pointer-events: auto; }
+
+.pills {
+  display: flex; gap: 8px;
+  overflow-x: auto;
+  padding: 2px 6px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.pills::-webkit-scrollbar { display: none; }
+.pills::before, .pills::after { content: ""; margin: auto; }
+.pill {
+  flex: none;
+  font: 500 14px/1 'Instrument Sans', sans-serif;
+  letter-spacing: -0.005em;
+  color: #271C12;
+  background: #F7F3EA;
+  border: 0;
+  border-radius: 100px;
+  padding: 11px 16px;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 0.5px rgba(39,28,18,.08);
+  transition: background .25s ease, color .25s ease;
+}
+.pill:hover { background: #F1ECE2; }
+.pill.on { background: #271C12; color: #FBF8F2; }
+
+.request-field {
+  height: 56px;
+  border-radius: 28px;
+  background: #F1ECE2;
+  display: flex; align-items: center;
+  padding: 0 18px 0 22px;
+  box-shadow:
+    inset 0 0 0 0.5px rgba(39,28,18,.06),
+    0 4px 18px rgba(39,28,18,.05),
+    0 1px 2px rgba(39,28,18,.04);
+}
+.request-field input {
+  flex: 1; border: 0; outline: 0; background: none;
+  font: 400 16.5px/1 'Instrument Sans', sans-serif;
+  letter-spacing: -0.005em;
+  color: #271C12;
+  min-width: 0;
+}
+.request-field input::placeholder { color: rgba(39,28,18,.40); }
+.request-field .mic {
+  color: #271C12; opacity: .55; display: block;
+  background: none; border: 0; padding: 8px; cursor: pointer;
+}
+
+/* The heard-you receipt */
+.receipt {
+  position: absolute; left: 24px; right: 24px;
+  top: calc(40% + var(--r, 160px) * 1px + 58px);
+  text-align: center;
+  font: 400 17px/1.4 'Instrument Sans', sans-serif;
+  letter-spacing: -0.005em;
+  color: rgba(39,28,18,.75);
+  opacity: 0; pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <canvas id="membrane"></canvas>
+  <div class="hint" id="hint">tap to listen</div>
+  <div class="led" id="led"></div>
+  <div class="receipt" id="receipt"></div>
+  <div class="controls" id="controls">
+    <div class="pills" id="pills"></div>
+    <div class="request-field" id="field">
+      <input id="phrase" type="text" placeholder="how do you feel?" autocomplete="off" autocapitalize="none" enterkeyhint="go" aria-label="Tell it how you feel">
+      <button class="mic" id="mic" aria-label="Speak">
+        <svg width="18" height="22" viewBox="0 0 18 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5" y="2" width="8" height="12" rx="4"/>
+          <path d="M2 11v1a7 7 0 0 0 14 0v-1"/>
+          <line x1="9" y1="19" x2="9" y2="21"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="nowline" id="nowline"></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const BG = '#FFFFFF';
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ======================== taxonomy & playlists ======================= */
+  // Four categories from the project brief; each maps to a local folder,
+  // a color pair for the membrane, and a motion gait.
+  const CATS = {
+    flow: {
+      label: '⚡ Focus',
+      folder: 'Adaptive Focus (High Energy Energy + Neutral:Negative)',
+      pal: [[38, 76, 210], [24, 166, 178]],                 // cobalt → teal
+      gait: { speed: 1.9, amp: .62, ripple: .30, cycles: 3.0, travel: 2.6,
+              drift: .06, breath: .03, breathRate: .50, grain: .55, sharp: .55,
+              surgeSpeed: 2.4, surgeStep: .55, surgeSharp: 6, surgeAmt: .35 },
+      tracks: [
+        ['02 - Brian Eno - Deep Blue Day.mp3', 'Brian Eno — Deep Blue Day'],
+        ['06-brian_eno_jon_hopkins_leo_abrahams-2_forms_of_anger.flac', 'Eno · Hopkins · Abrahams — 2 Forms of Anger'],
+        ['19-boards_of_canada-dawn_chorus.mp3', 'Boards of Canada — Dawn Chorus'],
+        ['201-gas-zauberberg_01.flac', 'Gas — Zauberberg 1'],
+        ['32. Boards of Canada - Hi Scores - 2014.mp3', 'Boards of Canada — Hi Scores']
+      ]
+    },
+    overload: {
+      label: '☁️ Overwhelmed',
+      folder: 'Deep Isolation (Low Energy + Negative)',
+      pal: [[54, 58, 90], [120, 132, 152]],                 // deep indigo → slate
+      gait: { speed: .25, amp: 1.05, ripple: .12, cycles: 1.2, travel: .35,
+              drift: .10, breath: .14, breathRate: .21, grain: .15, sharp: .25,
+              surgeSpeed: .5, surgeStep: .18, surgeSharp: 2, surgeAmt: .45 },
+      tracks: [
+        ['03 - Brian Eno - Lizard Point.mp3', 'Brian Eno — Lizard Point'],
+        ['03 - Rhubarb.mp3', 'Aphex Twin — Rhubarb'],
+        ['22-boards_of_canada-corsair-xtc.mp3', 'Boards of Canada — Corsair']
+      ]
+    },
+    cozy: {
+      label: '🌧️ Rainy Day',
+      folder: 'Pure Comfort Low Energy + Positive)',
+      pal: [[124, 72, 46], [201, 148, 122]],                // sepia → warm clay
+      gait: { speed: .75, amp: .55, ripple: .18, cycles: 1.6, travel: .70,
+              drift: .85, breath: .06, breathRate: .30, grain: .30, sharp: .30,
+              surgeSpeed: .8, surgeStep: .30, surgeSharp: 3, surgeAmt: .22 },
+      tracks: [
+        ['01-1_1.mp3', 'Brian Eno — 1/1'],
+        ['06-brian_eno_jon_hopkins_and_leo_abrahams-2_forms_of_anger.mp3', 'Eno · Hopkins · Abrahams — 2 Forms of Anger'],
+        ['103-aphex_twin-rhubarb.mp3', 'Aphex Twin — Rhubarb'],
+        ['105 - An Ending (Ascent) (Remastered).mp3', 'Brian Eno — An Ending (Ascent)'],
+        ['113 Olson.mp3', 'Boards of Canada — Olson'],
+        ['13. Boards Of Canada - Olson.mp3', 'Boards of Canada — Olson'],
+        ['17 Boards Of Canada - Semena Mertvykh.mp3', 'Boards of Canada — Semena Mertvykh'],
+        ['Boards of Canada - 03 - Olson (Version 3).mp3', 'Boards of Canada — Olson (Version 3)'],
+        ['Brian Eno - An Ending (Ascent).mp3', 'Brian Eno — An Ending (Ascent)']
+      ]
+    },
+    light: {
+      label: '☕ Morning',
+      folder: 'Elevated Flow (High Energy + Positive',
+      pal: [[216, 138, 40], [238, 192, 78]],                // amber → gold
+      gait: { speed: 1.6, amp: .55, ripple: .42, cycles: 4.2, travel: 3.4,
+              drift: .15, breath: .04, breathRate: .65, grain: .25, sharp: .40,
+              surgeSpeed: 1.6, surgeStep: .40, surgeSharp: 4, surgeAmt: .28 },
+      tracks: [
+        ['10. Boards Of Canada - Roygbiv.mp3', 'Boards of Canada — Roygbiv'],
+        ['11. Boards Of Canada - Dayvan Cowboy.mp3', 'Boards of Canada — Dayvan Cowboy'],
+        ['13. Tycho - A Walk.mp3', 'Tycho — A Walk']
+      ]
+    }
+  };
+  const FALLBACK = 'cozy';
+  const GRAY = [[213, 209, 200], [193, 188, 177]];          // asleep — Braun gray
+
+  /* ================== natural-language mood reading ==================== */
+  // Stem lexicon: feelings, weather, activities, time of day, genres.
+  // Prefix-matched, so "stressed", "stressing" both hit "stress".
+  const LEX = {
+    flow: ['focus','concentrat','work','coding','code','study','studying','grind',
+      'deadline','productiv','busy','hustle','determin','motivat','momentum','zone',
+      'locked','dial','sharp','crisp','typing','writing','building','making','create',
+      'creative','design','flow','deep','rhythm','beat','pulse','techno','driving',
+      'drive','running','run','gym','train','sprint','ship','launch','exam','finals'],
+    overload: ['anxious','anxiety','stress','overwhelm','panic','racing','spiral',
+      'frazzl','tense','tension','nervous','worry','worried','angry','anger','frustrat',
+      'furious','irritat','annoy','loud','noise','noisy','chaos','chaotic','burnout',
+      'burnt','overstimulat','crowded','headache','migraine','breathe','breathing',
+      'ground','grounding','calm','quiet','silence','still','heavy','numb','escape',
+      'disappear','hide','drown','static','drone','pressure','deadline?','fried'],
+    cozy: ['rain','rainy','storm','drizzl','grey','gray','cloudy','overcast','cozy',
+      'cosy','blanket','tea','fireplace','sad','blue','down','melanchol','nostalg',
+      'memor','missing','miss','homesick','wistful','bittersweet','sleepy','sleep',
+      'nap','drowsy','tired','exhaust','weary','night','evening','midnight','late',
+      'dusk','winter','autumn','fall','chill','mellow','slow','soft','gentle','tender',
+      'lofi','lo-fi','piano','tape','reading','book','journal','candle','hygge',
+      'comfort','home','snug','lonely','alone','heartbreak','heartbroken','breakup',
+      'cry','crying','grief','mourn','lost','empty','quiet?','hurt','longing','yearn'],
+    light: ['happy','happiness','joy','glad','great','good','sunny','sun','sunshine',
+      'sunrise','morning','dawn','coffee','breakfast','bright','light','breez','spring',
+      'summer','beach','ocean','sea','fresh','energiz','energetic','energy','awake',
+      'alive','upbeat','uplift','optimis','hopeful','hope','excit','celebrat','dance',
+      'dancing','groove','house','balearic','tropical','vacation','holiday','friends',
+      'love','smile','laugh','playful','golden','warm','walk','stroll','picnic',
+      'garden','flower','bloom','weekend','saturday','sunday','win','won','free']
+  };
+  // A few phrases that unigrams get wrong.
+  const PHRASES = [
+    [/can'?t sleep|cant sleep/, 'cozy'],
+    [/long day|rough day|hard day/, 'cozy'],
+    [/deep work|get things done|lock in/, 'flow'],
+    [/too much|shut (it|the world) out|need (space|air)/, 'overload'],
+    [/burn(ed|t) out/, 'overload'],
+    [/wind(ing)? down|slow(ing)? down/, 'cozy'],
+    [/road trip|day off/, 'light']
+  ];
+
+  function parseCategory(phrase) {
+    const low = phrase.toLowerCase();
+    for (const [re, cat] of PHRASES) if (re.test(low)) return cat;
+    const words = low.split(/[^a-z-]+/).filter(Boolean);
+    let best = null, bestScore = 0;
+    for (const key of Object.keys(LEX)) {
+      let score = 0;
+      for (const w of words)
+        if (LEX[key].some(k => w.startsWith(k))) score++;
+      if (score > bestScore) { bestScore = score; best = key; }
+    }
+    return best || FALLBACK;
+  }
+
+  /* ============================== canvas =============================== */
+  const app = document.getElementById('app');
+  const canvas = document.getElementById('membrane');
+  const ctx = canvas.getContext('2d');
+  let W = 0, H = 0, dpr = 1, cx = 0, cy = 0, radius = 0;
+
+  const NUM_LINES = 52;
+  const SAMPLES = 200;
+
+  let topY = 0, spacing = 0, peakScale = 0, lineLeft = 0, lineWidth = 0;
+
+  function size() {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    W = app.clientWidth; H = app.clientHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cx = W / 2;
+    cy = H * 0.40;
+    radius = Math.min(W * 0.42, H * 0.30);
+    app.style.setProperty('--r', radius);
+    topY = cy - radius;
+    spacing = (radius * 2) / (NUM_LINES - 1);
+    peakScale = spacing * 5.2;
+    lineLeft = cx - radius - 4;
+    lineWidth = radius * 2 + 8;
+  }
+  size();
+  new ResizeObserver(size).observe(app);
+
+  /* ==================== deterministic noise (patina) =================== */
+  function hash(x, y, s) {
+    const v = Math.sin(x * 12.9898 + y * 78.233 + s * 43.7) * 43758.5453;
+    return v - Math.floor(v);
+  }
+  function smoothNoise(x, y, s) {
+    const xi = Math.floor(x), yi = Math.floor(y);
+    const xf = x - xi, yf = y - yi;
+    const u = xf * xf * (3 - 2 * xf);
+    const v = yf * yf * (3 - 2 * yf);
+    const tl = hash(xi, yi, s), tr = hash(xi + 1, yi, s);
+    const bl = hash(xi, yi + 1, s), br = hash(xi + 1, yi + 1, s);
+    return tl + (tr - tl) * u + ((bl - tl) + (br - bl - tr + tl) * u) * v;
+  }
+
+  /* ==================== tone structure & static tables ================== */
+  const TONES = [
+    { f: 0.22, w: 0.07, base: 0.62, sp: 0.55, ph: 0.30 },
+    { f: 0.34, w: 0.08, base: 0.80, sp: 0.40, ph: 2.40 },
+    { f: 0.46, w: 0.08, base: 0.70, sp: 0.85, ph: 0.70 },
+    { f: 0.56, w: 0.09, base: 0.58, sp: 1.10, ph: 1.20 },
+    { f: 0.66, w: 0.09, base: 0.52, sp: 0.55, ph: 3.10 },
+    { f: 0.78, w: 0.10, base: 0.42, sp: 1.00, ph: 1.80 }
+  ];
+
+  const presence = TONES.map(t => {
+    const row = new Float32Array(SAMPLES + 1);
+    for (let s = 0; s <= SAMPLES; s++) {
+      const d = (s / SAMPLES - t.f) / t.w;
+      row[s] = Math.exp(-d * d * 0.55);
+    }
+    return row;
+  });
+
+  // Pulsar mask — activity lives in the middle band, edges stay quiet.
+  const mask = new Float32Array(SAMPLES + 1);
+  for (let s = 0; s <= SAMPLES; s++) {
+    const d = (s / SAMPLES - 0.5) / 0.37;
+    mask[s] = Math.exp(-Math.pow(d, 4));
+  }
+
+  const jitterTab = [];              // hand-traced patina — static, must not boil
+  const texA = [], texB = [];        // slow-drifting low-freq texture
+  const grainA = [], grainB = [];    // high-freq grain — the jagged pulsar detail
+  const linePhase = new Float32Array(NUM_LINES);
+  for (let i = 0; i < NUM_LINES; i++) {
+    const ty = 1 - i / (NUM_LINES - 1);
+    const j = new Float32Array(SAMPLES + 1);
+    const a = new Float32Array(SAMPLES + 1);
+    const b = new Float32Array(SAMPLES + 1);
+    const ga = new Float32Array(SAMPLES + 1);
+    const gb = new Float32Array(SAMPLES + 1);
+    for (let s = 0; s <= SAMPLES; s++) {
+      const fx = s / SAMPLES;
+      j[s] = (smoothNoise(fx * 40, ty * 60, 4.1) - 0.5) * 0.7;
+      a[s] = (smoothNoise(fx * 4.0, ty * 5.5, 1.3) - 0.5) * 0.18;
+      b[s] = (smoothNoise(fx * 4.0, ty * 5.5, 7.9) - 0.5) * 0.18;
+      ga[s] = (smoothNoise(fx * 22, ty * 26, 3.7) - 0.5);
+      gb[s] = (smoothNoise(fx * 22, ty * 26, 8.3) - 0.5);
+    }
+    jitterTab.push(j); texA.push(a); texB.push(b); grainA.push(ga); grainB.push(gb);
+    linePhase[i] = i * 0.35 + (hash(i, 7, 2) - 0.5) * 1.2;
+  }
+
+  /* ============================== audio ================================ */
+  // Two <audio> elements crossfaded by volume ramps in the frame loop.
+  // The Web Audio analyser only works same-origin over http(s) — routing a
+  // file:// media element through an AudioContext mutes it, so skip it there.
+  const canAnalyse = location.protocol === 'http:' || location.protocol === 'https:';
+  const players = [new Audio(), new Audio()];
+  const volTarget = [0, 0];
+  players.forEach(p => { p.preload = 'auto'; });
+  let cur = 0;
+  let ac = null, analyser = null, fftData = null;
+  let currentCat = FALLBACK;
+  let lastSrc = '';
+  let loadRetries = 0;
+
+  const enc = encodeURIComponent;
+  const trackURL = (cat, t) => 'Categories/' + enc(cat.folder) + '/' + enc(t[0]);
+
+  function buildAnalyser() {
+    if (!canAnalyse || ac) return;
+    try {
+      ac = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = ac.createAnalyser();
+      analyser.fftSize = 2048;
+      analyser.smoothingTimeConstant = 0.86;
+      fftData = new Uint8Array(analyser.frequencyBinCount);
+      players.forEach(p => ac.createMediaElementSource(p).connect(analyser));
+      analyser.connect(ac.destination);
+    } catch { ac = null; analyser = null; }
+  }
+
+  const nowline = document.getElementById('nowline');
+
+  function playCategory(key) {
+    currentCat = key;
+    const cat = CATS[key];
+    let pick = cat.tracks[(Math.random() * cat.tracks.length) | 0];
+    if (cat.tracks.length > 1) {
+      for (let tries = 0; tries < 6 && trackURL(cat, pick) === lastSrc; tries++)
+        pick = cat.tracks[(Math.random() * cat.tracks.length) | 0];
+    }
+    const nxt = players[1 - cur];
+    nxt.src = trackURL(cat, pick);
+    lastSrc = nxt.getAttribute('src');
+    nxt.volume = 0;
+    nxt.play().catch(() => {});
+    volTarget[1 - cur] = 0.9;
+    volTarget[cur] = 0;
+    cur = 1 - cur;
+    nowline.textContent = pick[1];
+    markPill(key);
+  }
+
+  players.forEach((p, i) => {
+    p.addEventListener('ended', () => {
+      if (on && i === cur) playCategory(currentCat);   // roll to the next track
+    });
+    p.addEventListener('playing', () => { loadRetries = 0; });
+    p.addEventListener('error', () => {
+      if (on && i === cur && loadRetries < 4) {        // damaged file or dropped server
+        loadRetries++;
+        setTimeout(() => { if (on) playCategory(currentCat); }, 500);
+      }
+    });
+  });
+
+  /* ============================ power state ============================ */
+  let on = false;          // a radio you left off stays off
+  let alive = 0;           // eased 0 (STILL) → 1 (ALIVE)
+
+  const controls = document.getElementById('controls');
+  const hint = document.getElementById('hint');
+  const led = document.getElementById('led');
+  const input = document.getElementById('phrase');
+
+  function showControls() {
+    controls.classList.add('shown');
+  }
+  function hideControls() {
+    controls.classList.remove('shown');
+    input.blur();
+  }
+
+  function setPower(state) {
+    on = state;
+    hint.classList.toggle('hidden', on);
+    led.classList.toggle('on', on);
+    nowline.classList.toggle('on', on);
+    if (on) {
+      buildAnalyser();
+      if (ac && ac.state === 'suspended') ac.resume();
+      playCategory(currentCat);
+      showControls();                 // first ask; it leaves after input
+    } else {
+      volTarget[0] = volTarget[1] = 0;
+      hideControls();
+    }
+  }
+
+  // The circle is the switch. Everywhere else summons the prompt.
+  app.addEventListener('click', e => {
+    if (controls.contains(e.target)) return;
+    const r = app.getBoundingClientRect();
+    const dx = e.clientX - r.left - cx, dy = e.clientY - r.top - cy;
+    if (dx * dx + dy * dy <= radius * radius) { setPower(!on); return; }
+    if (on) controls.classList.contains('shown') ? hideControls() : showControls();
+  });
+  app.addEventListener('pointermove', e => {
+    const r = app.getBoundingClientRect();
+    const dx = e.clientX - r.left - cx, dy = e.clientY - r.top - cy;
+    canvas.style.cursor = (dx * dx + dy * dy <= radius * radius) ? 'pointer' : 'default';
+  });
+
+  /* ============================== pills ================================ */
+  const pillsEl = document.getElementById('pills');
+  Object.keys(CATS).forEach(key => {
+    const b = document.createElement('button');
+    b.className = 'pill';
+    b.textContent = CATS[key].label;
+    b.dataset.cat = key;
+    b.addEventListener('click', () => {
+      playCategory(key);
+      showReceipt(CATS[key].label.replace(/^\S+\s/, ''));
+      hideControls();
+    });
+    pillsEl.appendChild(b);
+  });
+  function markPill(key) {
+    [...pillsEl.children].forEach(b => b.classList.toggle('on', b.dataset.cat === key));
+  }
+
+  /* ========================= phrase input ============================== */
+  const receiptEl = document.getElementById('receipt');
+
+  let receiptTimer = null;
+  function showReceipt(text) {
+    receiptEl.textContent = text;
+    receiptEl.style.transition = 'opacity .35s ease';
+    receiptEl.style.opacity = 1;
+    clearTimeout(receiptTimer);
+    receiptTimer = setTimeout(() => {
+      receiptEl.style.transition = 'opacity 1.8s ease';
+      receiptEl.style.opacity = 0;
+    }, 1600);
+  }
+
+  function submitPhrase() {
+    const p = input.value.trim();
+    if (!p) return;
+    playCategory(parseCategory(p));
+    input.value = '';
+    showReceipt(p);
+    hideControls();
+  }
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') submitPhrase(); });
+
+  // Speak, when the browser allows it; otherwise the field is the input.
+  const mic = document.getElementById('mic');
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  mic.addEventListener('click', () => {
+    if (!SR) { input.focus(); return; }
+    try {
+      const r = new SR();
+      r.lang = 'en-US'; r.maxAlternatives = 1;
+      r.onresult = ev => { input.value = ev.results[0][0].transcript; submitPhrase(); };
+      r.onerror = () => input.focus();
+      r.start();
+    } catch { input.focus(); }
+  });
+
+  /* =========================== FFT → membrane ========================== */
+  const toneEnergy = new Float32Array(TONES.length);
+  function readFFT() {
+    analyser.getByteFrequencyData(fftData);
+    const nyq = ac.sampleRate / 2;
+    for (let t = 0; t < TONES.length; t++) {
+      const f0 = 60 * Math.pow(4000 / 60, TONES[t].f - TONES[t].w);
+      const f1 = 60 * Math.pow(4000 / 60, TONES[t].f + TONES[t].w);
+      const b0 = Math.max(1, Math.floor(f0 / nyq * fftData.length));
+      const b1 = Math.min(fftData.length - 1, Math.ceil(f1 / nyq * fftData.length));
+      let sum = 0;
+      for (let b = b0; b <= b1; b++) sum += fftData[b];
+      const e = (sum / (b1 - b0 + 1)) / 255;
+      toneEnergy[t] += (e - toneEnergy[t]) * 0.12;
+    }
+  }
+
+  // Synthetic energy when no analyser — each mood keeps its own gait.
+  function synthEnergy(t, an) {
+    for (let k = 0; k < TONES.length; k++) {
+      const tn = TONES[k];
+      const s = Math.sin(t * an.speed * (0.6 + tn.sp) * 1.6 + tn.ph);
+      const shaped = Math.pow((s + 1) / 2, 1.6);
+      const e = an.amp * (0.30 + 0.62 * shaped);
+      toneEnergy[k] += (Math.max(0, e) - toneEnergy[k]) * 0.08;
+    }
+  }
+
+  /* ============================= render ================================ */
+  const lerp = (a, b, k) => a + (b - a) * k;
+
+  // Eased gait & palette — everything the mood touches moves smoothly.
+  const gaitNow = Object.assign({}, CATS[FALLBACK].gait);
+  const colNow = [[213, 209, 200], [193, 188, 177]];   // starts asleep-gray
+
+  const envRow = new Float32Array(TONES.length);
+  const surgeRow = new Float32Array(NUM_LINES);
+  const driftRow = new Float32Array(NUM_LINES);
+  const colRow = new Array(NUM_LINES);
+  const ptX = new Float32Array(SAMPLES + 1);
+  const ptY = new Float32Array(SAMPLES + 1);
+  let last = performance.now();
+
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    const t = now / 1000;
+
+    alive += ((on ? 1 : 0) - alive) * Math.min(1, dt * 1.6);
+
+    // ease gait toward the active mood
+    const g = CATS[currentCat].gait;
+    const ge = Math.min(1, dt * 0.9);
+    for (const k in gaitNow) gaitNow[k] += (g[k] - gaitNow[k]) * ge;
+
+    // ease palette toward mood color (or asleep-gray when off)
+    const pal = CATS[currentCat].pal;
+    const ce = Math.min(1, dt * 1.1);
+    for (let p = 0; p < 2; p++)
+      for (let c = 0; c < 3; c++) {
+        const target = lerp(GRAY[p][c], pal[p][c], alive);
+        colNow[p][c] += (target - colNow[p][c]) * ce;
+      }
+
+    // volume ramps → crossfade
+    for (let i = 0; i < 2; i++) {
+      const p = players[i];
+      const tv = on ? volTarget[i] : 0;
+      const v = p.volume + (tv - p.volume) * Math.min(1, dt * 0.9);
+      p.volume = Math.max(0, Math.min(1, v));
+      if (tv === 0 && p.volume < 0.01 && !p.paused) p.pause();
+    }
+
+    if (on) { if (analyser) readFFT(); else synthEnergy(t, gaitNow); }
+
+    const an = gaitNow;
+    const motion = reduceMotion ? 0.35 : 1;
+    const breath = 1 + an.breath * alive * Math.sin(t * an.breathRate * 6.283) * motion;
+    const gMix = 0.5 + 0.5 * Math.sin(t * 0.09);
+    const texMix = 0.5 + 0.5 * Math.sin(t * 0.07);
+    const grainAmt = an.grain * (0.25 + 0.75 * alive) * motion;
+    const rippleAmt = an.ripple * alive * motion;
+    const sharpAmt = an.sharp * (0.3 + 0.7 * alive);
+
+    // per-line rows: vertical surge crest, cozy tape-drift, gradient color
+    for (let i = 0; i < NUM_LINES; i++) {
+      const fy = i / (NUM_LINES - 1);
+      const sg = Math.sin(t * an.surgeSpeed * motion - i * an.surgeStep);
+      surgeRow[i] = Math.pow(Math.max(0, sg), an.surgeSharp) * an.surgeAmt * alive;
+      driftRow[i] = (smoothNoise(t * 0.12 * motion, i * 0.53, 5.5) - 0.5) * spacing * an.drift;
+      const shimmer = 0.10 * Math.sin(t * 0.25 + fy * 2.5);
+      const mixK = Math.max(0, Math.min(1, fy + shimmer));
+      const r0 = lerp(colNow[0][0], colNow[1][0], mixK) | 0;
+      const g0 = lerp(colNow[0][1], colNow[1][1], mixK) | 0;
+      const b0 = lerp(colNow[0][2], colNow[1][2], mixK) | 0;
+      colRow[i] = 'rgb(' + r0 + ',' + g0 + ',' + b0 + ')';
+    }
+
+    ctx.fillStyle = BG;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+
+    const breatheRest = reduceMotion ? 0.015 : 0.04;
+    const TAU = 6.283185;
+
+    for (let i = 0; i < NUM_LINES; i++) {
+      const ty = 1 - i / (NUM_LINES - 1);
+      const baselineY = topY + i * spacing + driftRow[i];
+
+      // per-tone envelope for this line: rest waver ↔ live energy
+      for (let k = 0; k < TONES.length; k++) {
+        const tn = TONES[k];
+        const rest = tn.base * (0.13 + breatheRest * Math.sin(t * 0.3 * tn.sp + tn.ph + ty * 2.8));
+        const live = tn.base * (0.26 + 0.95 * toneEnergy[k] * (0.6 + 0.4 * Math.abs(Math.sin(ty * tn.sp * 2.8 + tn.ph + t * 0.5 * an.speed))));
+        envRow[k] = lerp(rest, live, alive);
+      }
+
+      const jit = jitterTab[i], ta = texA[i], tb = texB[i], ga = grainA[i], gb = grainB[i];
+      const texAmt = lerp(0.35, 0.8, alive);
+      const phase = linePhase[i];
+      const surge = 1 + surgeRow[i];
+      for (let s = 0; s <= SAMPLES; s++) {
+        const fx = s / SAMPLES;
+        let a = 0;
+        for (let k = 0; k < TONES.length; k++) a += presence[k][s] * envRow[k];
+        a *= mask[s];
+        a *= 1 + rippleAmt * Math.sin(fx * TAU * an.cycles - t * an.travel * motion + phase);
+        a += lerp(ga[s], gb[s], gMix) * grainAmt * (0.25 + 0.75 * a) * mask[s];
+        a *= surge;
+        a += a * a * sharpAmt;                       // peak emphasis — pulsar spikes
+        a += lerp(ta[s], tb[s], texMix) * texAmt;
+        ptY[s] = baselineY - Math.max(0, a) * peakScale * breath + jit[s];
+        ptX[s] = lineLeft + fx * lineWidth;
+      }
+
+      // hidden-line removal
+      ctx.beginPath();
+      ctx.moveTo(ptX[0], ptY[0]);
+      for (let s = 1; s <= SAMPLES; s++) ctx.lineTo(ptX[s], ptY[s]);
+      ctx.lineTo(lineLeft + lineWidth, cy + radius + 50);
+      ctx.lineTo(lineLeft, cy + radius + 50);
+      ctx.closePath();
+      ctx.fillStyle = BG;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(ptX[0], ptY[0]);
+      for (let s = 1; s <= SAMPLES; s++) ctx.lineTo(ptX[s], ptY[s]);
+      ctx.strokeStyle = colRow[i];
+      ctx.lineWidth = (i === NUM_LINES - 1) ? 1.1 : 0.85;
+      ctx.globalAlpha = 0.94;
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+
+</body>
+</html>
