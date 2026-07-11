@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Greenlight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0b;
+  --surface: #111113;
+  --surface2: #18181c;
+  --surface3: #1f1f25;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --accent: #c8f060;
+  --accent-dim: rgba(200,240,96,0.12);
+  --accent-border: rgba(200,240,96,0.3);
+  --text: #f0f0ee;
+  --text2: #888884;
+  --text3: #444442;
+  --red: #ff5f5f;
+  --mono: 'DM Mono', monospace;
+  --sans: 'Syne', sans-serif;
+  --r: 10px;
+  --r-lg: 16px;
+}
+
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--sans);
+  height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; height: 52px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface); flex-shrink: 0;
+}
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 14px; letter-spacing: 0.08em;
+}
+.logo-mark {
+  width: 26px; height: 26px;
+  background: var(--accent); border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+}
+.logo-mark svg { width: 14px; height: 14px; }
+
+.status-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 100px;
+  border: 1px solid var(--border2);
+  font-family: var(--mono); font-size: 11px; color: var(--text2);
+  background: var(--surface2); transition: all 0.3s;
+}
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--text3); transition: background 0.3s;
+}
+.status-pill.warming .status-dot {
+  background: #f0a040; animation: pulse 1s ease-in-out infinite;
+}
+.status-pill.ready .status-dot { background: var(--accent); }
+.status-pill.ready { border-color: var(--accent-border); color: var(--accent); }
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+.wake-btn {
+  margin-left: 8px;
+  padding: 5px 12px; border-radius: 100px;
+  border: 1px solid var(--border2); background: var(--surface2);
+  color: var(--text); font-family: var(--mono); font-size: 11px;
+  cursor: pointer; transition: all 0.15s; display: none;
+}
+.wake-btn.visible { display: block; }
+.wake-btn:hover { border-color: var(--accent-border); color: var(--accent); }
+
+/* ── LAYOUT ── */
+.main { flex: 1; display: flex; overflow: hidden; }
+.panel {
+  width: 340px; flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+}
+.panel-scroll { flex: 1; overflow-y: auto; }
+.canvas {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 32px; background: var(--bg); overflow: hidden;
+}
+
+.ps {
+  padding: 18px 18px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.ps:last-child { border-bottom: none; }
+.slabel {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 0.1em; color: var(--text3);
+  text-transform: uppercase; margin-bottom: 12px;
+}
+
+/* ── DROPZONE / PREVIEW ── */
+.dropzone {
+  border: 1px dashed var(--border2); border-radius: var(--r);
+  padding: 24px 18px; text-align: center; cursor: pointer;
+  background: var(--surface2); transition: all 0.18s;
+}
+.dropzone:hover, .dropzone.over { border-color: var(--accent); background: var(--accent-dim); }
+.dropzone p {
+  font-size: 11px; color: var(--text2); font-family: var(--mono);
+  line-height: 1.5;
+}
+.dropzone span { color: var(--accent); }
+
+.preview-wrap {
+  display: none; flex-direction: column; gap: 8px;
+}
+.preview-wrap.visible { display: flex; }
+.preview-img-box {
+  position: relative;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100px;
+}
+.preview-img-box img {
+  max-width: 100%;
+  max-height: 200px;
+  display: block;
+}
+.preview-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0 2px;
+}
+.preview-info {
+  font-family: var(--mono); font-size: 10px; color: var(--text3);
+}
+.preview-info b { color: var(--text2); font-weight: 500; }
+.preview-clear {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--text3); background: none; border: none;
+  cursor: pointer; padding: 2px 4px;
+  transition: color 0.15s;
+}
+.preview-clear:hover { color: var(--red); }
+
+/* ── PROMPT ── */
+textarea {
+  width: 100%; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: var(--r);
+  color: var(--text); font-family: var(--mono); font-size: 12px;
+  line-height: 1.7; padding: 10px 12px; resize: none; outline: none;
+  transition: border-color 0.15s;
+}
+textarea:focus { border-color: var(--border2); }
+textarea::placeholder { color: var(--text3); }
+
+/* ── RUNTIME (circular badge with dropdown) ── */
+.runtime-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.runtime-label-text {
+  font-family: var(--mono); font-size: 11px; color: var(--text2);
+}
+.runtime-badge-wrap { position: relative; }
+.runtime-badge {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--text); font-family: var(--mono); font-size: 13px;
+  font-weight: 500; cursor: pointer;
+  display: flex; align-items: baseline; justify-content: center;
+  gap: 1px;
+  transition: all 0.15s;
+}
+.runtime-badge .num { font-size: 14px; }
+.runtime-badge .unit { font-size: 9px; color: var(--text3); }
+.runtime-badge:hover, .runtime-badge.open {
+  border-color: var(--accent-border); color: var(--accent);
+}
+.runtime-badge:hover .unit, .runtime-badge.open .unit { color: var(--accent); opacity: 0.7; }
+
+.runtime-menu {
+  position: absolute; top: 100%; right: 0; margin-top: 6px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: var(--r); padding: 4px;
+  display: none; flex-direction: column; gap: 2px;
+  z-index: 20; min-width: 64px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.runtime-menu.open { display: flex; }
+.runtime-opt {
+  padding: 6px 12px; border-radius: 6px; border: none;
+  background: transparent; color: var(--text); cursor: pointer;
+  font-family: var(--mono); font-size: 12px; text-align: left;
+  transition: all 0.1s;
+}
+.runtime-opt:hover { background: var(--surface3); }
+.runtime-opt.active { color: var(--accent); }
+
+/* ── SLIDERS ── */
+.slider-row { margin-bottom: 14px; }
+.slider-row:last-child { margin-bottom: 0; }
+.slider-header {
+  display: flex; justify-content: space-between; margin-bottom: 6px;
+}
+.slider-label { font-size: 11px; color: var(--text2); font-family: var(--mono); }
+.slider-val { font-size: 11px; color: var(--accent); font-family: var(--mono); font-weight: 500; }
+input[type=range] {
+  -webkit-appearance: none; width: 100%; height: 2px;
+  background: var(--surface3); border-radius: 2px; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 13px; height: 13px;
+  border-radius: 50%; background: var(--accent);
+  border: 2px solid var(--bg); cursor: pointer;
+}
+input[type=range]::-moz-range-thumb {
+  width: 13px; height: 13px; border-radius: 50%;
+  background: var(--accent); border: 2px solid var(--bg); cursor: pointer;
+  border-style: solid;
+}
+
+/* ── LORAS ── */
+.lora-list { display: flex; flex-direction: column; gap: 6px; }
+.lora-item {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 9px 10px;
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer; transition: all 0.15s;
+}
+.lora-item:hover { border-color: var(--border2); }
+.lora-item.active { border-color: var(--accent-border); background: var(--accent-dim); }
+.lora-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--surface3); flex-shrink: 0;
+  border: 1px solid var(--border2); transition: all 0.15s;
+}
+.lora-item.active .lora-dot { background: var(--accent); border-color: var(--accent); }
+.lora-info { flex: 1; min-width: 0; }
+.lora-name {
+  font-size: 11px; font-family: var(--mono); color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.lora-meta {
+  font-size: 10px; color: var(--text3); font-family: var(--mono);
+  margin-top: 1px;
+}
+.lora-empty {
+  font-size: 11px; font-family: var(--mono); color: var(--text3);
+  text-align: center; padding: 12px 0;
+}
+
+/* ── GENERATE BUTTON ── */
+.gen-bar {
+  padding: 14px 18px; border-top: 1px solid var(--border);
+  background: var(--surface); flex-shrink: 0;
+}
+.gen-btn {
+  width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 20px; border-radius: 10px; border: none;
+  background: var(--accent); color: #0a0a0b;
+  font-family: var(--sans); font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all 0.18s; letter-spacing: 0.02em;
+}
+.gen-btn:hover:not(:disabled) {
+  background: #d8ff70; transform: translateY(-1px);
+}
+.gen-btn:disabled {
+  opacity: 0.5; cursor: not-allowed;
+  background: var(--surface2); color: var(--text3);
+}
+
+/* ── OUTPUT ── */
+.output-card {
+  width: 100%; max-width: 960px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+.video-wrap {
+  background: #000; position: relative;
+  aspect-ratio: 16/9;
+  max-height: 70vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  transition: aspect-ratio 0.3s ease;
+}
+.video-wrap video {
+  width: 100%; height: 100%; object-fit: contain; display: none;
+}
+.video-wrap video.visible { display: block; }
+.placeholder {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px; padding: 40px;
+  background: linear-gradient(135deg, #0f0f12, #1a1a20);
+  text-align: center;
+}
+.placeholder.hidden { display: none; }
+.placeholder-icon {
+  width: 48px; height: 48px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text3);
+}
+.placeholder-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.placeholder-sub {
+  font-size: 12px; color: var(--text2); font-family: var(--mono);
+  max-width: 320px; line-height: 1.6;
+}
+.spinner {
+  width: 28px; height: 28px; animation: spin 1.4s linear infinite;
+  color: var(--accent);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.shimmer {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(200,240,96,0.04), transparent);
+  animation: shimmer 2.5s ease-in-out infinite;
+  display: none;
+}
+.shimmer.visible { display: block; }
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.progress-wrap {
+  padding: 12px 18px; display: none;
+  border-top: 1px solid var(--border);
+}
+.progress-wrap.visible { display: block; }
+.progress-header {
+  display: flex; justify-content: space-between; margin-bottom: 6px;
+}
+.progress-label, .progress-pct {
+  font-family: var(--mono); font-size: 10px; color: var(--text2);
+}
+.progress-pct { color: var(--accent); }
+.progress-bar {
+  height: 2px; background: var(--surface3);
+  border-radius: 2px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--accent);
+  width: 0%; transition: width 0.4s ease; border-radius: 2px;
+}
+
+.meta-bar {
+  padding: 12px 18px; display: none;
+  align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--border);
+}
+.meta-bar.visible { display: flex; }
+.meta-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.tag {
+  font-family: var(--mono); font-size: 10px; padding: 3px 8px;
+  border-radius: 100px; background: var(--surface2); color: var(--text2);
+  border: 1px solid var(--border);
+}
+.tag.hi {
+  color: var(--accent); border-color: var(--accent-border);
+  background: var(--accent-dim);
+}
+.dl-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: 7px;
+  border: 1px solid var(--border2); background: var(--surface2);
+  color: var(--text); font-family: var(--mono); font-size: 11px;
+  cursor: pointer; transition: all 0.15s;
+}
+.dl-btn:hover { border-color: var(--accent-border); color: var(--accent); }
+.dl-btn svg { width: 12px; height: 12px; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 20px; right: 20px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: var(--r); padding: 10px 16px;
+  font-family: var(--mono); font-size: 12px; color: var(--text);
+  opacity: 0; transform: translateY(8px);
+  transition: all 0.25s; pointer-events: none; z-index: 100;
+}
+.toast.show { opacity: 1; transform: none; }
+.toast.error { border-color: var(--red); color: var(--red); }
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 16 16" fill="none">
+        <path d="M8 2L14 5.5V10.5L8 14L2 10.5V5.5L8 2Z" fill="#0a0a0b"/>
+      </svg>
+    </div>
+    GREENLIGHT
+  </div>
+  <div style="display: flex; align-items: center;">
+    <div class="status-pill" id="status-pill">
+      <div class="status-dot"></div>
+      <span id="status-text">checking…</span>
+    </div>
+    <button class="wake-btn" id="wake-btn">Wake up</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- PANEL -->
+  <div class="panel">
+    <div class="panel-scroll">
+
+      <!-- Image -->
+      <div class="ps">
+        <div class="slabel">Source Image</div>
+        <div class="dropzone" id="dropzone">
+          <p style="margin-bottom:4px;"><span>Click or drop</span></p>
+          <p style="font-size:10px;color:var(--text3);">PNG · JPG · WEBP — any aspect</p>
+        </div>
+        <div class="preview-wrap" id="preview-wrap">
+          <div class="preview-img-box">
+            <img id="preview-img" alt=""/>
+          </div>
+          <div class="preview-meta">
+            <span class="preview-info" id="preview-info">—</span>
+            <button class="preview-clear" id="preview-clear">Clear</button>
+          </div>
+        </div>
+        <input type="file" id="img-file" accept="image/*" style="display:none;">
+      </div>
+
+      <!-- Prompt -->
+      <div class="ps">
+        <div class="slabel">Prompt</div>
+        <textarea id="prompt" rows="5" placeholder="Describe the motion and scene…"></textarea>
+      </div>
+
+      <!-- Generation -->
+      <div class="ps">
+        <div class="slabel">Generation</div>
+
+        <div class="runtime-row">
+          <span class="runtime-label-text">Runtime</span>
+          <div class="runtime-badge-wrap">
+            <button class="runtime-badge" id="runtime-badge">
+              <span class="num" id="runtime-num">5</span><span class="unit">s</span>
+            </button>
+            <div class="runtime-menu" id="runtime-menu">
+              <button class="runtime-opt active" data-rt="5">5s</button>
+              <button class="runtime-opt" data-rt="6">6s</button>
+              <button class="runtime-opt" data-rt="7">7s</button>
+              <button class="runtime-opt" data-rt="8">8s</button>
+              <button class="runtime-opt" data-rt="9">9s</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-header">
+            <span class="slider-label">Steps</span>
+            <span class="slider-val" id="steps-val">40</span>
+          </div>
+          <input type="range" id="steps" min="20" max="60" step="1" value="40">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-header">
+            <span class="slider-label">CFG</span>
+            <span class="slider-val" id="cfg-val">5.0</span>
+          </div>
+          <input type="range" id="cfg" min="1" max="10" step="0.1" value="5">
+        </div>
+      </div>
+
+      <!-- LoRAs -->
+      <div class="ps">
+        <div class="slabel">LoRAs</div>
+        <div class="lora-list" id="lora-list">
+          <div class="lora-empty">No LoRAs found</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="gen-bar">
+      <button class="gen-btn" id="gen-btn" disabled>
+        <svg viewBox="0 0 15 15" fill="none" width="14" height="14">
+          <path d="M7.5 1L9.5 6H15L10.5 9.5L12.5 14.5L7.5 11L2.5 14.5L4.5 9.5L0 6H5.5L7.5 1Z" fill="currentColor"/>
+        </svg>
+        Generate
+      </button>
+    </div>
+  </div>
+
+  <!-- CANVAS -->
+  <div class="canvas">
+    <div class="output-card">
+      <div class="video-wrap" id="video-wrap">
+        <div class="placeholder" id="placeholder">
+          <div class="placeholder-icon">
+            <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+              <path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M10 9l5 3-5 3V9z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="placeholder-title" id="placeholder-title">No video yet</div>
+          <div class="placeholder-sub" id="placeholder-sub">
+            Upload an image, write a prompt, hit generate.
+          </div>
+        </div>
+        <div class="shimmer" id="shimmer"></div>
+        <video id="output-video" controls playsinline></video>
+      </div>
+
+      <div class="progress-wrap" id="progress-wrap">
+        <div class="progress-header">
+          <span class="progress-label" id="progress-label">queued</span>
+          <span class="progress-pct" id="progress-pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+
+      <div class="meta-bar" id="meta-bar">
+        <div class="meta-tags" id="meta-tags"></div>
+        <button class="dl-btn" id="dl-btn">
+          <svg viewBox="0 0 12 12" fill="none">
+            <path d="M6 2v6m0 0L3 5m3 3l3-3M2 10h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Download
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ─────────────────────────────────────────────────────────────────
+const STATE = {
+  containerStatus: 'unknown',
+  imageDataUrl: null,
+  imageBase64: null,
+  imageW: 0, imageH: 0,
+  runtime: 5,
+  loras: [],
+  activeLoras: new Map(),  // name → scale
+  jobId: null,
+  pollInterval: null,
+  videoUrl: null,
+};
+
+const API = window.location.origin;
+const $ = id => document.getElementById(id);
+
+// ── Toast ─────────────────────────────────────────────────────────────────
+function toast(msg, isError = false) {
+  const el = $('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// ── Status / Health ───────────────────────────────────────────────────────
+function setStatus(s) {
+  STATE.containerStatus = s;
+  const pill = $('status-pill');
+  pill.className = 'status-pill ' + (s === 'unknown' ? '' : s);
+  $('status-text').textContent = {
+    unknown: 'checking…', cold: 'cold', warming: 'warming', ready: 'ready',
+  }[s] || s;
+  $('wake-btn').classList.toggle('visible', s === 'cold');
+  updateGenButton();
+}
+
+async function checkHealth() {
+  try {
+    const r = await fetch(API + '/health');
+    if (r.ok && STATE.containerStatus !== 'warming') setStatus('ready');
+  } catch {
+    setStatus('cold');
+  }
+}
+
+async function wake() {
+  setStatus('warming');
+  try {
+    await fetch(API + '/wake', { method: 'POST' });
+    setTimeout(() => setStatus('ready'), 2000);
+  } catch {
+    setStatus('cold');
+    toast('Could not reach API', true);
+  }
+}
+$('wake-btn').addEventListener('click', wake);
+
+// ── Image upload ──────────────────────────────────────────────────────────
+$('dropzone').addEventListener('click', () => $('img-file').click());
+
+$('dropzone').addEventListener('dragover', e => {
+  e.preventDefault();
+  $('dropzone').classList.add('over');
+});
+$('dropzone').addEventListener('dragleave', () => {
+  $('dropzone').classList.remove('over');
+});
+$('dropzone').addEventListener('drop', e => {
+  e.preventDefault();
+  $('dropzone').classList.remove('over');
+  if (e.dataTransfer.files[0]) handleImage(e.dataTransfer.files[0]);
+});
+$('img-file').addEventListener('change', e => {
+  if (e.target.files[0]) handleImage(e.target.files[0]);
+});
+
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+function aspectLabel(w, h) {
+  const g = gcd(w, h);
+  const arW = w / g, arH = h / g;
+  // For weird ratios that don't simplify nicely, show decimal
+  if (arW > 30 || arH > 30) {
+    return (w / h).toFixed(2) + ':1';
+  }
+  return `${arW}:${arH}`;
+}
+
+// Compute the dimensions the backend will use (mirrors model-card formula)
+const MAX_AREA = 720 * 1280;
+const MOD_VALUE = 16;  // vae_scale_factor_spatial=8 * patch_size[1]=2
+function projectedDimensions(w, h) {
+  const ar = h / w;
+  const oh = Math.round(Math.sqrt(MAX_AREA * ar) / MOD_VALUE) * MOD_VALUE;
+  const ow = Math.round(Math.sqrt(MAX_AREA / ar) / MOD_VALUE) * MOD_VALUE;
+  return [ow, oh];
+}
+
+function handleImage(file) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    STATE.imageDataUrl = ev.target.result;
+    STATE.imageBase64 = ev.target.result.split(',')[1];
+
+    const img = new Image();
+    img.onload = () => {
+      STATE.imageW = img.naturalWidth;
+      STATE.imageH = img.naturalHeight;
+
+      $('preview-img').src = ev.target.result;
+      const ar = aspectLabel(img.naturalWidth, img.naturalHeight);
+      const [pw, ph] = projectedDimensions(img.naturalWidth, img.naturalHeight);
+      $('preview-info').innerHTML =
+        `<b>${img.naturalWidth} × ${img.naturalHeight}</b> &nbsp;·&nbsp; ${ar} &nbsp;→&nbsp; <b>${pw} × ${ph}</b>`;
+
+      // Update output preview to match aspect
+      $('video-wrap').style.aspectRatio = `${pw}/${ph}`;
+
+      $('dropzone').style.display = 'none';
+      $('preview-wrap').classList.add('visible');
+      updateGenButton();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+$('preview-clear').addEventListener('click', () => {
+  STATE.imageDataUrl = null;
+  STATE.imageBase64 = null;
+  STATE.imageW = 0;
+  STATE.imageH = 0;
+  $('preview-wrap').classList.remove('visible');
+  $('dropzone').style.display = 'block';
+  $('video-wrap').style.aspectRatio = '16/9';
+  $('img-file').value = '';
+  updateGenButton();
+});
+
+// ── Runtime dropdown ──────────────────────────────────────────────────────
+$('runtime-badge').addEventListener('click', e => {
+  e.stopPropagation();
+  $('runtime-menu').classList.toggle('open');
+  $('runtime-badge').classList.toggle('open');
+});
+
+document.querySelectorAll('.runtime-opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    STATE.runtime = parseInt(opt.dataset.rt);
+    $('runtime-num').textContent = STATE.runtime;
+    document.querySelectorAll('.runtime-opt').forEach(o => o.classList.remove('active'));
+    opt.classList.add('active');
+    $('runtime-menu').classList.remove('open');
+    $('runtime-badge').classList.remove('open');
+  });
+});
+
+// Close runtime dropdown on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.runtime-badge-wrap')) {
+    $('runtime-menu').classList.remove('open');
+    $('runtime-badge').classList.remove('open');
+  }
+});
+
+// ── Sliders ───────────────────────────────────────────────────────────────
+$('steps').addEventListener('input', e => {
+  $('steps-val').textContent = e.target.value;
+});
+$('cfg').addEventListener('input', e => {
+  $('cfg-val').textContent = parseFloat(e.target.value).toFixed(1);
+});
+
+// ── LoRAs ─────────────────────────────────────────────────────────────────
+async function loadLoras() {
+  try {
+    const r = await fetch(API + '/loras');
+    if (!r.ok) return;
+    STATE.loras = await r.json();
+    renderLoras();
+  } catch {}
+}
+
+function renderLoras() {
+  const list = $('lora-list');
+  if (!STATE.loras.length) {
+    list.innerHTML = '<div class="lora-empty">No LoRAs found.<br/>Upload via Modal CLI.</div>';
+    return;
+  }
+  list.innerHTML = STATE.loras.map(l => `
+    <div class="lora-item${STATE.activeLoras.has(l.name) ? ' active' : ''}" data-name="${l.name}">
+      <div class="lora-dot"></div>
+      <div class="lora-info">
+        <div class="lora-name">${l.name}</div>
+        <div class="lora-meta">${l.size_mb} MB</div>
+      </div>
+    </div>
+  `).join('');
+  list.querySelectorAll('.lora-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const name = el.dataset.name;
+      if (STATE.activeLoras.has(name)) STATE.activeLoras.delete(name);
+      else STATE.activeLoras.set(name, 1.0);
+      renderLoras();
+    });
+  });
+}
+
+// ── Generate button state ─────────────────────────────────────────────────
+function updateGenButton() {
+  const ready = STATE.containerStatus === 'ready';
+  const hasImage = !!STATE.imageBase64;
+  const hasPrompt = $('prompt').value.trim().length > 0;
+  $('gen-btn').disabled = !(ready && hasImage && hasPrompt);
+}
+$('prompt').addEventListener('input', updateGenButton);
+
+// ── Generate ──────────────────────────────────────────────────────────────
+$('gen-btn').addEventListener('click', generate);
+
+async function generate() {
+  if ($('gen-btn').disabled) return;
+
+  const loras = [...STATE.activeLoras.entries()]
+    .map(([name, scale]) => ({ name, scale }));
+
+  const payload = {
+    image_b64: STATE.imageBase64,
+    prompt: $('prompt').value.trim(),
+    runtime: STATE.runtime,
+    steps: parseInt($('steps').value),
+    cfg: parseFloat($('cfg').value),
+    loras,
+  };
+
+  // UI → loading
+  $('gen-btn').disabled = true;
+  $('placeholder').classList.add('hidden');
+  $('placeholder-title').textContent = 'Generating';
+  $('placeholder-sub').textContent = 'Sampling frames…';
+  $('shimmer').classList.add('visible');
+  $('progress-wrap').classList.add('visible');
+  $('progress-fill').style.width = '0%';
+  $('progress-pct').textContent = '0%';
+  $('progress-label').textContent = 'queued';
+  $('meta-bar').classList.remove('visible');
+  $('output-video').classList.remove('visible');
+  $('output-video').src = '';
+
+  try {
+    const r = await fetch(API + '/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!r.ok) throw new Error(await r.text());
+    const { job_id } = await r.json();
+    STATE.jobId = job_id;
+    pollJob(job_id, payload);
+  } catch (e) {
+    onGenerationError(e.message);
+  }
+}
+
+function pollJob(jobId, payload) {
+  const labels = {
+    queued: 'queued',
+    loading: 'loading model…',
+    generating: 'sampling',
+    encoding: 'encoding video…',
+    complete: 'done',
+    error: 'error',
+  };
+
+  STATE.pollInterval = setInterval(async () => {
+    try {
+      const r = await fetch(API + `/job/${jobId}`);
+      const job = await r.json();
+
+      $('progress-fill').style.width = (job.progress || 0) + '%';
+      $('progress-pct').textContent = (job.progress || 0) + '%';
+      $('progress-label').textContent =
+        job.status === 'generating' && job.step
+          ? `sampling · step ${job.step} / ${job.total_steps}`
+          : (labels[job.status] || job.status);
+
+      if (job.status === 'complete') {
+        clearInterval(STATE.pollInterval);
+        showVideo(jobId, job, payload);
+      } else if (job.status === 'error') {
+        clearInterval(STATE.pollInterval);
+        onGenerationError(job.error || 'Unknown error');
+      }
+    } catch {
+      // Keep polling — transient network errors are fine
+    }
+  }, 1500);
+}
+
+function showVideo(jobId, job, payload) {
+  const url = API + `/video/${jobId}`;
+  STATE.videoUrl = url;
+  const vid = $('output-video');
+  vid.src = url;
+  vid.load();
+  vid.classList.add('visible');
+
+  $('shimmer').classList.remove('visible');
+  $('progress-wrap').classList.remove('visible');
+
+  // Match output container aspect to the actual generated video
+  if (job.width && job.height) {
+    $('video-wrap').style.aspectRatio = `${job.width}/${job.height}`;
+  }
+
+  const tags = [];
+  if (job.width && job.height) tags.push({ label: `${job.width}×${job.height}`, hi: true });
+  tags.push({ label: `${STATE.runtime}s · ${config_FPS()}fps` });
+  tags.push({ label: `${payload.steps} steps` });
+  tags.push({ label: `cfg ${payload.cfg.toFixed(1)}` });
+  if (payload.loras.length) tags.push({ label: `${payload.loras.length} LoRA` });
+  if (job.elapsed) tags.push({ label: `${job.elapsed}s` });
+
+  $('meta-tags').innerHTML = tags
+    .map(t => `<span class="tag${t.hi ? ' hi' : ''}">${t.label}</span>`)
+    .join('');
+  $('meta-bar').classList.add('visible');
+
+  updateGenButton();
+}
+
+function config_FPS() { return 16; }
+
+function onGenerationError(msg) {
+  $('shimmer').classList.remove('visible');
+  $('progress-wrap').classList.remove('visible');
+  $('placeholder').classList.remove('hidden');
+  $('placeholder-title').textContent = 'No video yet';
+  $('placeholder-sub').textContent = 'Upload an image, write a prompt, hit generate.';
+  toast(`Error: ${msg}`, true);
+  updateGenButton();
+}
+
+// ── Download ──────────────────────────────────────────────────────────────
+$('dl-btn').addEventListener('click', () => {
+  if (!STATE.videoUrl) return;
+  const a = document.createElement('a');
+  a.href = STATE.videoUrl;
+  a.download = `greenlight_${STATE.jobId}.mp4`;
+  a.click();
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────
+checkHealth();
+setInterval(checkHealth, 30000);
+loadLoras();
+</script>
+</body>
+</html>
