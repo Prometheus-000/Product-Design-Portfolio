@@ -95,7 +95,7 @@ body {
 }
 .panel-scroll { flex: 1; overflow-y: auto; }
 .canvas {
-  flex: 1; display: flex; align-items: center; justify-content: center;
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
   padding: 32px; background: var(--bg); overflow: hidden;
 }
 
@@ -342,6 +342,18 @@ input[type=range]::-moz-range-thumb {
   100% { transform: translateX(100%); }
 }
 
+/* ── SESSION — the console's own generation history (no empty states) ── */
+.session { width: 100%; max-width: 960px; margin-top: 18px; }
+.session-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+.session-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text2); }
+.session-count { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+.takes-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.take-tile { position: relative; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: #000; cursor: pointer; padding: 0; transition: border-color 0.2s; }
+.take-tile:hover { border-color: var(--accent-border); }
+.take-tile.on { border-color: var(--accent); }
+.take-tile video { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.take-num { position: absolute; top: 6px; left: 8px; font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.85); text-shadow: 0 1px 6px rgba(0,0,0,0.9); }
+
 .progress-wrap {
   padding: 12px 18px; display: none;
   border-top: 1px solid var(--border);
@@ -553,6 +565,14 @@ input[type=range]::-moz-range-thumb {
           Download
         </button>
       </div>
+    </div>
+
+    <div class="session">
+      <div class="session-head">
+        <span class="session-title">Session &mdash; vintage portrait animation</span>
+        <span class="session-count" id="session-count"></span>
+      </div>
+      <div class="takes-row" id="takes-row"></div>
     </div>
   </div>
 </div>
@@ -911,6 +931,44 @@ $('dl-btn').addEventListener('click', () => {
   a.download = `greenlight_${STATE.jobId}.mp4`;
   a.click();
 });
+
+// ── Session gallery — this console's real generation history, preloaded.
+//    No empty state: the stage opens on the last take. Root-relative paths
+//    resolve identically standalone and inside the portfolio's srcdoc embed.
+const SESSION = [
+  { file: '/greenlight/film/take-03-i2v.mp4', res: '1920×1080', prompt: 'Slow cinematic push in toward his face — subtle breathing, slight blink, micro-movements.' },
+  { file: '/greenlight/film/take-05-i2v.mp4', res: '1920×1080', prompt: 'Very slow push in toward the boy’s face — subtle breathing, slight wind movement in hair.' },
+  { file: '/greenlight/film/take-04-i2v.mp4', res: '1280×720', prompt: 'Slow gentle push in — subtle breathing, slight wind in hair, gentle warmth in the rocky landscape.' },
+  { file: '/greenlight/film/take-01-i2v.mp4', res: '1280×720', prompt: 'Subtle cinematic motion — slow gentle push in toward his face, naturalistic micro-movements.' },
+  { file: '/greenlight/film/take-02-i2v.mp4', res: '1280×720', prompt: 'Very slow push in toward father’s face — subtle breathing motion, slight blink, micro-movements.' }
+];
+(function initSession() {
+  const row = $('takes-row'); if (!row) return;
+  $('session-count').textContent = SESSION.length + ' generations';
+  function cueTake(i) {
+    const s = SESSION[i];
+    const vid = $('output-video');
+    vid.src = s.file; vid.load(); vid.classList.add('visible');
+    $('placeholder').classList.add('hidden');
+    $('video-wrap').style.aspectRatio = '16/9';
+    STATE.videoUrl = s.file;
+    STATE.jobId = 'session-' + String(i + 1).padStart(2, '0');
+    $('meta-tags').innerHTML =
+      `<span class="tag hi">${s.res}</span><span class="tag">5s · 16fps</span><span class="tag">wan 2.2 i2v</span>` +
+      `<span class="tag" style="max-width:480px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${s.prompt}">${s.prompt}</span>`;
+    $('meta-bar').classList.add('visible');
+    [...row.children].forEach((t, ti) => t.classList.toggle('on', ti === i));
+  }
+  SESSION.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.className = 'take-tile'; b.title = s.prompt;
+    b.setAttribute('aria-label', 'Load generation ' + (i + 1));
+    b.innerHTML = `<video muted preload="metadata" src="${s.file}#t=0.1"></video><span class="take-num">${String(i + 1).padStart(2, '0')}</span>`;
+    b.addEventListener('click', () => cueTake(i));
+    row.appendChild(b);
+  });
+  cueTake(0);
+})();
 
 // ── Init ──────────────────────────────────────────────────────────────────
 checkHealth();

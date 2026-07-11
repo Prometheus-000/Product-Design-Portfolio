@@ -498,7 +498,7 @@
 
       <div class="projector reveal">
         <div class="screenv" id="screenv">
-          <span class="takebadge" id="takebadge">Take 01 / 06</span>
+          <span class="takebadge" id="takebadge">Take 01 / 05</span>
           <span class="playhint" id="playhint">Play</span>
           <video id="reelv" preload="metadata" playsinline></video>
         </div>
@@ -509,7 +509,6 @@
           <button>03</button>
           <button>04</button>
           <button>05</button>
-          <button>06</button>
         </div>
       </div>
 
@@ -518,7 +517,7 @@
         <div class="beat-title">Greenlight — a console for directing stills into film.</div>
         <p class="beat-pov">Designed, built, and deployed solo: wan 2.2 on serverless GPUs, resolution derived from the source frame, prompts written like shot directions. The name is a film term. Old habits.</p>
         <div class="console-face" id="consoleFace" role="button" tabindex="0" aria-label="Open the Greenlight console" data-cap="<b>Greenlight, the production console.</b> Drop a frame, direct the shot. wan 2.2 &middot; PyTorch &middot; serverless GPU &mdash; the deployed instance sleeps until woken."></div>
-        <p class="consolecap">The production app, live in miniature — GPU asleep. Click to step inside.</p>
+        <p class="consolecap">The production app, live in miniature — the session that made the reel above, GPU asleep. Click to step inside.</p>
       </div>
     </div>
   </section>
@@ -749,7 +748,6 @@
     const TAKES=[
       {f:'take-03-i2v',p:'Slow cinematic push in toward his face &mdash; subtle breathing, slight blink, micro-movements.'},
       {f:'take-05-i2v',p:'Very slow push in toward the boy&rsquo;s face &mdash; subtle breathing, slight wind movement in hair.'},
-      {f:'take-06-t2v',p:'A 10-year-old boy in simple 1960s clothing, standing in a stone doorway in Nablus. No photograph existed &mdash; generated from the sentence alone.'},
       {f:'take-04-i2v',p:'Slow gentle push in &mdash; subtle breathing, slight wind in hair, gentle warmth in the rocky landscape.'},
       {f:'take-01-i2v',p:'Subtle cinematic motion &mdash; slow gentle push in toward his face, naturalistic micro-movements.'},
       {f:'take-02-i2v',p:'Very slow push in toward father&rsquo;s face &mdash; subtle breathing motion, slight blink, micro-movements.'}
@@ -758,7 +756,7 @@
       scr.classList.remove('playing');
       v.src='greenlight/film/'+T.f+'.mp4';
       v.addEventListener('loadeddata',function once(){v.currentTime=0.01;v.removeEventListener('loadeddata',once);});
-      badge.textContent='Take '+String(i+1).padStart(2,'0')+' / 06 · '+(T.f.endsWith('t2v')?'text-to-video':'image-to-video')+' · 5s';
+      badge.textContent='Take '+String(i+1).padStart(2,'0')+' / '+String(TAKES.length).padStart(2,'0')+' · image-to-video · 5s';
       dir.style.opacity=0;setTimeout(()=>{dir.innerHTML='<b>Direction</b>'+T.p;dir.style.opacity=1;},180);
       [...reel.children].forEach((b,bi)=>b.classList.toggle('on',bi===i));
       hint.textContent='Play';
