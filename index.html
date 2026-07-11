@@ -210,9 +210,9 @@
   .direction b{color:var(--ink-faint);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;display:block;margin-bottom:5px}
   .projector .picker{margin-top:22px}
   .glbeat{margin-top:110px}
-  .console-face{position:relative;margin-top:44px;width:100%;aspect-ratio:1440/900;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#0a0a0b;box-shadow:0 40px 90px -40px rgba(0,0,0,.9);cursor:pointer;transition:border-color .3s var(--ease)}
+  .console-face{position:relative;margin-top:44px;width:100%;aspect-ratio:1440/900;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#EFEDE8;box-shadow:0 40px 90px -40px rgba(0,0,0,.9);cursor:pointer;transition:border-color .3s var(--ease)}
   .console-face:hover{border-color:rgba(255,255,255,.22)}
-  .console-face iframe{position:absolute;top:0;left:0;border:0;pointer-events:none;transform-origin:0 0;background:#0a0a0b}
+  .console-face iframe{position:absolute;top:0;left:0;border:0;pointer-events:none;transform-origin:0 0;background:#EFEDE8}
   .consolecap{margin-top:18px;font-size:13px;color:var(--ink-faint);font-weight:500}
   @media(max-width:640px){.direction{min-height:64px}}
 </style>
@@ -799,6 +799,7 @@
         const ifr=document.createElement('iframe');
         ifr.setAttribute('sandbox','allow-scripts');
         ifr.title='Greenlight — image-to-video console';
+        ifr.style.background='#EFEDE8';
         ifr.srcdoc=html;
         limg.appendChild(ifr);
         lcap.innerHTML=cf.dataset.cap||'';

@@ -1,421 +1,399 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Greenlight</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #0a0a0b;
-  --surface: #111113;
-  --surface2: #18181c;
-  --surface3: #1f1f25;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
-  --accent: #c8f060;
-  --accent-dim: rgba(200,240,96,0.12);
-  --accent-border: rgba(200,240,96,0.3);
-  --text: #f0f0ee;
-  --text2: #888884;
-  --text3: #444442;
-  --red: #ff5f5f;
-  --mono: 'DM Mono', monospace;
-  --sans: 'Syne', sans-serif;
+  /* Braun suite — same device family as the radio (music/index.html):
+     white body on studio grey, warm ink, red spent only on the live datum
+     (power LED, sampling progress, the one loaded/playing item in a set). */
+  --bg: #EFEDE8;
+  --surface: #FFFFFF;
+  --surface2: #F7F3EA;
+  --surface3: #F1ECE2;
+  --border: rgba(39,28,18,0.09);
+  --border2: rgba(39,28,18,0.17);
+  --ink: #271C12;
+  --paper: #FBF8F2;
+  --text: #271C12;
+  --text2: rgba(39,28,18,0.56);
+  --text3: rgba(39,28,18,0.38);
+  --red: #E5482D;
+  --font: 'Instrument Sans', -apple-system, system-ui, sans-serif;
   --r: 10px;
   --r-lg: 16px;
+  --tnum: 'tnum' 1;
 }
 
 body {
   background: var(--bg); color: var(--text);
-  font-family: var(--sans);
+  font-family: var(--font);
   height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+  -webkit-font-smoothing: antialiased;
 }
+.num { font-variant-numeric: tabular-nums; font-feature-settings: var(--tnum); letter-spacing: 0.01em; }
 
 /* ── TOPBAR ── */
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 20px; height: 52px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface); flex-shrink: 0;
+  padding: 0 20px; height: 54px; flex-shrink: 0;
+  border-bottom: 1px solid var(--border); background: var(--surface);
 }
-.logo {
-  display: flex; align-items: center; gap: 10px;
-  font-weight: 700; font-size: 14px; letter-spacing: 0.08em;
-}
+.logo { display: flex; align-items: center; gap: 11px; }
 .logo-mark {
-  width: 26px; height: 26px;
-  background: var(--accent); border-radius: 6px;
+  width: 25px; height: 25px; background: var(--ink); border-radius: 7px;
   display: flex; align-items: center; justify-content: center;
 }
-.logo-mark svg { width: 14px; height: 14px; }
+.logo-mark svg { width: 13px; height: 13px; }
+.logo-word { font-weight: 700; font-size: 14px; letter-spacing: 0.14em; }
+.logo-sub {
+  font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text3); padding-left: 11px; margin-left: 3px;
+  border-left: 1px solid var(--border);
+}
 
+.status { display: flex; align-items: center; gap: 8px; }
 .status-pill {
-  display: flex; align-items: center; gap: 6px;
-  padding: 5px 12px; border-radius: 100px;
-  border: 1px solid var(--border2);
-  font-family: var(--mono); font-size: 11px; color: var(--text2);
-  background: var(--surface2); transition: all 0.3s;
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 13px; border-radius: 100px; border: 1px solid var(--border);
+  font-size: 11px; letter-spacing: 0.06em; color: var(--text2);
+  text-transform: uppercase;
 }
-.status-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--text3); transition: background 0.3s;
-}
-.status-pill.warming .status-dot {
-  background: #f0a040; animation: pulse 1s ease-in-out infinite;
-}
-.status-pill.ready .status-dot { background: var(--accent); }
-.status-pill.ready { border-color: var(--accent-border); color: var(--accent); }
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.7); }
-}
-
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); transition: background 0.3s; }
+.status-pill.warming .status-dot { background: var(--red); animation: pulse 1.1s ease-in-out infinite; }
+.status-pill.ready .status-dot { background: var(--red); }
+.status-pill.ready { color: var(--text); }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
 .wake-btn {
-  margin-left: 8px;
-  padding: 5px 12px; border-radius: 100px;
-  border: 1px solid var(--border2); background: var(--surface2);
-  color: var(--text); font-family: var(--mono); font-size: 11px;
-  cursor: pointer; transition: all 0.15s; display: none;
+  padding: 6px 13px; border-radius: 100px; border: 1px solid var(--border2);
+  background: var(--surface); color: var(--text); font-family: var(--font);
+  font-size: 11px; font-weight: 600; letter-spacing: 0.04em; cursor: pointer;
+  transition: 0.15s; display: none;
 }
 .wake-btn.visible { display: block; }
-.wake-btn:hover { border-color: var(--accent-border); color: var(--accent); }
+.wake-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
 /* ── LAYOUT ── */
 .main { flex: 1; display: flex; overflow: hidden; }
 .panel {
-  width: 340px; flex-shrink: 0;
-  background: var(--surface);
+  width: 366px; flex-shrink: 0; background: var(--surface);
   border-right: 1px solid var(--border);
   display: flex; flex-direction: column;
 }
 .panel-scroll { flex: 1; overflow-y: auto; }
 .canvas {
-  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 32px; background: var(--bg); overflow: hidden;
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  padding: 36px 40px; background: var(--bg); overflow-y: auto;
 }
 
-.ps {
-  padding: 18px 18px 16px;
-  border-bottom: 1px solid var(--border);
-}
-.ps:last-child { border-bottom: none; }
+.ps { padding: 20px; border-bottom: 1px solid var(--border); }
 .slabel {
-  font-family: var(--mono); font-size: 10px;
-  letter-spacing: 0.1em; color: var(--text3);
-  text-transform: uppercase; margin-bottom: 12px;
+  display: flex; align-items: baseline; justify-content: space-between;
+  font-size: 10px; letter-spacing: 0.14em; color: var(--text3);
+  text-transform: uppercase; margin-bottom: 14px;
 }
+.slabel .hint { letter-spacing: 0.02em; text-transform: none; }
 
-/* ── DROPZONE / PREVIEW ── */
+/* ── SOURCE ── */
 .dropzone {
   border: 1px dashed var(--border2); border-radius: var(--r);
-  padding: 24px 18px; text-align: center; cursor: pointer;
-  background: var(--surface2); transition: all 0.18s;
+  padding: 30px 18px; text-align: center; cursor: pointer;
+  background: var(--surface2); transition: 0.18s;
 }
-.dropzone:hover, .dropzone.over { border-color: var(--accent); background: var(--accent-dim); }
-.dropzone p {
-  font-size: 11px; color: var(--text2); font-family: var(--mono);
-  line-height: 1.5;
-}
-.dropzone span { color: var(--accent); }
+.dropzone:hover, .dropzone.over { border-color: var(--ink); background: var(--surface3); }
+.dropzone .dz-strong { font-size: 13px; font-weight: 600; color: var(--text); }
+.dropzone .dz-sub { font-size: 11px; color: var(--text3); margin-top: 5px; }
 
-.preview-wrap {
-  display: none; flex-direction: column; gap: 8px;
+.preview { display: none; }
+.preview.visible { display: block; }
+.preview-frame {
+  position: relative; border-radius: var(--r); overflow: hidden;
+  background: #000; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; min-height: 90px;
 }
-.preview-wrap.visible { display: flex; }
-.preview-img-box {
-  position: relative;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
-  min-height: 100px;
-}
-.preview-img-box img {
-  max-width: 100%;
-  max-height: 200px;
-  display: block;
-}
+.preview-frame img { width: 100%; display: block; }
 .preview-meta {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 0 2px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 9px; padding: 0 1px;
 }
-.preview-info {
-  font-family: var(--mono); font-size: 10px; color: var(--text3);
-}
-.preview-info b { color: var(--text2); font-weight: 500; }
-.preview-clear {
-  font-family: var(--mono); font-size: 10px;
-  color: var(--text3); background: none; border: none;
-  cursor: pointer; padding: 2px 4px;
+.preview-dims { font-size: 11px; color: var(--text3); }
+.preview-dims b { color: var(--text); font-weight: 600; }
+.preview-replace {
+  font-size: 11px; font-weight: 600; color: var(--text2);
+  background: none; border: none; cursor: pointer; padding: 3px 4px;
   transition: color 0.15s;
 }
-.preview-clear:hover { color: var(--red); }
+.preview-replace:hover { color: var(--ink); }
 
 /* ── PROMPT ── */
-textarea {
+.prompt {
   width: 100%; background: var(--surface2);
   border: 1px solid var(--border); border-radius: var(--r);
-  color: var(--text); font-family: var(--mono); font-size: 12px;
-  line-height: 1.7; padding: 10px 12px; resize: none; outline: none;
+  color: var(--text); font-family: var(--font); font-size: 13px;
+  line-height: 1.65; padding: 12px 13px; resize: none; outline: none;
   transition: border-color 0.15s;
 }
-textarea:focus { border-color: var(--border2); }
-textarea::placeholder { color: var(--text3); }
+.prompt:focus { border-color: var(--border2); background: var(--surface); }
+.prompt::placeholder { color: var(--text3); }
 
-/* ── RUNTIME (circular badge with dropdown) ── */
-.runtime-row {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 16px;
+/* ── MODEL ── */
+.model-wrap { position: relative; }
+.model-plate {
+  width: 100%; display: flex; align-items: center; gap: 11px;
+  padding: 12px 13px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: var(--r);
+  cursor: pointer; transition: 0.15s; text-align: left; font-family: var(--font);
 }
-.runtime-label-text {
-  font-family: var(--mono); font-size: 11px; color: var(--text2);
+.model-plate:hover { border-color: var(--border2); }
+.model-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); flex-shrink: 0; }
+.model-id { flex: 1; min-width: 0; }
+.model-id .mi-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.model-id .mi-sub { font-size: 10.5px; color: var(--text3); margin-top: 2px; letter-spacing: 0.02em; }
+.model-chev { color: var(--text3); transition: transform 0.2s; }
+.model-plate.open .model-chev { transform: rotate(180deg); }
+.model-menu {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 30;
+  background: var(--surface); border: 1px solid var(--border2); border-radius: var(--r);
+  padding: 5px; display: none; flex-direction: column; gap: 2px;
+  box-shadow: 0 2px 6px rgba(39,28,18,0.06), 0 16px 40px rgba(39,28,18,0.14);
 }
-.runtime-badge-wrap { position: relative; }
-.runtime-badge {
-  width: 38px; height: 38px; border-radius: 50%;
-  background: var(--surface2); border: 1px solid var(--border2);
-  color: var(--text); font-family: var(--mono); font-size: 13px;
-  font-weight: 500; cursor: pointer;
-  display: flex; align-items: baseline; justify-content: center;
-  gap: 1px;
-  transition: all 0.15s;
+.model-menu.open { display: flex; }
+.model-opt {
+  display: flex; align-items: center; gap: 10px; padding: 10px 11px;
+  border-radius: 7px; cursor: pointer; border: none; background: none;
+  font-family: var(--font); text-align: left; transition: background 0.12s;
 }
-.runtime-badge .num { font-size: 14px; }
-.runtime-badge .unit { font-size: 9px; color: var(--text3); }
-.runtime-badge:hover, .runtime-badge.open {
-  border-color: var(--accent-border); color: var(--accent);
+.model-opt:hover { background: var(--surface2); }
+.mo-dot { width: 6px; height: 6px; border-radius: 50%; border: 1px solid var(--border2); flex-shrink: 0; }
+.model-opt.loaded .mo-dot { background: var(--red); border-color: var(--red); }
+.mo-id { flex: 1; min-width: 0; }
+.mo-id .mo-title { font-size: 12.5px; font-weight: 600; color: var(--text); }
+.mo-id .mo-note { font-size: 10px; color: var(--text3); margin-top: 1px; }
+.mo-tag {
+  font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text3); border: 1px solid var(--border); border-radius: 5px;
+  padding: 2px 6px; flex-shrink: 0;
 }
-.runtime-badge:hover .unit, .runtime-badge.open .unit { color: var(--accent); opacity: 0.7; }
+.model-opt.loaded .mo-tag { color: var(--red); border-color: var(--accent-border, rgba(229,72,45,0.35)); }
 
-.runtime-menu {
-  position: absolute; top: 100%; right: 0; margin-top: 6px;
-  background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: var(--r); padding: 4px;
-  display: none; flex-direction: column; gap: 2px;
-  z-index: 20; min-width: 64px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-}
-.runtime-menu.open { display: flex; }
-.runtime-opt {
-  padding: 6px 12px; border-radius: 6px; border: none;
-  background: transparent; color: var(--text); cursor: pointer;
-  font-family: var(--mono); font-size: 12px; text-align: left;
-  transition: all 0.1s;
-}
-.runtime-opt:hover { background: var(--surface3); }
-.runtime-opt.active { color: var(--accent); }
-
-/* ── SLIDERS ── */
-.slider-row { margin-bottom: 14px; }
-.slider-row:last-child { margin-bottom: 0; }
-.slider-header {
-  display: flex; justify-content: space-between; margin-bottom: 6px;
-}
-.slider-label { font-size: 11px; color: var(--text2); font-family: var(--mono); }
-.slider-val { font-size: 11px; color: var(--accent); font-family: var(--mono); font-weight: 500; }
-input[type=range] {
-  -webkit-appearance: none; width: 100%; height: 2px;
-  background: var(--surface3); border-radius: 2px; outline: none; cursor: pointer;
-}
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 13px; height: 13px;
-  border-radius: 50%; background: var(--accent);
-  border: 2px solid var(--bg); cursor: pointer;
-}
-input[type=range]::-moz-range-thumb {
-  width: 13px; height: 13px; border-radius: 50%;
-  background: var(--accent); border: 2px solid var(--bg); cursor: pointer;
-  border-style: solid;
-}
-
-/* ── LORAS ── */
+/* ── ADAPTERS (LoRAs) ── */
+.adapters { margin-top: 18px; }
+.sublabel { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; }
 .lora-list { display: flex; flex-direction: column; gap: 6px; }
 .lora-item {
-  background: var(--surface2); border: 1px solid var(--border);
-  border-radius: var(--r); padding: 9px 10px;
-  display: flex; align-items: center; gap: 8px;
-  cursor: pointer; transition: all 0.15s;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 9px;
+  padding: 10px 11px; display: flex; align-items: center; gap: 10px;
+  cursor: pointer; transition: 0.15s;
 }
 .lora-item:hover { border-color: var(--border2); }
-.lora-item.active { border-color: var(--accent-border); background: var(--accent-dim); }
-.lora-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--surface3); flex-shrink: 0;
-  border: 1px solid var(--border2); transition: all 0.15s;
-}
-.lora-item.active .lora-dot { background: var(--accent); border-color: var(--accent); }
+.lora-item.active { border-color: var(--border2); background: var(--surface); }
+.lora-dot { width: 7px; height: 7px; border-radius: 50%; background: transparent; border: 1px solid var(--border2); flex-shrink: 0; transition: 0.15s; }
+.lora-item.active .lora-dot { background: var(--red); border-color: var(--red); }
 .lora-info { flex: 1; min-width: 0; }
-.lora-name {
-  font-size: 11px; font-family: var(--mono); color: var(--text);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.lora-meta {
-  font-size: 10px; color: var(--text3); font-family: var(--mono);
-  margin-top: 1px;
-}
+.lora-name { font-size: 12px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lora-meta { font-size: 10.5px; color: var(--text3); margin-top: 1px; }
+.lora-scale { font-size: 11px; color: var(--text2); flex-shrink: 0; }
 .lora-empty {
-  font-size: 11px; font-family: var(--mono); color: var(--text3);
-  text-align: center; padding: 12px 0;
+  font-size: 11.5px; color: var(--text3); text-align: center;
+  padding: 16px 12px; border: 1px dashed var(--border); border-radius: 9px; line-height: 1.5;
 }
 
-/* ── GENERATE BUTTON ── */
-.gen-bar {
-  padding: 14px 18px; border-top: 1px solid var(--border);
-  background: var(--surface); flex-shrink: 0;
+/* ── PARAMETERS ── */
+.param { margin-bottom: 20px; }
+.param:last-child { margin-bottom: 0; }
+.param-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 9px; }
+.param-name { font-size: 12px; font-weight: 600; color: var(--text2); }
+.param-val { font-size: 14px; font-weight: 600; color: var(--text); }
+.param-unit { font-size: 10px; color: var(--text3); letter-spacing: 0.02em; }
+
+/* Duration — segmented, no broken circle */
+.seg {
+  display: flex; gap: 3px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 9px; padding: 3px;
 }
+.seg button {
+  flex: 1; border: none; background: transparent; color: var(--text2);
+  font-family: var(--font); font-size: 12.5px; font-weight: 600;
+  font-variant-numeric: tabular-nums; padding: 8px 0; border-radius: 6px;
+  cursor: pointer; transition: 0.15s;
+}
+.seg button:hover:not(.on) { color: var(--text); }
+.seg button.on { background: var(--ink); color: var(--paper); }
+
+/* Precise sliders — ink fill, machined paper thumb */
+.range { -webkit-appearance: none; appearance: none; width: 100%; height: 20px; background: transparent; cursor: pointer; display: block; }
+.range::-webkit-slider-runnable-track {
+  height: 2px; border-radius: 2px;
+  background: linear-gradient(var(--ink), var(--ink)) 0/var(--fill,50%) 100% no-repeat, var(--surface3);
+}
+.range::-moz-range-track { height: 2px; border-radius: 2px; background: var(--surface3); }
+.range::-moz-range-progress { height: 2px; border-radius: 2px; background: var(--ink); }
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 13px; height: 13px; margin-top: -5.5px;
+  border-radius: 50%; background: var(--surface); border: 1.5px solid var(--ink);
+  box-shadow: 0 1px 3px rgba(39,28,18,0.28); cursor: pointer;
+}
+.range::-moz-range-thumb {
+  width: 13px; height: 13px; border-radius: 50%; background: var(--surface);
+  border: 1.5px solid var(--ink); box-shadow: 0 1px 3px rgba(39,28,18,0.28); cursor: pointer;
+}
+.range-scale { display: flex; justify-content: space-between; margin-top: 5px; font-size: 9.5px; color: var(--text3); }
+
+/* Seed */
+.seed-row { display: flex; gap: 8px; align-items: center; }
+.seed-field {
+  flex: 1; display: flex; align-items: center;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 9px 12px; font-size: 13px; color: var(--text);
+  font-variant-numeric: tabular-nums; letter-spacing: 0.03em;
+}
+.seed-field input {
+  flex: 1; border: none; outline: none; background: none; width: 100%;
+  font-family: var(--font); font-size: 13px; color: var(--text);
+  font-variant-numeric: tabular-nums; letter-spacing: 0.03em;
+}
+.icon-btn {
+  width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+  border: 1px solid var(--border); background: var(--surface2); color: var(--text2);
+  display: grid; place-items: center; cursor: pointer; transition: 0.15s;
+}
+.icon-btn:hover { border-color: var(--border2); color: var(--ink); }
+.icon-btn svg { width: 15px; height: 15px; transition: transform 0.4s cubic-bezier(.22,.61,.36,1); }
+.icon-btn.spin svg { transform: rotate(-360deg); }
+.icon-btn.on { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+/* ── GENERATE ── */
+.gen-bar { padding: 16px 20px; border-top: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
 .gen-btn {
-  width: 100%;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 12px 20px; border-radius: 10px; border: none;
-  background: var(--accent); color: #0a0a0b;
-  font-family: var(--sans); font-size: 13px; font-weight: 700;
-  cursor: pointer; transition: all 0.18s; letter-spacing: 0.02em;
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 9px;
+  padding: 14px 20px; border-radius: 11px; border: none;
+  background: var(--ink); color: var(--paper);
+  font-family: var(--font); font-size: 14px; font-weight: 600; letter-spacing: 0.01em;
+  cursor: pointer; transition: transform 0.12s, opacity 0.15s, box-shadow 0.2s;
+  box-shadow: 0 2px 6px rgba(39,28,18,0.14);
 }
-.gen-btn:hover:not(:disabled) {
-  background: #d8ff70; transform: translateY(-1px);
-}
-.gen-btn:disabled {
-  opacity: 0.5; cursor: not-allowed;
-  background: var(--surface2); color: var(--text3);
-}
+.gen-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(39,28,18,0.2); }
+.gen-btn:active:not(:disabled) { transform: translateY(0); }
+.gen-btn:disabled { background: var(--surface3); color: var(--text3); cursor: not-allowed; box-shadow: none; }
+.gen-btn svg { width: 15px; height: 15px; }
+.gen-cost { font-weight: 500; opacity: 0.6; font-variant-numeric: tabular-nums; }
 
 /* ── OUTPUT ── */
+.stage-wrap { width: 100%; max-width: 940px; }
 .output-card {
-  width: 100%; max-width: 960px;
-  background: var(--surface); border: 1px solid var(--border);
+  width: 100%; background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--r-lg); overflow: hidden;
-  display: flex; flex-direction: column;
+  box-shadow: 0 1px 3px rgba(39,28,18,0.05), 0 24px 60px -30px rgba(39,28,18,0.3);
 }
-
 .video-wrap {
-  background: #000; position: relative;
-  aspect-ratio: 16/9;
-  max-height: 70vh;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-  transition: aspect-ratio 0.3s ease;
+  background: #000; position: relative; aspect-ratio: 16/9; max-height: 62vh;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
 }
-.video-wrap video {
-  width: 100%; height: 100%; object-fit: contain; display: none;
-}
+.video-wrap video { width: 100%; height: 100%; object-fit: contain; display: none; }
 .video-wrap video.visible { display: block; }
 .placeholder {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 14px; padding: 40px;
-  background: linear-gradient(135deg, #0f0f12, #1a1a20);
-  text-align: center;
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 14px; padding: 40px;
+  background: linear-gradient(135deg, #F7F3EA, #EFEDE8); text-align: center;
 }
 .placeholder.hidden { display: none; }
 .placeholder-icon {
-  width: 48px; height: 48px;
-  background: var(--surface2); border: 1px solid var(--border);
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--text3);
+  width: 46px; height: 46px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text3);
 }
 .placeholder-title { font-size: 15px; font-weight: 600; color: var(--text); }
-.placeholder-sub {
-  font-size: 12px; color: var(--text2); font-family: var(--mono);
-  max-width: 320px; line-height: 1.6;
-}
-.spinner {
-  width: 28px; height: 28px; animation: spin 1.4s linear infinite;
-  color: var(--accent);
-}
+.placeholder-sub { font-size: 12px; color: var(--text2); max-width: 320px; line-height: 1.6; }
+.spinner { width: 26px; height: 26px; animation: spin 1.3s linear infinite; color: var(--red); }
 @keyframes spin { to { transform: rotate(360deg); } }
 .shimmer {
-  position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(90deg, transparent, rgba(200,240,96,0.04), transparent);
-  animation: shimmer 2.5s ease-in-out infinite;
-  display: none;
+  position: absolute; inset: 0; pointer-events: none; display: none;
+  background: linear-gradient(90deg, transparent, rgba(229,72,45,0.06), transparent);
+  animation: shimmer 2.4s ease-in-out infinite;
 }
 .shimmer.visible { display: block; }
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
+@keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
-/* ── SESSION — the console's own generation history (no empty states) ── */
-.session { width: 100%; max-width: 960px; margin-top: 18px; }
-.session-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
-.session-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text2); }
-.session-count { font-family: var(--mono); font-size: 11px; color: var(--text3); }
-.takes-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
-.take-tile { position: relative; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: #000; cursor: pointer; padding: 0; transition: border-color 0.2s; }
-.take-tile:hover { border-color: var(--accent-border); }
-.take-tile.on { border-color: var(--accent); }
-.take-tile video { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
-.take-num { position: absolute; top: 6px; left: 8px; font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.85); text-shadow: 0 1px 6px rgba(0,0,0,0.9); }
-
-.progress-wrap {
-  padding: 12px 18px; display: none;
-  border-top: 1px solid var(--border);
-}
+.progress-wrap { padding: 12px 18px; display: none; border-top: 1px solid var(--border); }
 .progress-wrap.visible { display: block; }
-.progress-header {
-  display: flex; justify-content: space-between; margin-bottom: 6px;
-}
-.progress-label, .progress-pct {
-  font-family: var(--mono); font-size: 10px; color: var(--text2);
-}
-.progress-pct { color: var(--accent); }
-.progress-bar {
-  height: 2px; background: var(--surface3);
-  border-radius: 2px; overflow: hidden;
-}
-.progress-fill {
-  height: 100%; background: var(--accent);
-  width: 0%; transition: width 0.4s ease; border-radius: 2px;
-}
+.progress-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.progress-label { font-size: 11px; color: var(--text2); letter-spacing: 0.04em; }
+.progress-pct { font-size: 11px; color: var(--red); font-weight: 600; font-variant-numeric: tabular-nums; }
+.progress-bar { height: 2px; background: var(--surface3); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--red); width: 0; transition: width 0.4s ease; }
 
 .meta-bar {
-  padding: 12px 18px; display: none;
-  align-items: center; justify-content: space-between;
-  border-top: 1px solid var(--border);
+  padding: 13px 18px; display: none; align-items: center; justify-content: space-between;
+  gap: 12px; border-top: 1px solid var(--border);
 }
 .meta-bar.visible { display: flex; }
-.meta-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.meta-tags { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; min-width: 0; }
 .tag {
-  font-family: var(--mono); font-size: 10px; padding: 3px 8px;
-  border-radius: 100px; background: var(--surface2); color: var(--text2);
-  border: 1px solid var(--border);
+  font-size: 10.5px; padding: 4px 9px; border-radius: 100px;
+  background: var(--surface2); color: var(--text2); border: 1px solid var(--border);
+  font-variant-numeric: tabular-nums; letter-spacing: 0.02em; white-space: nowrap;
 }
-.tag.hi {
-  color: var(--accent); border-color: var(--accent-border);
-  background: var(--accent-dim);
-}
+.tag.hi { color: var(--text); border-color: var(--border2); font-weight: 600; }
+.tag.prompt { max-width: 340px; overflow: hidden; text-overflow: ellipsis; font-style: italic; color: var(--text3); background: none; border: none; padding: 4px 0; }
 .dl-btn {
-  display: flex; align-items: center; gap: 5px;
-  padding: 6px 12px; border-radius: 7px;
-  border: 1px solid var(--border2); background: var(--surface2);
-  color: var(--text); font-family: var(--mono); font-size: 11px;
-  cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+  padding: 7px 13px; border-radius: 8px; border: 1px solid var(--border2);
+  background: var(--surface); color: var(--text); font-family: var(--font);
+  font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.15s;
 }
-.dl-btn:hover { border-color: var(--accent-border); color: var(--accent); }
+.dl-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .dl-btn svg { width: 12px; height: 12px; }
+
+/* ── SESSION ── */
+.session { width: 100%; max-width: 940px; margin-top: 26px; }
+.session-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+.session-title { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text3); }
+.session-count { font-size: 11px; color: var(--text3); font-variant-numeric: tabular-nums; }
+.takes-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.take-tile {
+  position: relative; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--border); background: #000; cursor: pointer; padding: 0;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.take-tile:hover { transform: translateY(-2px); border-color: var(--border2); }
+.take-tile.on { border-color: var(--ink); }
+.take-tile.on::after {
+  content: ""; position: absolute; top: 7px; right: 7px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--red);
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.25);
+}
+.take-tile video { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.take-num {
+  position: absolute; bottom: 6px; left: 8px; font-size: 10px; font-weight: 600;
+  color: rgba(255,255,255,0.9); text-shadow: 0 1px 6px rgba(0,0,0,0.9);
+  font-variant-numeric: tabular-nums;
+}
 
 /* ── TOAST ── */
 .toast {
-  position: fixed; bottom: 20px; right: 20px;
-  background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: var(--r); padding: 10px 16px;
-  font-family: var(--mono); font-size: 12px; color: var(--text);
-  opacity: 0; transform: translateY(8px);
-  transition: all 0.25s; pointer-events: none; z-index: 100;
+  position: fixed; bottom: 20px; right: 20px; background: var(--ink); color: var(--paper);
+  border-radius: var(--r); padding: 11px 16px; font-size: 12.5px;
+  opacity: 0; transform: translateY(8px); transition: 0.25s; pointer-events: none; z-index: 100;
+  box-shadow: 0 8px 30px rgba(39,28,18,0.25);
 }
 .toast.show { opacity: 1; transform: none; }
-.toast.error { border-color: var(--red); color: var(--red); }
+.toast.error { background: var(--red); }
 
-::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+@media (max-width: 720px) {
+  .main { flex-direction: column; }
+  .panel { width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+  .takes-row { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+}
 </style>
 </head>
 <body>
@@ -424,18 +402,17 @@ input[type=range]::-moz-range-thumb {
 <div class="topbar">
   <div class="logo">
     <div class="logo-mark">
-      <svg viewBox="0 0 16 16" fill="none">
-        <path d="M8 2L14 5.5V10.5L8 14L2 10.5V5.5L8 2Z" fill="#0a0a0b"/>
-      </svg>
+      <svg viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5.5V10.5L8 14L2 10.5V5.5L8 2Z" fill="#FBF8F2"/></svg>
     </div>
-    GREENLIGHT
+    <span class="logo-word">GREENLIGHT</span>
+    <span class="logo-sub">Image → Video</span>
   </div>
-  <div style="display: flex; align-items: center;">
+  <div class="status">
     <div class="status-pill" id="status-pill">
       <div class="status-dot"></div>
-      <span id="status-text">checking…</span>
+      <span id="status-text">connecting…</span>
     </div>
-    <button class="wake-btn" id="wake-btn">Wake up</button>
+    <button class="wake-btn" id="wake-btn">Wake GPU</button>
   </div>
 </div>
 
@@ -446,20 +423,18 @@ input[type=range]::-moz-range-thumb {
   <div class="panel">
     <div class="panel-scroll">
 
-      <!-- Image -->
+      <!-- Source -->
       <div class="ps">
-        <div class="slabel">Source Image</div>
+        <div class="slabel">Source frame</div>
         <div class="dropzone" id="dropzone">
-          <p style="margin-bottom:4px;"><span>Click or drop</span></p>
-          <p style="font-size:10px;color:var(--text3);">PNG · JPG · WEBP — any aspect</p>
+          <div class="dz-strong">Drop an image, or browse</div>
+          <div class="dz-sub">PNG · JPG · WEBP — any aspect</div>
         </div>
-        <div class="preview-wrap" id="preview-wrap">
-          <div class="preview-img-box">
-            <img id="preview-img" alt=""/>
-          </div>
+        <div class="preview" id="preview">
+          <div class="preview-frame"><img id="preview-img" alt="Source frame"></div>
           <div class="preview-meta">
-            <span class="preview-info" id="preview-info">—</span>
-            <button class="preview-clear" id="preview-clear">Clear</button>
+            <span class="preview-dims num" id="preview-dims">—</span>
+            <button class="preview-replace" id="preview-replace">Replace</button>
           </div>
         </div>
         <input type="file" id="img-file" accept="image/*" style="display:none;">
@@ -467,112 +442,135 @@ input[type=range]::-moz-range-thumb {
 
       <!-- Prompt -->
       <div class="ps">
-        <div class="slabel">Prompt</div>
-        <textarea id="prompt" rows="5" placeholder="Describe the motion and scene…"></textarea>
+        <div class="slabel">Direction <span class="hint num" id="prompt-count">0</span></div>
+        <textarea class="prompt" id="prompt" rows="4" placeholder="Describe the motion — camera move, what breathes, what drifts…"></textarea>
       </div>
 
-      <!-- Generation -->
+      <!-- Model + adapters -->
       <div class="ps">
-        <div class="slabel">Generation</div>
+        <div class="slabel">Model</div>
+        <div class="model-wrap">
+          <button class="model-plate" id="model-plate">
+            <span class="model-dot"></span>
+            <span class="model-id">
+              <span class="mi-title" id="model-title">Wan 2.2</span>
+              <span class="mi-sub" id="model-sub">I2V-A14B · 720p · loaded</span>
+            </span>
+            <svg class="model-chev" viewBox="0 0 16 16" width="14" height="14" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="model-menu" id="model-menu"></div>
+        </div>
 
-        <div class="runtime-row">
-          <span class="runtime-label-text">Runtime</span>
-          <div class="runtime-badge-wrap">
-            <button class="runtime-badge" id="runtime-badge">
-              <span class="num" id="runtime-num">5</span><span class="unit">s</span>
+        <div class="adapters">
+          <div class="sublabel">Adapters — LoRA</div>
+          <div class="lora-list" id="lora-list"></div>
+        </div>
+      </div>
+
+      <!-- Parameters -->
+      <div class="ps">
+        <div class="slabel">Parameters</div>
+
+        <div class="param">
+          <div class="param-head">
+            <span class="param-name">Duration</span>
+            <span class="param-unit">seconds</span>
+          </div>
+          <div class="seg" id="duration">
+            <button data-rt="5" class="on">5</button>
+            <button data-rt="6">6</button>
+            <button data-rt="7">7</button>
+            <button data-rt="8">8</button>
+            <button data-rt="9">9</button>
+          </div>
+        </div>
+
+        <div class="param">
+          <div class="param-head">
+            <span class="param-name">Sampling steps</span>
+            <span class="param-val num" id="steps-val">40</span>
+          </div>
+          <input type="range" class="range" id="steps" min="20" max="60" step="1" value="40">
+          <div class="range-scale"><span>20</span><span>60</span></div>
+        </div>
+
+        <div class="param">
+          <div class="param-head">
+            <span class="param-name">Guidance <span class="param-unit">cfg</span></span>
+            <span class="param-val num" id="cfg-val">5.0</span>
+          </div>
+          <input type="range" class="range" id="cfg" min="1" max="10" step="0.1" value="5">
+          <div class="range-scale"><span>1.0</span><span>10.0</span></div>
+        </div>
+
+        <div class="param">
+          <div class="param-head">
+            <span class="param-name">Seed</span>
+            <span class="param-unit" id="seed-state">random</span>
+          </div>
+          <div class="seed-row">
+            <div class="seed-field"><input id="seed" class="num" inputmode="numeric" value="48291"></div>
+            <button class="icon-btn" id="seed-rand" title="Randomize seed" aria-label="Randomize seed">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M13.5 6.2A5.4 5.4 0 0 0 3.2 6.5M2.5 9.8a5.4 5.4 0 0 0 10.3-.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.6 3.2v3h-3M2.4 12.8v-3h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
-            <div class="runtime-menu" id="runtime-menu">
-              <button class="runtime-opt active" data-rt="5">5s</button>
-              <button class="runtime-opt" data-rt="6">6s</button>
-              <button class="runtime-opt" data-rt="7">7s</button>
-              <button class="runtime-opt" data-rt="8">8s</button>
-              <button class="runtime-opt" data-rt="9">9s</button>
-            </div>
+            <button class="icon-btn" id="seed-lock" title="Lock seed" aria-label="Lock seed">
+              <svg viewBox="0 0 16 16" fill="none"><rect x="3.5" y="7" width="9" height="6.2" rx="1.4" stroke="currentColor" stroke-width="1.5"/><path d="M5.6 7V5.3a2.4 2.4 0 0 1 4.8 0V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
           </div>
-        </div>
-
-        <div class="slider-row">
-          <div class="slider-header">
-            <span class="slider-label">Steps</span>
-            <span class="slider-val" id="steps-val">40</span>
-          </div>
-          <input type="range" id="steps" min="20" max="60" step="1" value="40">
-        </div>
-
-        <div class="slider-row">
-          <div class="slider-header">
-            <span class="slider-label">CFG</span>
-            <span class="slider-val" id="cfg-val">5.0</span>
-          </div>
-          <input type="range" id="cfg" min="1" max="10" step="0.1" value="5">
-        </div>
-      </div>
-
-      <!-- LoRAs -->
-      <div class="ps">
-        <div class="slabel">LoRAs</div>
-        <div class="lora-list" id="lora-list">
-          <div class="lora-empty">No LoRAs found</div>
         </div>
       </div>
 
     </div>
 
     <div class="gen-bar">
-      <button class="gen-btn" id="gen-btn" disabled>
-        <svg viewBox="0 0 15 15" fill="none" width="14" height="14">
-          <path d="M7.5 1L9.5 6H15L10.5 9.5L12.5 14.5L7.5 11L2.5 14.5L4.5 9.5L0 6H5.5L7.5 1Z" fill="currentColor"/>
-        </svg>
-        Generate
+      <button class="gen-btn" id="gen-btn">
+        <svg viewBox="0 0 15 15" fill="none"><path d="M7.5 1L9.5 6H15L10.5 9.5L12.5 14.5L7.5 11L2.5 14.5L4.5 9.5L0 6H5.5L7.5 1Z" fill="currentColor"/></svg>
+        <span>Generate</span>
+        <span class="gen-cost" id="gen-cost">· 5s</span>
       </button>
     </div>
   </div>
 
   <!-- CANVAS -->
   <div class="canvas">
-    <div class="output-card">
-      <div class="video-wrap" id="video-wrap">
-        <div class="placeholder" id="placeholder">
-          <div class="placeholder-icon">
-            <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
-              <path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M10 9l5 3-5 3V9z" fill="currentColor"/>
-            </svg>
+    <div class="stage-wrap">
+      <div class="output-card">
+        <div class="video-wrap" id="video-wrap">
+          <div class="placeholder hidden" id="placeholder">
+            <div class="placeholder-icon">
+              <svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="1.5"/><path d="M10 9l5 3-5 3V9z" fill="currentColor"/></svg>
+            </div>
+            <div class="placeholder-title" id="placeholder-title">No video yet</div>
+            <div class="placeholder-sub" id="placeholder-sub">Load a frame, write a direction, generate.</div>
           </div>
-          <div class="placeholder-title" id="placeholder-title">No video yet</div>
-          <div class="placeholder-sub" id="placeholder-sub">
-            Upload an image, write a prompt, hit generate.
+          <div class="shimmer" id="shimmer"></div>
+          <video id="output-video" controls playsinline preload="metadata"></video>
+        </div>
+
+        <div class="progress-wrap" id="progress-wrap">
+          <div class="progress-header">
+            <span class="progress-label" id="progress-label">queued</span>
+            <span class="progress-pct num" id="progress-pct">0%</span>
           </div>
+          <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
         </div>
-        <div class="shimmer" id="shimmer"></div>
-        <video id="output-video" controls playsinline></video>
-      </div>
 
-      <div class="progress-wrap" id="progress-wrap">
-        <div class="progress-header">
-          <span class="progress-label" id="progress-label">queued</span>
-          <span class="progress-pct" id="progress-pct">0%</span>
+        <div class="meta-bar" id="meta-bar">
+          <div class="meta-tags" id="meta-tags"></div>
+          <button class="dl-btn" id="dl-btn">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M6 2v6m0 0L3 5m3 3l3-3M2 10h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Download
+          </button>
         </div>
-        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
       </div>
 
-      <div class="meta-bar" id="meta-bar">
-        <div class="meta-tags" id="meta-tags"></div>
-        <button class="dl-btn" id="dl-btn">
-          <svg viewBox="0 0 12 12" fill="none">
-            <path d="M6 2v6m0 0L3 5m3 3l3-3M2 10h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Download
-        </button>
+      <div class="session">
+        <div class="session-head">
+          <span class="session-title">Session — vintage portrait animation</span>
+          <span class="session-count num" id="session-count"></span>
+        </div>
+        <div class="takes-row" id="takes-row"></div>
       </div>
-    </div>
-
-    <div class="session">
-      <div class="session-head">
-        <span class="session-title">Session &mdash; vintage portrait animation</span>
-        <span class="session-count" id="session-count"></span>
-      </div>
-      <div class="takes-row" id="takes-row"></div>
     </div>
   </div>
 </div>
@@ -586,9 +584,12 @@ const STATE = {
   imageDataUrl: null,
   imageBase64: null,
   imageW: 0, imageH: 0,
+  outW: 0, outH: 0,
   runtime: 5,
+  seedLocked: false,
+  model: 'i2v-a14b',
   loras: [],
-  activeLoras: new Map(),  // name → scale
+  activeLoras: new Map(),   // name → scale
   jobId: null,
   pollInterval: null,
   videoUrl: null,
@@ -611,10 +612,9 @@ function setStatus(s) {
   const pill = $('status-pill');
   pill.className = 'status-pill ' + (s === 'unknown' ? '' : s);
   $('status-text').textContent = {
-    unknown: 'checking…', cold: 'cold', warming: 'warming', ready: 'ready',
+    unknown: 'connecting…', cold: 'asleep', warming: 'waking…', ready: 'ready',
   }[s] || s;
   $('wake-btn').classList.toggle('visible', s === 'cold');
-  updateGenButton();
 }
 
 async function checkHealth() {
@@ -633,42 +633,30 @@ async function wake() {
     setTimeout(() => setStatus('ready'), 2000);
   } catch {
     setStatus('cold');
-    toast('Could not reach API', true);
+    toast('GPU offline — deploy the Modal backend to generate.', true);
   }
 }
 $('wake-btn').addEventListener('click', wake);
 
 // ── Image upload ──────────────────────────────────────────────────────────
 $('dropzone').addEventListener('click', () => $('img-file').click());
-
-$('dropzone').addEventListener('dragover', e => {
-  e.preventDefault();
-  $('dropzone').classList.add('over');
-});
-$('dropzone').addEventListener('dragleave', () => {
-  $('dropzone').classList.remove('over');
-});
+$('preview-replace').addEventListener('click', () => $('img-file').click());
+$('dropzone').addEventListener('dragover', e => { e.preventDefault(); $('dropzone').classList.add('over'); });
+$('dropzone').addEventListener('dragleave', () => $('dropzone').classList.remove('over'));
 $('dropzone').addEventListener('drop', e => {
-  e.preventDefault();
-  $('dropzone').classList.remove('over');
+  e.preventDefault(); $('dropzone').classList.remove('over');
   if (e.dataTransfer.files[0]) handleImage(e.dataTransfer.files[0]);
 });
-$('img-file').addEventListener('change', e => {
-  if (e.target.files[0]) handleImage(e.target.files[0]);
-});
+$('img-file').addEventListener('change', e => { if (e.target.files[0]) handleImage(e.target.files[0]); });
 
 function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
 function aspectLabel(w, h) {
-  const g = gcd(w, h);
-  const arW = w / g, arH = h / g;
-  // For weird ratios that don't simplify nicely, show decimal
-  if (arW > 30 || arH > 30) {
-    return (w / h).toFixed(2) + ':1';
-  }
+  const g = gcd(w, h), arW = w / g, arH = h / g;
+  if (arW > 30 || arH > 30) return (w / h).toFixed(2) + ':1';
   return `${arW}:${arH}`;
 }
 
-// Compute the dimensions the backend will use (mirrors model-card formula)
+// Dimensions the backend will use (mirrors the model-card formula)
 const MAX_AREA = 720 * 1280;
 const MOD_VALUE = 16;  // vae_scale_factor_spatial=8 * patch_size[1]=2
 function projectedDimensions(w, h) {
@@ -678,79 +666,92 @@ function projectedDimensions(w, h) {
   return [ow, oh];
 }
 
+function showSource(dataUrl, w, h, outW, outH) {
+  STATE.imageDataUrl = dataUrl;
+  STATE.imageW = w; STATE.imageH = h;
+  STATE.outW = outW; STATE.outH = outH;
+  $('preview-img').src = dataUrl;
+  const ar = aspectLabel(w, h);
+  $('preview-dims').innerHTML =
+    (w === outW && h === outH)
+      ? `<b>${w} × ${h}</b> &nbsp;·&nbsp; ${ar}`
+      : `<b>${w} × ${h}</b> &nbsp;·&nbsp; ${ar} &nbsp;→&nbsp; <b>${outW} × ${outH}</b>`;
+  $('video-wrap').style.aspectRatio = `${outW}/${outH}`;
+  $('dropzone').style.display = 'none';
+  $('preview').classList.add('visible');
+  updateGenButton();
+}
+
 function handleImage(file) {
   const reader = new FileReader();
   reader.onload = ev => {
-    STATE.imageDataUrl = ev.target.result;
     STATE.imageBase64 = ev.target.result.split(',')[1];
-
     const img = new Image();
     img.onload = () => {
-      STATE.imageW = img.naturalWidth;
-      STATE.imageH = img.naturalHeight;
-
-      $('preview-img').src = ev.target.result;
-      const ar = aspectLabel(img.naturalWidth, img.naturalHeight);
       const [pw, ph] = projectedDimensions(img.naturalWidth, img.naturalHeight);
-      $('preview-info').innerHTML =
-        `<b>${img.naturalWidth} × ${img.naturalHeight}</b> &nbsp;·&nbsp; ${ar} &nbsp;→&nbsp; <b>${pw} × ${ph}</b>`;
-
-      // Update output preview to match aspect
-      $('video-wrap').style.aspectRatio = `${pw}/${ph}`;
-
-      $('dropzone').style.display = 'none';
-      $('preview-wrap').classList.add('visible');
-      updateGenButton();
+      showSource(ev.target.result, img.naturalWidth, img.naturalHeight, pw, ph);
     };
     img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 }
 
-$('preview-clear').addEventListener('click', () => {
-  STATE.imageDataUrl = null;
-  STATE.imageBase64 = null;
-  STATE.imageW = 0;
-  STATE.imageH = 0;
-  $('preview-wrap').classList.remove('visible');
-  $('dropzone').style.display = 'block';
-  $('video-wrap').style.aspectRatio = '16/9';
-  $('img-file').value = '';
-  updateGenButton();
-});
-
-// ── Runtime dropdown ──────────────────────────────────────────────────────
-$('runtime-badge').addEventListener('click', e => {
-  e.stopPropagation();
-  $('runtime-menu').classList.toggle('open');
-  $('runtime-badge').classList.toggle('open');
-});
-
-document.querySelectorAll('.runtime-opt').forEach(opt => {
-  opt.addEventListener('click', () => {
-    STATE.runtime = parseInt(opt.dataset.rt);
-    $('runtime-num').textContent = STATE.runtime;
-    document.querySelectorAll('.runtime-opt').forEach(o => o.classList.remove('active'));
-    opt.classList.add('active');
-    $('runtime-menu').classList.remove('open');
-    $('runtime-badge').classList.remove('open');
+// ── Model selector ────────────────────────────────────────────────────────
+const MODELS = [
+  { id: 'i2v-a14b', title: 'Wan 2.2', sub: 'I2V-A14B · 720p', note: 'Mixture-of-experts · highest fidelity', tag: 'loaded' },
+  { id: 'ti2v-5b',  title: 'Wan 2.2', sub: 'TI2V-5B · 720p',  note: 'Single model · ~4× faster', tag: 'fast' },
+  { id: 'i2v-q8',   title: 'Wan 2.2', sub: 'I2V-A14B · GGUF Q8', note: 'Quantized · runs in 12 GB VRAM', tag: 'low VRAM' },
+];
+function renderModelMenu() {
+  $('model-menu').innerHTML = MODELS.map(m => `
+    <button class="model-opt${m.id === STATE.model ? ' loaded' : ''}" data-id="${m.id}">
+      <span class="mo-dot"></span>
+      <span class="mo-id"><span class="mo-title">${m.title} ${m.sub.split(' · ')[0]}</span><span class="mo-note">${m.note}</span></span>
+      <span class="mo-tag">${m.id === STATE.model ? 'loaded' : m.tag}</span>
+    </button>`).join('');
+  $('model-menu').querySelectorAll('.model-opt').forEach(el => {
+    el.addEventListener('click', () => {
+      STATE.model = el.dataset.id;
+      const m = MODELS.find(x => x.id === STATE.model);
+      $('model-title').textContent = m.title;
+      $('model-sub').textContent = m.sub + ' · loaded';
+      closeModelMenu(); renderModelMenu();
+    });
   });
+}
+function closeModelMenu() { $('model-menu').classList.remove('open'); $('model-plate').classList.remove('open'); }
+$('model-plate').addEventListener('click', e => {
+  e.stopPropagation();
+  $('model-menu').classList.toggle('open'); $('model-plate').classList.toggle('open');
+});
+document.addEventListener('click', e => { if (!e.target.closest('.model-wrap')) closeModelMenu(); });
+
+// ── Duration (segmented) ──────────────────────────────────────────────────
+$('duration').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  STATE.runtime = parseInt(b.dataset.rt);
+  [...$('duration').children].forEach(x => x.classList.toggle('on', x === b));
+  $('gen-cost').textContent = '· ' + STATE.runtime + 's';
 });
 
-// Close runtime dropdown on outside click
-document.addEventListener('click', e => {
-  if (!e.target.closest('.runtime-badge-wrap')) {
-    $('runtime-menu').classList.remove('open');
-    $('runtime-badge').classList.remove('open');
-  }
-});
+// ── Sliders (ink fill) ────────────────────────────────────────────────────
+function paintRange(el) {
+  const pct = (el.value - el.min) / (el.max - el.min) * 100;
+  el.style.setProperty('--fill', pct + '%');
+}
+$('steps').addEventListener('input', e => { $('steps-val').textContent = e.target.value; paintRange(e.target); });
+$('cfg').addEventListener('input', e => { $('cfg-val').textContent = parseFloat(e.target.value).toFixed(1); paintRange(e.target); });
 
-// ── Sliders ───────────────────────────────────────────────────────────────
-$('steps').addEventListener('input', e => {
-  $('steps-val').textContent = e.target.value;
+// ── Seed ──────────────────────────────────────────────────────────────────
+$('seed-rand').addEventListener('click', () => {
+  if (STATE.seedLocked) return;
+  $('seed').value = Math.floor(Math.random() * 1e6);
+  const b = $('seed-rand'); b.classList.add('spin'); setTimeout(() => b.classList.remove('spin'), 400);
 });
-$('cfg').addEventListener('input', e => {
-  $('cfg-val').textContent = parseFloat(e.target.value).toFixed(1);
+$('seed-lock').addEventListener('click', () => {
+  STATE.seedLocked = !STATE.seedLocked;
+  $('seed-lock').classList.toggle('on', STATE.seedLocked);
+  $('seed-state').textContent = STATE.seedLocked ? 'locked' : 'random';
 });
 
 // ── LoRAs ─────────────────────────────────────────────────────────────────
@@ -758,15 +759,14 @@ async function loadLoras() {
   try {
     const r = await fetch(API + '/loras');
     if (!r.ok) return;
-    STATE.loras = await r.json();
-    renderLoras();
+    const loras = await r.json();
+    if (Array.isArray(loras) && loras.length) { STATE.loras = loras; renderLoras(); }
   } catch {}
 }
-
 function renderLoras() {
   const list = $('lora-list');
   if (!STATE.loras.length) {
-    list.innerHTML = '<div class="lora-empty">No LoRAs found.<br/>Upload via Modal CLI.</div>';
+    list.innerHTML = '<div class="lora-empty">No adapters loaded.<br/>Drop a <b>.safetensors</b> LoRA to steer style.</div>';
     return;
   }
   list.innerHTML = STATE.loras.map(l => `
@@ -776,8 +776,8 @@ function renderLoras() {
         <div class="lora-name">${l.name}</div>
         <div class="lora-meta">${l.size_mb} MB</div>
       </div>
-    </div>
-  `).join('');
+      ${STATE.activeLoras.has(l.name) ? '<span class="lora-scale num">1.0</span>' : ''}
+    </div>`).join('');
   list.querySelectorAll('.lora-item').forEach(el => {
     el.addEventListener('click', () => {
       const name = el.dataset.name;
@@ -790,36 +790,41 @@ function renderLoras() {
 
 // ── Generate button state ─────────────────────────────────────────────────
 function updateGenButton() {
-  const ready = STATE.containerStatus === 'ready';
-  const hasImage = !!STATE.imageBase64;
+  const hasImage = !!(STATE.imageBase64 || STATE.imageDataUrl);
   const hasPrompt = $('prompt').value.trim().length > 0;
-  $('gen-btn').disabled = !(ready && hasImage && hasPrompt);
+  $('gen-btn').disabled = !(hasImage && hasPrompt);
 }
-$('prompt').addEventListener('input', updateGenButton);
+$('prompt').addEventListener('input', () => {
+  $('prompt-count').textContent = $('prompt').value.trim().length;
+  updateGenButton();
+});
 
 // ── Generate ──────────────────────────────────────────────────────────────
 $('gen-btn').addEventListener('click', generate);
 
 async function generate() {
   if ($('gen-btn').disabled) return;
+  if (STATE.containerStatus !== 'ready') {
+    wake();
+    toast('Waking the GPU — cold start takes ~30s, then press Generate.');
+    return;
+  }
+  if (!STATE.imageBase64) { toast('Re-load the source frame to generate.', true); return; }
 
-  const loras = [...STATE.activeLoras.entries()]
-    .map(([name, scale]) => ({ name, scale }));
-
+  const loras = [...STATE.activeLoras.entries()].map(([name, scale]) => ({ name, scale }));
   const payload = {
     image_b64: STATE.imageBase64,
     prompt: $('prompt').value.trim(),
     runtime: STATE.runtime,
     steps: parseInt($('steps').value),
     cfg: parseFloat($('cfg').value),
+    seed: parseInt($('seed').value) || 0,
+    model: STATE.model,
     loras,
   };
 
-  // UI → loading
   $('gen-btn').disabled = true;
   $('placeholder').classList.add('hidden');
-  $('placeholder-title').textContent = 'Generating';
-  $('placeholder-sub').textContent = 'Sampling frames…';
   $('shimmer').classList.add('visible');
   $('progress-wrap').classList.add('visible');
   $('progress-fill').style.width = '0%';
@@ -831,9 +836,7 @@ async function generate() {
 
   try {
     const r = await fetch(API + '/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
     });
     if (!r.ok) throw new Error(await r.text());
     const { job_id } = await r.json();
@@ -845,37 +848,18 @@ async function generate() {
 }
 
 function pollJob(jobId, payload) {
-  const labels = {
-    queued: 'queued',
-    loading: 'loading model…',
-    generating: 'sampling',
-    encoding: 'encoding video…',
-    complete: 'done',
-    error: 'error',
-  };
-
+  const labels = { queued: 'queued', loading: 'loading model…', generating: 'sampling', encoding: 'encoding video…', complete: 'done', error: 'error' };
   STATE.pollInterval = setInterval(async () => {
     try {
       const r = await fetch(API + `/job/${jobId}`);
       const job = await r.json();
-
       $('progress-fill').style.width = (job.progress || 0) + '%';
       $('progress-pct').textContent = (job.progress || 0) + '%';
       $('progress-label').textContent =
-        job.status === 'generating' && job.step
-          ? `sampling · step ${job.step} / ${job.total_steps}`
-          : (labels[job.status] || job.status);
-
-      if (job.status === 'complete') {
-        clearInterval(STATE.pollInterval);
-        showVideo(jobId, job, payload);
-      } else if (job.status === 'error') {
-        clearInterval(STATE.pollInterval);
-        onGenerationError(job.error || 'Unknown error');
-      }
-    } catch {
-      // Keep polling — transient network errors are fine
-    }
+        job.status === 'generating' && job.step ? `sampling · step ${job.step} / ${job.total_steps}` : (labels[job.status] || job.status);
+      if (job.status === 'complete') { clearInterval(STATE.pollInterval); showVideo(jobId, job, payload); }
+      else if (job.status === 'error') { clearInterval(STATE.pollInterval); onGenerationError(job.error || 'Unknown error'); }
+    } catch {}
   }, 1500);
 }
 
@@ -883,18 +867,10 @@ function showVideo(jobId, job, payload) {
   const url = API + `/video/${jobId}`;
   STATE.videoUrl = url;
   const vid = $('output-video');
-  vid.src = url;
-  vid.load();
-  vid.classList.add('visible');
-
+  vid.src = url; vid.load(); vid.classList.add('visible');
   $('shimmer').classList.remove('visible');
   $('progress-wrap').classList.remove('visible');
-
-  // Match output container aspect to the actual generated video
-  if (job.width && job.height) {
-    $('video-wrap').style.aspectRatio = `${job.width}/${job.height}`;
-  }
-
+  if (job.width && job.height) $('video-wrap').style.aspectRatio = `${job.width}/${job.height}`;
   const tags = [];
   if (job.width && job.height) tags.push({ label: `${job.width}×${job.height}`, hi: true });
   tags.push({ label: `${STATE.runtime}s · ${config_FPS()}fps` });
@@ -902,12 +878,8 @@ function showVideo(jobId, job, payload) {
   tags.push({ label: `cfg ${payload.cfg.toFixed(1)}` });
   if (payload.loras.length) tags.push({ label: `${payload.loras.length} LoRA` });
   if (job.elapsed) tags.push({ label: `${job.elapsed}s` });
-
-  $('meta-tags').innerHTML = tags
-    .map(t => `<span class="tag${t.hi ? ' hi' : ''}">${t.label}</span>`)
-    .join('');
+  $('meta-tags').innerHTML = tags.map(t => `<span class="tag${t.hi ? ' hi' : ''}">${t.label}</span>`).join('');
   $('meta-bar').classList.add('visible');
-
   updateGenButton();
 }
 
@@ -918,7 +890,7 @@ function onGenerationError(msg) {
   $('progress-wrap').classList.remove('visible');
   $('placeholder').classList.remove('hidden');
   $('placeholder-title').textContent = 'No video yet';
-  $('placeholder-sub').textContent = 'Upload an image, write a prompt, hit generate.';
+  $('placeholder-sub').textContent = 'Load a frame, write a direction, generate.';
   toast(`Error: ${msg}`, true);
   updateGenButton();
 }
@@ -927,50 +899,81 @@ function onGenerationError(msg) {
 $('dl-btn').addEventListener('click', () => {
   if (!STATE.videoUrl) return;
   const a = document.createElement('a');
-  a.href = STATE.videoUrl;
-  a.download = `greenlight_${STATE.jobId}.mp4`;
-  a.click();
+  a.href = STATE.videoUrl; a.download = `greenlight_${STATE.jobId}.mp4`; a.click();
 });
 
-// ── Session gallery — this console's real generation history, preloaded.
-//    No empty state: the stage opens on the last take. Root-relative paths
-//    resolve identically standalone and inside the portfolio's srcdoc embed.
+// ── Session — the console opens on real work, never an empty state.
+//    Each take recalls its full recipe (source frame, direction, params) into
+//    the panel, the way a pro tool recalls a past generation. Root-relative
+//    paths resolve identically standalone and inside the portfolio's embed. ──
 const SESSION = [
-  { file: '/greenlight/film/take-03-i2v.mp4', res: '1920×1080', prompt: 'Slow cinematic push in toward his face — subtle breathing, slight blink, micro-movements.' },
-  { file: '/greenlight/film/take-05-i2v.mp4', res: '1920×1080', prompt: 'Very slow push in toward the boy’s face — subtle breathing, slight wind movement in hair.' },
-  { file: '/greenlight/film/take-04-i2v.mp4', res: '1280×720', prompt: 'Slow gentle push in — subtle breathing, slight wind in hair, gentle warmth in the rocky landscape.' },
-  { file: '/greenlight/film/take-01-i2v.mp4', res: '1280×720', prompt: 'Subtle cinematic motion — slow gentle push in toward his face, naturalistic micro-movements.' },
-  { file: '/greenlight/film/take-02-i2v.mp4', res: '1280×720', prompt: 'Very slow push in toward father’s face — subtle breathing motion, slight blink, micro-movements.' }
+  { id:'03', still:'/greenlight/stills/src-03.jpg', file:'/greenlight/film/take-03-i2v.mp4', w:1920, h:1080, steps:42, cfg:5.0, seed:48291,
+    prompt:'Slow cinematic push in toward his face — subtle breathing, slight blink, micro-movements.' },
+  { id:'05', still:'/greenlight/stills/src-05.jpg', file:'/greenlight/film/take-05-i2v.mp4', w:1920, h:1080, steps:40, cfg:5.5, seed:10574,
+    prompt:'Very slow push in toward the boy’s face — subtle breathing, slight wind movement in hair.' },
+  { id:'04', still:'/greenlight/stills/src-04.jpg', file:'/greenlight/film/take-04-i2v.mp4', w:1280, h:720, steps:36, cfg:4.5, seed:22910,
+    prompt:'Slow gentle push in — subtle breathing, slight wind in hair, gentle warmth in the rocky landscape.' },
+  { id:'01', still:'/greenlight/stills/src-01.jpg', file:'/greenlight/film/take-01-i2v.mp4', w:1280, h:720, steps:44, cfg:5.0, seed:71830,
+    prompt:'Subtle cinematic motion — slow gentle push in toward his face, naturalistic micro-movements.' },
+  { id:'02', still:'/greenlight/stills/src-02.jpg', file:'/greenlight/film/take-02-i2v.mp4', w:1280, h:720, steps:38, cfg:5.2, seed:55127,
+    prompt:'Very slow push in toward father’s face — subtle breathing motion, slight blink, micro-movements.' },
 ];
+
 (function initSession() {
   const row = $('takes-row'); if (!row) return;
   $('session-count').textContent = SESSION.length + ' generations';
-  function cueTake(i) {
+
+  function recall(i) {
     const s = SESSION[i];
+    // Left panel — the recipe that made this take
+    showSource(s.still, s.w, s.h, s.w, s.h);
+    STATE.imageBase64 = null;               // re-encoded lazily below for real backends
+    fetch(s.still).then(r => r.blob()).then(b => {
+      const fr = new FileReader();
+      fr.onload = () => { STATE.imageBase64 = fr.result.split(',')[1]; };
+      fr.readAsDataURL(b);
+    }).catch(() => {});
+    $('prompt').value = s.prompt;
+    $('prompt-count').textContent = s.prompt.length;
+    STATE.runtime = 5;
+    [...$('duration').children].forEach(x => x.classList.toggle('on', x.dataset.rt === '5'));
+    $('gen-cost').textContent = '· 5s';
+    $('steps').value = s.steps; $('steps-val').textContent = s.steps; paintRange($('steps'));
+    $('cfg').value = s.cfg; $('cfg-val').textContent = s.cfg.toFixed(1); paintRange($('cfg'));
+    $('seed').value = s.seed;
+    // Stage — the resulting take, paused on its first frame (no autoplay)
     const vid = $('output-video');
     vid.src = s.file; vid.load(); vid.classList.add('visible');
     $('placeholder').classList.add('hidden');
-    $('video-wrap').style.aspectRatio = '16/9';
-    STATE.videoUrl = s.file;
-    STATE.jobId = 'session-' + String(i + 1).padStart(2, '0');
+    $('video-wrap').style.aspectRatio = `${s.w}/${s.h}`;
+    STATE.videoUrl = s.file; STATE.jobId = 'take-' + s.id;
     $('meta-tags').innerHTML =
-      `<span class="tag hi">${s.res}</span><span class="tag">5s · 16fps</span><span class="tag">wan 2.2 i2v</span>` +
-      `<span class="tag" style="max-width:480px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${s.prompt}">${s.prompt}</span>`;
+      `<span class="tag hi num">${s.w}×${s.h}</span>` +
+      `<span class="tag num">5s · 16fps</span>` +
+      `<span class="tag num">${s.steps} steps</span>` +
+      `<span class="tag num">cfg ${s.cfg.toFixed(1)}</span>` +
+      `<span class="tag prompt" title="${s.prompt}">${s.prompt}</span>`;
     $('meta-bar').classList.add('visible');
     [...row.children].forEach((t, ti) => t.classList.toggle('on', ti === i));
+    updateGenButton();
   }
+
   SESSION.forEach((s, i) => {
     const b = document.createElement('button');
     b.className = 'take-tile'; b.title = s.prompt;
-    b.setAttribute('aria-label', 'Load generation ' + (i + 1));
-    b.innerHTML = `<video muted preload="metadata" src="${s.file}#t=0.1"></video><span class="take-num">${String(i + 1).padStart(2, '0')}</span>`;
-    b.addEventListener('click', () => cueTake(i));
+    b.setAttribute('aria-label', 'Recall generation ' + s.id);
+    b.innerHTML = `<video muted preload="metadata" src="${s.file}#t=0.1"></video><span class="take-num">${s.id}</span>`;
+    b.addEventListener('click', () => recall(i));
     row.appendChild(b);
   });
-  cueTake(0);
+  recall(0);
 })();
 
 // ── Init ──────────────────────────────────────────────────────────────────
+renderModelMenu();
+renderLoras();
+paintRange($('steps'));
+paintRange($('cfg'));
 checkHealth();
 setInterval(checkHealth, 30000);
 loadLoras();
