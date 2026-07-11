@@ -49,27 +49,44 @@
   .h2 .lt{font-weight:400;color:var(--ink-soft)}
   .pov{font-size:16px;color:var(--ink-soft);font-weight:500;max-width:44ch;line-height:1.55}
 
-  /* ===== CASE 1 — lens picker ===== */
-  .lensview{margin-top:48px;aspect-ratio:16/9;width:100%;background:#0B0B0D;border:1px solid var(--line);border-radius:16px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-  .lensview svg{width:88%;height:78%}
-  .lensview .vlabel{position:absolute;top:20px;left:24px;font-size:13px;font-weight:700;color:var(--ink-soft);letter-spacing:.02em}
-  .lenscap{text-align:center;font-size:15px;color:var(--ink-soft);font-weight:500;margin-top:26px;min-height:22px;transition:opacity .3s}
-  .picker{display:flex;gap:2px;justify-content:center;flex-wrap:wrap;margin-top:22px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:100px;padding:5px;width:fit-content;margin-inline:auto;max-width:100%}
-  .picker button{font-family:inherit;font-size:13px;font-weight:600;color:var(--ink-soft);background:transparent;border:0;border-radius:100px;padding:9px 17px;cursor:pointer;transition:.2s;white-space:nowrap}
+  /* ===== CASE 1 — lens lead-in (understated strip that sets up the drill below) ===== */
+  .beat.lens-lead{margin-top:78px;padding-top:78px;border-top:1px solid var(--line)}
+  .lens-lead .beat-title{font-size:clamp(19px,2.3vw,25px)}
+  .lensstrip{margin-top:26px}
+  .lenshead{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+  .lensview{aspect-ratio:1000/210;width:100%;background:#0A0A0F;border:1px solid var(--line);border-radius:10px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .lensview svg{width:94%;height:84%;display:block}
+  .lensview .vlabel{position:absolute;top:14px;left:20px;font-family:ui-monospace,SF Mono,Menlo,monospace;font-size:11px;font-weight:500;color:var(--ink-faint);letter-spacing:.02em}
+  .lenscap{font-size:13px;color:var(--ink-soft);font-weight:500;margin-top:14px;min-height:18px;transition:opacity .3s;line-height:1.5}
+  .picker{display:inline-flex;gap:2px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:100px;padding:4px;max-width:100%;flex-wrap:wrap}
+  .picker button{font-family:inherit;font-size:12px;font-weight:600;color:var(--ink-faint);background:transparent;border:0;border-radius:100px;padding:7px 14px;cursor:pointer;transition:.2s;white-space:nowrap}
+  .picker button:hover{color:var(--ink-soft)}
   .picker button.on{background:var(--ink);color:#0B0B0D}
 
-  /* ===== CASE 2 — drag to compress ===== */
-  .compress{margin-top:48px}
-  .durwrap{text-align:center;font-weight:700;letter-spacing:-.01em;font-size:clamp(28px,4.6vw,50px);line-height:1;margin-bottom:8px}
+  /* ===== CASE 2 — compress: a precise instrument framed by negative space ===== */
+  .compress{margin-top:96px;padding:16px 0 40px}
+  .durwrap{text-align:center;font-weight:700;letter-spacing:-.02em;font-size:clamp(30px,5vw,52px);line-height:1;margin-bottom:12px}
   .durwrap #durNow{color:var(--ink)}
-  .dursub{text-align:center;font-size:13px;color:var(--ink-faint);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:40px;transition:opacity .3s}
-  .timeline{position:relative;height:78px;margin:0 auto;max-width:880px}
-  .track{position:absolute;top:30px;left:0;height:18px;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:100px;transition:width .12s linear}
-  .stage{position:absolute;top:30px;height:18px;border-radius:100px;background:rgba(246,245,242,.18);opacity:1;display:flex;align-items:center;justify-content:center;font-size:0;transition:left .12s linear,opacity .25s,width .12s linear}
-  .stagelab{position:absolute;top:-2px;font-size:11px;color:var(--ink-soft);font-weight:600;white-space:nowrap;transform:translateX(-50%);transition:left .12s linear,opacity .25s}
-  .slider{-webkit-appearance:none;appearance:none;width:100%;max-width:880px;display:block;margin:36px auto 0;height:4px;border-radius:100px;background:rgba(255,255,255,.12);outline:none}
-  .slider::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:var(--ink);border:3px solid var(--accent);cursor:grab;box-shadow:0 6px 20px -6px rgba(0,0,0,.7)}
-  .slider::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:var(--ink);border:3px solid var(--accent);cursor:grab}
+  .dursub{text-align:center;font-size:12px;color:var(--ink-faint);font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:76px;transition:opacity .3s}
+  .timeline{position:relative;height:60px;margin:0 auto;max-width:640px}
+  .track{position:absolute;top:30px;left:0;height:8px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:100px;transition:width .12s linear}
+  .stage{position:absolute;top:30px;height:8px;border-radius:100px;background:rgba(246,245,242,.16);opacity:1;transition:left .12s linear,opacity .25s,width .12s linear}
+  .stagelab{position:absolute;top:2px;font-size:10px;color:var(--ink-soft);font-weight:600;letter-spacing:.01em;white-space:nowrap;transform:translateX(-50%);transition:left .12s linear,opacity .25s}
+  /* the fader — a machined cap riding a graduated rail; no disc, no ring */
+  .fader{position:relative;max-width:640px;margin:56px auto 0;height:44px}
+  .fader .rail{position:absolute;left:0;right:0;top:50%;height:2px;transform:translateY(-50%);background:rgba(246,245,242,.14)}
+  .fader .rail::before,.fader .rail::after{content:"";position:absolute;top:50%;width:1.5px;height:15px;transform:translateY(-50%);background:rgba(246,245,242,.34)}
+  .fader .rail::before{left:0}
+  .fader .rail::after{right:0}
+  .fader .ticks{position:absolute;left:0;right:0;top:50%;height:11px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,rgba(246,245,242,.15) 0 1px,transparent 1px calc((100% - 1px)/20))}
+  .slider{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);width:100%;height:38px;-webkit-appearance:none;appearance:none;background:transparent;outline:none;margin:0;cursor:grab}
+  .slider:active{cursor:grabbing}
+  .slider::-webkit-slider-runnable-track{-webkit-appearance:none;background:transparent;height:38px;border:0}
+  .slider::-moz-range-track{background:transparent;height:38px;border:0}
+  .slider::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:38px;border-radius:4px;background:linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.28)) center/1.5px 14px no-repeat,linear-gradient(180deg,#F0583C 0%,#E5482D 52%,#C4381F 100%);border:1px solid rgba(0,0,0,.4);box-shadow:0 4px 16px rgba(229,72,45,.42),0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.32),inset 0 -1px 0 rgba(0,0,0,.32);cursor:grab}
+  .slider::-moz-range-thumb{width:15px;height:38px;border-radius:4px;background:linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.28)) center/1.5px 14px no-repeat,linear-gradient(180deg,#F0583C 0%,#E5482D 52%,#C4381F 100%);border:1px solid rgba(0,0,0,.4);box-shadow:0 4px 16px rgba(229,72,45,.42),0 2px 6px rgba(0,0,0,.5);cursor:grab}
+  .faderends{display:flex;justify-content:space-between;max-width:640px;margin:20px auto 0;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+  @media(max-width:520px){.stagelab{display:none}.timeline{height:34px}.track,.stage{top:13px}.compress{margin-top:72px}.dursub{margin-bottom:60px}}
 
   /* ===== CASE 3 — mood visualizer ===== */
   .feelview{margin-top:48px;display:flex;flex-direction:column;align-items:center}
@@ -84,17 +101,35 @@
   .foot{padding:58px 24px 90px;border-top:1px solid var(--line);text-align:center}
   .foot p{font-size:12.5px;color:var(--ink-faint)}
 
+  /* ===== The whisper — one line in a vast void, then the credits ===== */
+  .whisper{padding:230px 24px 200px;text-align:center}
+  .whisper .wline{font-size:13.5px;font-weight:600;letter-spacing:.09em;color:var(--ink)}
+  .colophon{margin-top:72px;display:flex;flex-direction:column;gap:9px}
+  .colophon span{font-size:11px;line-height:1.7;color:var(--ink-faint);font-weight:500;letter-spacing:.04em}
+  .colophon i{font-style:italic}
+  @media(max-width:640px){.whisper{padding:150px 24px 130px}}
+
+  /* ===== Grid reveal — press g (Brockmann's gift to whoever finds it) ===== */
+  #gridoverlay{position:fixed;top:0;bottom:0;left:max(24px,calc((100vw - 1120px)/2));right:max(24px,calc((100vw - 1120px)/2));pointer-events:none;z-index:200;opacity:0;transition:opacity .35s var(--ease);background:repeating-linear-gradient(90deg,rgba(229,72,45,.16) 0 1px,transparent 1px calc(100%/12));border-right:1px solid rgba(229,72,45,.16)}
+  body.gridon #gridoverlay{opacity:1}
+
   /* ===== CloudZero drill beat (integrated) ===== */
   .beat{margin-top:88px}
   .beat-eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px}
   .beat-title{font-weight:700;font-size:clamp(21px,3vw,32px);line-height:1.15;letter-spacing:-.01em;margin-bottom:14px}
   .beat-title .lt{font-weight:400;color:var(--ink-soft)}
   .beat-pov{font-size:15px;color:var(--ink-soft);font-weight:500;max-width:52ch;line-height:1.55}
-  .drill{margin-top:40px}
-  .drillbar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
-  .seg{display:inline-flex;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:100px;padding:5px}
-  .seg button{font-family:inherit;font-size:13.5px;font-weight:600;color:var(--ink-soft);background:transparent;border:0;border-radius:100px;padding:10px 20px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:9px;white-space:nowrap}
-  .seg button.on{background:var(--ink);color:#0B0B0D}
+  .drill{margin-top:84px}
+  /* drill path — the switcher IS the drill: click the anomaly to descend, the root to surface */
+  .drillpath{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px;font-family:ui-monospace,"SF Mono","Menlo",monospace}
+  .crumb{font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.01em;background:transparent;border:0;padding:6px 0;cursor:pointer;color:var(--ink-faint);transition:color .2s;display:inline-flex;align-items:center;gap:9px;white-space:nowrap}
+  .crumb:not(.on):hover{color:var(--ink-soft)}
+  .crumb.on{color:var(--ink);cursor:default}
+  .crumb-sep{color:var(--ink-faint);opacity:.55;font-size:13px;font-family:inherit}
+  .crumb.leaf{border:1px solid var(--line);border-radius:7px;padding:7px 13px;color:var(--ink-soft);transition:border-color .2s,color .2s}
+  .crumb.leaf .delta{color:var(--accent);font-weight:700}
+  .crumb.leaf:not(.on):hover{border-color:rgba(255,255,255,.28);color:var(--ink)}
+  .crumb.leaf.on{border-color:rgba(255,255,255,.28);color:var(--ink)}
   .screen{position:relative;width:100%;aspect-ratio:1440/900;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#0A0A0F;box-shadow:0 40px 90px -40px rgba(0,0,0,.9);isolation:isolate}
   .pane{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .5s var(--ease)}
   .pane.show{opacity:1;visibility:visible}
@@ -106,7 +141,7 @@
   .scrollport img{display:block;width:100%;height:auto}
   .drillcap{margin-top:22px;font-size:14.5px;color:var(--ink-soft);font-weight:500;line-height:1.55;max-width:60ch;transition:opacity .35s;min-height:44px}
   .drillcap b{color:var(--ink);font-weight:600}
-  @media(max-width:640px){.drillbar{gap:12px}.seg button{padding:9px 15px;font-size:12.5px}}
+  @media(max-width:640px){.drillpath{gap:9px}.crumb{font-size:12px}.crumb.leaf{padding:6px 10px}}
   @media(prefers-reduced-motion:reduce){.pane,.drillcap{transition-duration:.01ms}}
 
   /* ===== Cummins receipt — image-led card rail + lightbox ===== */
@@ -115,7 +150,7 @@
   .rrail::-webkit-scrollbar{display:none}
   .rrail.dragging{cursor:grabbing;scroll-snap-type:none}
   .rcard{flex:0 0 auto;width:clamp(300px,38vw,460px);scroll-snap-align:start}
-  .rface{aspect-ratio:104/85;border-radius:20px;overflow:hidden;position:relative;background:#0B0B0D;border:1px solid var(--line);cursor:pointer;transition:border-color .3s var(--ease)}
+  .rface{aspect-ratio:104/85;border-radius:20px;overflow:hidden;position:relative;background:radial-gradient(120% 95% at 50% 18%,#15151B 0%,#0B0B0D 62%);border:1px solid var(--line);cursor:pointer;transition:border-color .3s var(--ease)}
   .rface:hover{border-color:rgba(255,255,255,.22)}
   .rface::before{content:"";position:absolute;inset:14px;border:1px dashed var(--line);border-radius:12px;pointer-events:none}
   .rface img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -186,7 +221,7 @@
     <div class="wrap">
       <!-- INTRO: statement + Get-to-know card carousel -->
       <div class="reveal">
-        <div class="ov">CloudZero · Founding designer</div>
+        <div class="ov">01 · CloudZero · Founding designer</div>
         <h2 class="bighead">Scaling from a single user to thirty enterprise clients.</h2>
         <p class="sublead">Navigating zero-to-one product design through Series B.</p>
       </div>
@@ -197,31 +232,31 @@
         <article class="ccard" data-i="0">
           <div class="ceyebrow">Reach</div>
           <div class="chead">Meeting engineers inside their workflow.</div>
-          <svg class="motif" viewBox="0 0 120 100" fill="none" aria-hidden="true"><circle cx="30" cy="50" r="6" fill="var(--accent)"/><path d="M44 50a20 20 0 0 0-20-20M52 50a28 28 0 0 0-28-28M60 50a36 36 0 0 0-36-36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="78" y="30" width="34" height="40" rx="5" stroke="currentColor" stroke-width="2"/><path d="M86 44h18M86 52h18M86 60h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg class="motif" viewBox="0 0 120 100" fill="none" aria-hidden="true"><circle cx="30" cy="50" r="6" fill="var(--ink)"/><path d="M44 50a20 20 0 0 0-20-20M52 50a28 28 0 0 0-28-28M60 50a36 36 0 0 0-36-36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="78" y="30" width="34" height="40" rx="5" stroke="currentColor" stroke-width="2"/><path d="M86 44h18M86 52h18M86 60h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
           <div class="detail"><p>Engineers rarely open dashboards. Cost metrics find them instead — delivering real-time alerts on spend spikes with a direct path to resolution.</p></div>
         </article>
         <article class="ccard" data-i="1">
           <div class="ceyebrow">The domain</div>
           <div class="chead">Co-designing with infrastructure teams.</div>
-          <svg class="motif" viewBox="0 0 120 100" fill="none" aria-hidden="true"><path d="M40 68a26 26 0 1 1 40 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M74 62l6 8 8-6" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="40" cy="72" r="4" fill="currentColor"/><circle cx="80" cy="72" r="4" fill="var(--accent)"/></svg>
+          <svg class="motif" viewBox="0 0 120 100" fill="none" aria-hidden="true"><path d="M40 68a26 26 0 1 1 40 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M74 62l6 8 8-6" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="40" cy="72" r="4" fill="currentColor"/><circle cx="80" cy="72" r="4" fill="var(--ink)"/></svg>
           <div class="detail"><p>Learning complex cloud architecture directly from backend engineers. Designing tools for the immediate technical team.</p></div>
         </article>
         <article class="ccard" data-i="2">
           <div class="ceyebrow">Tagging</div>
           <div class="chead">Adapting to user taxonomies.</div>
-          <svg class="motif" viewBox="0 0 120 100" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20 34h30l16 16-22 22-24-24z" transform="rotate(-8 44 50)"/><path d="M44 30h30l16 16-22 22-24-24z" transform="rotate(6 66 48)" stroke="var(--accent)"/></g><circle cx="34" cy="44" r="3.2" fill="currentColor"/><circle cx="60" cy="40" r="3.2" fill="var(--accent)"/></svg>
+          <svg class="motif" viewBox="0 0 120 100" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20 34h30l16 16-22 22-24-24z" transform="rotate(-8 44 50)"/><path d="M44 30h30l16 16-22 22-24-24z" transform="rotate(6 66 48)" stroke="var(--ink)"/></g><circle cx="34" cy="44" r="3.2" fill="currentColor"/><circle cx="60" cy="40" r="3.2" fill="var(--ink)"/></svg>
           <div class="detail"><p>Infrastructure tags are inherently messy. The interface accepts raw AWS tags as-is, building adjacent structures with minimal UI interference.</p></div>
         </article>
         <article class="ccard" data-i="3">
           <div class="ceyebrow">Design system</div>
           <div class="chead">Systemization over invention.</div>
-          <svg class="motif" viewBox="0 0 120 100" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="2"><rect x="30" y="26" width="18" height="18" rx="3" fill="currentColor" fill-opacity=".9"/><rect x="52" y="26" width="18" height="18" rx="3" stroke-dasharray="3 4"/><rect x="74" y="26" width="18" height="18" rx="3" fill="currentColor" fill-opacity=".9"/><rect x="30" y="48" width="18" height="18" rx="3" stroke-dasharray="3 4"/><rect x="52" y="48" width="18" height="18" rx="3" fill="var(--accent)" stroke="none"/><rect x="74" y="48" width="18" height="18" rx="3" stroke-dasharray="3 4"/></g></svg>
+          <svg class="motif" viewBox="0 0 120 100" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="2"><rect x="30" y="26" width="18" height="18" rx="3" fill="currentColor" fill-opacity=".9"/><rect x="52" y="26" width="18" height="18" rx="3" stroke-dasharray="3 4"/><rect x="74" y="26" width="18" height="18" rx="3" fill="currentColor" fill-opacity=".9"/><rect x="30" y="48" width="18" height="18" rx="3" stroke-dasharray="3 4"/><rect x="52" y="48" width="18" height="18" rx="3" fill="var(--ink)" stroke="none"/><rect x="74" y="48" width="18" height="18" rx="3" stroke-dasharray="3 4"/></g></svg>
           <div class="detail"><p>Adapting IBM's Carbon into the Zero Design System. Styling component states, edge cases, and loading skeletons to keep development lean.</p></div>
         </article>
         <article class="ccard" data-i="4">
           <div class="ceyebrow">The practice</div>
           <div class="chead">Sole design ownership.</div>
-          <svg class="motif" viewBox="0 0 120 100" fill="none" aria-hidden="true"><circle cx="60" cy="50" r="9" fill="var(--accent)"/><g stroke="currentColor" stroke-width="2"><circle cx="60" cy="22" r="4"/><circle cx="88" cy="38" r="4"/><circle cx="88" cy="62" r="4"/><circle cx="60" cy="78" r="4"/><circle cx="32" cy="62" r="4"/><circle cx="32" cy="38" r="4"/></g><g stroke="currentColor" stroke-width="1.3" stroke-opacity=".5"><path d="M60 31v10M83 41 69 47M83 59 69 53M60 69V59M37 59l14-6M37 41l14 6"/></g></svg>
+          <svg class="motif" viewBox="0 0 120 100" fill="none" aria-hidden="true"><circle cx="60" cy="50" r="9" fill="var(--ink)"/><g stroke="currentColor" stroke-width="2"><circle cx="60" cy="22" r="4"/><circle cx="88" cy="38" r="4"/><circle cx="88" cy="62" r="4"/><circle cx="60" cy="78" r="4"/><circle cx="32" cy="62" r="4"/><circle cx="32" cy="38" r="4"/></g><g stroke="currentColor" stroke-width="1.3" stroke-opacity=".5"><path d="M60 31v10M83 41 69 47M83 59 69 53M60 69V59M37 59l14-6M37 41l14 6"/></g></svg>
           <div class="detail"><p>Owning user research, interaction models, and prototyping solo from seed through two funding rounds, scaling the platform to market.</p></div>
         </article>
       </div>
@@ -229,20 +264,24 @@
 
     <div class="wrap">
 
-      <!-- BEAT: the lens picker (mechanic unchanged; header demoted to beat under the intro) -->
-      <div class="beat reveal">
+      <!-- LEAD-IN: five saved lenses, understated — sets up the drill below -->
+      <div class="beat lens-lead reveal">
         <div class="beat-eyebrow">One product, five lenses</div>
         <div class="beat-title">Interfaces built for context.</div>
-        <p class="beat-pov">Infrastructure cost changes depending on who looks at it. The platform introduces custom view filters tailored to individual team needs.</p>
+        <p class="beat-pov">Infrastructure cost reads differently depending on who's looking. The same numbers reshape into the view each team already thinks in — the starting point before anyone drills in.</p>
       </div>
-      <div class="lensview reveal"><span class="vlabel" id="vlabel">Total cost by feature</span><svg id="lensSvg" viewBox="0 0 600 320"></svg></div>
-      <div class="lenscap" id="lenscap">Grouped by feature — cost in the shape the product team already thinks in.</div>
-      <div class="picker" id="picker">
-        <button data-l="feature" class="on">Feature</button>
-        <button data-l="team">Team</button>
-        <button data-l="service">Service</button>
-        <button data-l="resource">Resource</button>
-        <button data-l="eng">Engineering</button>
+      <div class="lensstrip reveal">
+        <div class="lenshead">
+          <div class="picker" id="picker" role="tablist" aria-label="Switch cost lens">
+            <button data-l="feature" class="on">Feature</button>
+            <button data-l="team">Team</button>
+            <button data-l="service">Service</button>
+            <button data-l="resource">Resource</button>
+            <button data-l="eng">Engineering</button>
+          </div>
+        </div>
+        <div class="lensview"><span class="vlabel" id="vlabel">total_cost · by feature</span><svg id="lensSvg" viewBox="0 0 1000 210"></svg></div>
+        <div class="lenscap" id="lenscap">Grouped by feature — cost in the shape the product team already thinks in.</div>
       </div>
 
       <!-- BEAT: BREADTH → DEPTH (the drill) -->
@@ -250,12 +289,11 @@
         <div class="beat-eyebrow">Breadth → depth</div>
         <div class="beat-title">Granular drill-downs, zero friction.</div>
         <p class="beat-pov">Moving from high-level monthly overviews to single-resource spending anomalies inside a single workspace without a page reload.</p>
-        <div class="drillbar" role="group" aria-label="Choose a view">
-          <div class="seg" id="seg">
-            <button data-v="dash" class="on" aria-pressed="true">Cost dashboard</button>
-            <button data-v="res" aria-pressed="false">Resource detail</button>
-          </div>
-        </div>
+        <nav class="drillpath" id="drillpath" aria-label="Drill path">
+          <button class="crumb on" data-v="dash" aria-current="true">cost_dashboard</button>
+          <span class="crumb-sep" aria-hidden="true">/</span>
+          <button class="crumb leaf" data-v="res" aria-current="false">resource-snapshots <span class="delta">+55%</span></button>
+        </nav>
         <div class="screen" id="screen">
           <div class="pane show" id="paneDash">
             <div class="chrome-h" id="dashH"></div>
@@ -277,15 +315,20 @@
   <section class="case" id="cummins">
     <div class="wrap">
       <div class="reveal">
-        <div class="ov">Cummins · Product, system, process</div>
-        <div class="h2">Accelerating enterprise product cycles.</div>
-        <p class="pov">Aligning software design systems with industrial manufacturing sprint cadences.</p>
+        <div class="ov">02 · Cummins · Product, system, process</div>
+        <h2 class="bighead">Accelerating enterprise product cycles.</h2>
+        <p class="sublead">Aligning software design systems with industrial manufacturing sprint cadences.</p>
       </div>
       <div class="compress reveal">
         <div class="durwrap"><span id="durNow">3 months</span></div>
         <div class="dursub" id="durSub">Linear delivery: isolated specifications, sequential reviews, and rigid engineering handoffs.</div>
         <div class="timeline" id="timeline"></div>
-        <input type="range" class="slider" id="slider" min="0" max="100" value="0">
+        <div class="fader">
+          <div class="rail"></div>
+          <div class="ticks"></div>
+          <input type="range" class="slider" id="slider" min="0" max="100" value="0" aria-label="Compress the delivery cycle">
+        </div>
+        <div class="faderends"><span>Linear</span><span>Living</span></div>
       </div>
 
     </div>
@@ -295,7 +338,7 @@
   <section class="case alt" data-nav="cummins">
     <div class="wrap">
       <div class="reveal">
-        <div class="ov">Cummins · The receipt</div>
+        <div class="ov">02 · Cummins · The receipt</div>
         <div class="h2">Systemizing velocity.</div>
         <p class="pov">Structural shifts that transform product delivery pipelines.</p>
       </div>
@@ -412,7 +455,7 @@
   <section class="case" id="concept">
     <div class="wrap" style="text-align:center">
       <div class="reveal">
-        <div class="ov">Concept · Sound landscape</div>
+        <div class="ov">03 · Concept · Sound landscape</div>
         <div class="h2" style="margin-inline:auto">An audio landscape shaped by emotion.</div>
         <p class="pov" style="margin-inline:auto">A minimalist audio terminal removing cognitive overload through responsive geometry.</p>
       </div>
@@ -430,6 +473,15 @@
       <div class="stat reveal"><div class="n">30+</div><div class="l">paying enterprise customers, from one</div></div>
       <div class="stat reveal"><div class="n">6×</div><div class="l">faster design-to-ship at a Fortune 500</div></div>
       <div class="stat reveal"><div class="n">10 yrs</div><div class="l">designing AI products, end to end</div></div>
+    </div>
+  </section>
+
+  <!-- THE WHISPER — the one sanctioned break: a second-person line in a void, then the prior lives, rolled like credits -->
+  <section class="whisper">
+    <p class="wline reveal">This is the crop, not the negative.</p>
+    <div class="colophon reveal">
+      <span>Previously — creative direction, Belladonna Productions <i>(L.I.E. · A Guide to Recognizing Your Saints · Transamerica)</i></span>
+      <span>campaigns for Dodge &amp; Keds · a decade behind a camera</span>
     </div>
   </section>
 
@@ -455,23 +507,38 @@
   /* ===== CASE 1 — lens picker ===== */
   const lensSvg=document.getElementById("lensSvg"),vlabel=document.getElementById("vlabel"),lenscap=document.getElementById("lenscap");
   const lenses={
-    feature:{label:"Total cost by feature",cap:"Grouped by feature — cost in the shape the product team already thinks in.",draw:()=>barView(26,"seq",18)},
-    team:{label:"Total cost by team",cap:"Grouped by team — every group sees only what they own.",draw:()=>barView(8,"flat",-1)},
-    service:{label:"Total cost by service",cap:"The raw AWS view — Lambda, EC2, RDS, S3 — for when you need it.",draw:()=>barView(26,"stack",-1)},
-    resource:{label:"Total cost by resource",cap:"All the way down to the individual resource and its leaf cost.",draw:()=>barView(40,"thin",-1)},
-    eng:{label:"Cost by engineering event",cap:"Tied to the git commit and the PR reviewer. Cost in an engineer's language.",draw:()=>eventView()}
+    feature:{label:"total_cost · by feature",cap:"Grouped by feature — cost in the shape the product team already thinks in.",draw:()=>barView(20,"seq")},
+    team:{label:"total_cost · by team",cap:"Grouped by team — every group sees only what they own.",draw:()=>barView(7,"flat")},
+    service:{label:"total_cost · by service",cap:"The raw AWS view — Lambda, EC2, RDS, S3 — stacked, for when you need it.",draw:()=>barView(24,"stack")},
+    resource:{label:"total_cost · by resource",cap:"All the way down to the individual resource and its leaf cost.",draw:()=>barView(44,"thin")},
+    eng:{label:"cost · by engineering event",cap:"Tied to the git commit and the PR reviewer. Cost in an engineer's language.",draw:()=>commitView()}
   };
-  function barView(n,mode,anom){clear(lensSvg);const W=600,H=320,gap=mode==="thin"?2:4,bw=(W-(n-1)*gap)/n;
-    for(let i=0;i<n;i++){let h=Math.max(24,(0.32+0.5*Math.abs(Math.sin(i*0.7+1)))*H*0.82);if(i===anom)h=H*0.92;
-      const x=i*(bw+gap),y=H-h;
-      if(mode==="stack"){const segs=4;let yy=H;for(let s=0;s<segs;s++){const sh=h/segs;yy-=sh;const r=mk(x,yy,bw,sh-1);r.setAttribute("fill","rgba(246,245,242,"+(0.5-s*0.1)+")");lensSvg.appendChild(r);}}
-      else{const r=mk(x,y,bw,h);r.setAttribute("fill",i===anom?"#E5482D":(mode==="seq"?"rgba(246,245,242,"+(0.22+0.5*(i/n))+")":"rgba(246,245,242,.30)"));lensSvg.appendChild(r);}}
+  // Precise, sorted long-tail bars — deterministic, quiet, no wobble. Reads as real sorted data.
+  const wob=[0,.05,-.03,.04,-.05,.02,-.04,.03,-.02,.05,-.03,.04,-.05,.01,-.02,.03,-.04,.02,-.03,.04];
+  function barView(n,mode){clear(lensSvg);const W=1000,H=210,base=H-16;
+    const gap=mode==="thin"?4:mode==="flat"?14:6;const bw=(W-(n-1)*gap)/n;
+    for(let i=0;i<n;i++){const t=n>1?i/(n-1):0;
+      let hn=Math.pow(1-t,1.4);hn=Math.max(.07,hn+wob[i%wob.length]*(1-t));
+      const h=hn*(H-56),x=i*(bw+gap),y=base-h;
+      if(mode==="stack"){const segs=3;let yy=base;for(let s=0;s<segs;s++){const sh=h/segs;yy-=sh;const r=mk(x,yy,bw,Math.max(1,sh-1.5));r.setAttribute("fill","rgba(246,245,242,"+(0.30-s*0.08).toFixed(3)+")");lensSvg.appendChild(r);}}
+      else{const r=mk(x,y,bw,h);const a=mode==="flat"?0.24:(0.16+0.34*hn);r.setAttribute("fill","rgba(246,245,242,"+a.toFixed(3)+")");lensSvg.appendChild(r);}}
+    const bl=document.createElementNS(ns,"line");bl.setAttribute("x1",0);bl.setAttribute("x2",W);bl.setAttribute("y1",base+2);bl.setAttribute("y2",base+2);bl.setAttribute("stroke","rgba(246,245,242,.09)");bl.setAttribute("stroke-width","1");lensSvg.appendChild(bl);
   }
-  function eventView(){clear(lensSvg);const W=600,H=320;
-    // line + event dots
-    let d="M 10 220";const pts=[];for(let i=0;i<=24;i++){const x=10+i*24,y=120+70*Math.sin(i*0.6)+ (i===16?-70:0);d+=" L "+x+" "+y;pts.push([x,y,i===16]);}
-    const p=document.createElementNS(ns,"path");p.setAttribute("d",d);p.setAttribute("fill","none");p.setAttribute("stroke","rgba(246,245,242,.5)");p.setAttribute("stroke-width","2");lensSvg.appendChild(p);
-    pts.forEach(([x,y,hot])=>{if((x/24)%2<1){const c=document.createElementNS(ns,"circle");c.setAttribute("cx",x);c.setAttribute("cy",H-30);c.setAttribute("r",hot?9:4);c.setAttribute("fill",hot?"#E5482D":"rgba(246,245,242,.3)");lensSvg.appendChild(c);}});
+  // Engineering lens — a git commit lane, not a squiggle. Straight branch, quiet nodes,
+  // one accent commit (the PR that moved cost) with a delta callout in an engineer's terms.
+  function commitView(){clear(lensSvg);const W=1000,H=210,y=Math.round(H*0.62),x0=44,x1=W-44,n=15,hot=9;
+    const line=document.createElementNS(ns,"line");line.setAttribute("x1",x0);line.setAttribute("x2",x1);line.setAttribute("y1",y);line.setAttribute("y2",y);line.setAttribute("stroke","rgba(246,245,242,.16)");line.setAttribute("stroke-width","1.5");lensSvg.appendChild(line);
+    const step=(x1-x0)/(n-1);
+    for(let i=0;i<n;i++){const cx=x0+i*step;
+      if(i===hot){
+        const stem=document.createElementNS(ns,"line");stem.setAttribute("x1",cx);stem.setAttribute("x2",cx);stem.setAttribute("y1",y-6);stem.setAttribute("y2",y-58);stem.setAttribute("stroke","#E5482D");stem.setAttribute("stroke-width","1.5");lensSvg.appendChild(stem);
+        const ring=document.createElementNS(ns,"circle");ring.setAttribute("cx",cx);ring.setAttribute("cy",y-66);ring.setAttribute("r",6.5);ring.setAttribute("fill","#0A0A0F");ring.setAttribute("stroke","#E5482D");ring.setAttribute("stroke-width","2");lensSvg.appendChild(ring);
+        const dot=document.createElementNS(ns,"circle");dot.setAttribute("cx",cx);dot.setAttribute("cy",y);dot.setAttribute("r",5);dot.setAttribute("fill","#E5482D");lensSvg.appendChild(dot);
+        const t=document.createElementNS(ns,"text");t.setAttribute("x",cx+15);t.setAttribute("y",y-61);t.setAttribute("fill","rgba(246,245,242,.72)");t.setAttribute("font-family","ui-monospace,SF Mono,Menlo,monospace");t.setAttribute("font-size","12.5");t.textContent="+55%  #4127  @dana";lensSvg.appendChild(t);
+      } else {
+        const c=document.createElementNS(ns,"circle");c.setAttribute("cx",cx);c.setAttribute("cy",y);c.setAttribute("r",3.2);c.setAttribute("fill","rgba(246,245,242,.30)");lensSvg.appendChild(c);
+      }
+    }
   }
   function mk(x,y,w,h){const r=document.createElementNS(ns,"rect");r.setAttribute("x",x.toFixed(1));r.setAttribute("y",y.toFixed(1));r.setAttribute("width",w.toFixed(1));r.setAttribute("height",h.toFixed(1));r.setAttribute("rx","1.5");return r;}
   function setLens(k){const L=lenses[k];vlabel.textContent=L.label;lenscap.style.opacity=0;
@@ -483,7 +550,7 @@
   /* ===== CASE 2 — drag to compress ===== */
   const slider=document.getElementById("slider"),tl=document.getElementById("timeline"),durNow=document.getElementById("durNow"),durSub=document.getElementById("durSub");
   const stagesBefore=["Spec","Review","Handoff","Build","QA","Ship"];
-  const stagesAfter=["Design in context","Comments","Ship"];
+  const stagesAfter=["In context","Comments","Ship"];
   function buildTimeline(v){ // v 0..1
     clear(tl);const w=tl.clientWidth||820;const trackW=w*(1-0.62*v);
     const track=document.createElement("div");track.className="track";track.style.width=trackW+"px";tl.appendChild(track);
@@ -491,7 +558,8 @@
     const stages=showAfter?stagesAfter:stagesBefore;const n=stages.length;
     stages.forEach((s,i)=>{const seg=document.createElement("div");seg.className="stage";const segW=trackW/n-6;
       seg.style.width=Math.max(8,segW)+"px";seg.style.left=(i*(trackW/n)+3)+"px";
-      seg.style.opacity = showAfter?0.95:(0.95-(i>=3?fade*0.9:0));tl.appendChild(seg);
+      seg.style.background = showAfter?"var(--ink)":"rgba(246,245,242,.16)";
+      seg.style.opacity = showAfter?1:(0.95-(i>=3?fade*0.9:0));tl.appendChild(seg);
       const lab=document.createElement("div");lab.className="stagelab";lab.textContent=s;lab.style.left=(i*(trackW/n)+segW/2+3)+"px";
       lab.style.opacity = showAfter?0.9:(i>=3?(1-fade*1.6):0.9);tl.appendChild(lab);});
     const months=3- v*(3-0.5); // 3 months -> ~0.5 month (2 wks)
@@ -514,6 +582,15 @@
   document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
   window.addEventListener("load",()=>{const m=document.getElementById("mark");m.style.transition="opacity 1s var(--ease)";m.style.opacity="1";buildTimeline(0);});
 
+  /* ===== press g: the grid reveals itself ===== */
+  const gridEl=document.createElement("div");gridEl.id="gridoverlay";gridEl.setAttribute("aria-hidden","true");document.body.appendChild(gridEl);
+  window.addEventListener("keydown",e=>{
+    if(e.key!=="g"||e.metaKey||e.ctrlKey||e.altKey)return;
+    const t=document.activeElement&&document.activeElement.tagName;
+    if(/INPUT|TEXTAREA|SELECT/.test(t))return;
+    document.body.classList.toggle("gridon");
+  });
+
   /* ===== CloudZero drill beat ===== */
   (function(){
     const B64 = window.__CZ_ASSETS__; if(!B64) return;
@@ -525,7 +602,7 @@
     document.getElementById('resN').style.backgroundImage  = `url(${src('dashboard_nav')})`;
     document.getElementById('resImg').src = src('resource_content');
     const paneDash=document.getElementById('paneDash'), paneRes=document.getElementById('paneRes');
-    const seg=document.getElementById('seg'), cap=document.getElementById('cap'), resScroll=document.getElementById('resScroll');
+    const path=document.getElementById('drillpath'), cap=document.getElementById('cap'), resScroll=document.getElementById('resScroll');
     const CAPS={
       dash:'<b>Cost by feature.</b> The month&rsquo;s spend, grouped the way the product team already thinks. resource-snapshots is up 55%.',
       res:'<b>One resource, all the way down.</b> The RDS cluster behind the spike — cost by usage type, CPU &amp; memory, network and disk I/O, every observation and relationship.'
@@ -534,12 +611,12 @@
       const toRes=view==='res';
       paneDash.classList.toggle('show',!toRes);
       paneRes.classList.toggle('show',toRes);
-      [...seg.children].forEach(b=>{const on=b.dataset.v===view;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});
+      path.querySelectorAll('.crumb').forEach(b=>{const on=b.dataset.v===view;b.classList.toggle('on',on);b.setAttribute('aria-current',on);});
       if(toRes) resScroll.scrollTop=0;
       cap.style.opacity=0;
       setTimeout(()=>{cap.innerHTML=CAPS[view];cap.style.opacity=1;},200);
     }
-    seg.addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(b.dataset.v);});
+    path.addEventListener('click',e=>{const b=e.target.closest('.crumb');if(b)go(b.dataset.v);});
   })();
 
   /* ===== CloudZero milestones — static grid, documentation in plain view ===== */
