@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=1440">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CloudZero — resource</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -112,6 +112,48 @@ a:hover{color:var(--link-primary-hover);text-decoration:underline}
 .evrow .a{font-size:12px;color:var(--text-secondary)}
 .evrow .i{font-size:13px;font-weight:600;text-align:right}
 .hr{border-top:1px solid var(--border-subtle-00)}
+.m-only{display:none}
+
+/* ===== mobile app layout — same document, phone-sized viewport (≤700px) ===== */
+.mbar{display:none}
+@media(max-width:700px){
+  .view{scrollbar-width:none}
+  .view::-webkit-scrollbar{width:0;height:0}
+  .topbar,.rail{display:none}
+  .d-only{display:none}
+  .m-only{display:inline}
+  .mbar{position:fixed;top:0;left:0;right:0;height:56px;display:flex;align-items:center;gap:11px;padding:0 14px;background:#101014;border-bottom:1px solid #24242a;z-index:10}
+  .mbar .mark{width:32px;height:32px;border-radius:8px;background:var(--blue-60);display:grid;place-items:center;font-weight:600;font-size:13px;color:#fff;flex:none}
+  .mbar .tt{flex:1;min-width:0}
+  .mbar .tt .id{font-family:var(--font-mono);font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mbar .tt .sub{font-size:11px;color:var(--text-secondary);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mbar .tt .sub .ok{color:var(--support-success)}
+  .mbar .bell{flex:none;display:grid;place-items:center}
+  .mbar .bell svg{width:20px;height:20px;stroke:var(--gray-40);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .view{top:56px;left:0}
+  .page{padding:14px 16px 48px}
+  .crumbs,.rhead{display:none}
+  .banner{flex-direction:column;align-items:stretch;gap:12px;padding:12px 14px;margin-bottom:26px}
+  .banner h1{font-size:13.5px}
+  .ackbtn{width:100%;min-width:0}
+  .stats{grid-template-columns:1fr 1fr;gap:18px 20px;margin-bottom:30px}
+  .stat{padding:12px 0 0;border-left:0;border-top:1px solid var(--border-subtle-00)}
+  .stat:first-child{padding:12px 0 0;border-top:1px solid var(--border-subtle-00)}
+  .stat .n{font-size:26px}
+  .chartrow{flex-direction:column;align-items:stretch;gap:12px;margin-bottom:12px}
+  .tabs{width:100%}
+  .tab{flex:1;padding:0}
+  .chartbox{margin-bottom:36px}
+  .causes{margin-bottom:36px}
+  .cause{grid-template-columns:20px 1fr;gap:6px 10px;padding:16px 0}
+  .cause .imp{grid-column:2;text-align:left;display:flex;gap:12px;align-items:baseline;margin-top:2px}
+  .cause .imp .c{margin-top:0}
+  .cause .acts{flex-wrap:wrap;gap:8px 18px}
+  .evrow{display:block;padding:11px 0}
+  .evrow .etop{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:3px}
+  .evrow .b{display:block}
+  .evrow .a{display:block;margin-top:3px}
+}
 </style>
 </head>
 <body>
@@ -123,6 +165,15 @@ a:hover{color:var(--link-primary-hover);text-decoration:underline}
     <span class="tb-btn"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="11" rx="1.5"/><path d="M2 6.5h12M5.5 1.5v3M10.5 1.5v3"/></svg>Last 30 days<svg class="chev" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3"/></svg></span>
     <span class="tb-btn"><svg viewBox="0 0 16 16"><path d="M2 4.5h12M4.5 8h7M6.5 11.5h3"/></svg>Filters<span class="count">1</span></span>
   </div>
+</header>
+
+<header class="mbar">
+  <div class="mark">CZ</div>
+  <div class="tt">
+    <div class="id">i-0a3f9c2b7e14d8e6a</div>
+    <div class="sub">Payments Platform · EC2 · us-east-1 · <span class="ok">● running</span></div>
+  </div>
+  <span class="bell"><svg viewBox="0 0 20 20"><path d="M10 3a4.6 4.6 0 0 0-4.6 4.6c0 4-1.9 5.6-1.9 5.6h13s-1.9-1.6-1.9-5.6A4.6 4.6 0 0 0 10 3zM8.4 16.2a1.7 1.7 0 0 0 3.2 0"/></svg></span>
 </header>
 
 <nav class="rail">
@@ -165,7 +216,7 @@ a:hover{color:var(--link-primary-hover);text-decoration:underline}
   <div class="chartrow">
     <div>
       <div class="sechead">Daily cost · last 30 days</div>
-      <div class="secsub">Ticks mark change events. Hover a day to see what changed.</div>
+      <div class="secsub"><span class="d-only">Ticks mark change events. Hover a day to see what changed.</span><span class="m-only">Ticks mark change events. Tap a day to see what changed.</span></div>
     </div>
     <div class="tabs" role="tablist">
       <button class="tab on" id="tab0" role="tab">My team&rsquo;s changes (7)</button>
@@ -234,7 +285,14 @@ a:hover{color:var(--link-primary-hover);text-decoration:underline}
     {i:26,when:'Jul 11 · 14:22', title:'Rollback #4903', desc:'ASG max reverted to 6', actor:'sarah.kim', mine:true, imp:-52}
   ];
   var scope=0, hoverIdx=null, acked=false;
-  var W=1056,H=320,L=46,R=10,T=18,B=64,PW=W-L-R,PH=H-T-B,n=cost.length,yMax=240,avg=92;
+  var n=cost.length,yMax=240,avg=92;
+  var W,H,L,R,T,B,PW,PH,MOB;
+  function setDims(){
+    MOB=window.innerWidth<=700;
+    if(MOB){W=358;H=252;L=34;R=8;T=16;B=52;}
+    else{W=1056;H=320;L=46;R=10;T=18;B=64;}
+    PW=W-L-R;PH=H-T-B;
+  }
   function x(i){return L+i*(PW/(n-1))}
   function y(v){return T+PH*(1-v/yMax)}
   function dateLabel(i){var d=new Date(2026,5,15);d.setDate(d.getDate()+i);return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})}
@@ -243,6 +301,7 @@ a:hover{color:var(--link-primary-hover);text-decoration:underline}
   var box=document.getElementById('chartbox');
   function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
   function draw(){
+    setDims();
     var evs=filtered(), s='';
     [0,120,240].forEach(function(g){
       s+='<line x1="'+L+'" x2="'+(L+PW)+'" y1="'+y(g)+'" y2="'+y(g)+'" stroke="var(--border-subtle-00)" stroke-width="1"/>';
@@ -251,11 +310,16 @@ a:hover{color:var(--link-primary-hover);text-decoration:underline}
     s+='<line x1="'+L+'" x2="'+(L+PW)+'" y1="'+y(avg)+'" y2="'+y(avg)+'" stroke="var(--gray-60)" stroke-width="1" stroke-dasharray="4 3"/>';
     s+='<text x="'+(L+PW)+'" y="'+(y(avg)+14)+'" text-anchor="end" font-size="11" fill="var(--text-secondary)" font-family="var(--font-sans)">baseline $92/day</text>';
     s+='<line x1="'+x(17)+'" x2="'+x(17)+'" y1="'+T+'" y2="'+(T+PH)+'" stroke="var(--support-error)" stroke-width="1"/>';
-    s+='<text x="'+(x(17)+6)+'" y="'+(T+10)+'" font-size="11" fill="var(--support-error)" font-family="var(--font-sans)">spike start · Jul 2, 09:14</text>';
+    if(MOB){
+      s+='<text x="'+(x(17)-6)+'" y="'+(T+10)+'" text-anchor="end" font-size="10.5" fill="var(--support-error)" font-family="var(--font-sans)">spike · Jul 2, 09:14</text>';
+    }else{
+      s+='<text x="'+(x(17)+6)+'" y="'+(T+10)+'" font-size="11" fill="var(--support-error)" font-family="var(--font-sans)">spike start · Jul 2, 09:14</text>';
+    }
     var lp='';cost.forEach(function(v,i){lp+=(i?'L':'M')+x(i).toFixed(1)+','+y(v).toFixed(1)+' '});
     s+='<path d="'+lp+'" fill="none" stroke="var(--blue-50)" stroke-width="1.5"/>';
-    [0,6,12,18,24,29].forEach(function(i){
-      s+='<text x="'+x(i)+'" y="'+(H-8)+'" text-anchor="middle" font-size="11" fill="var(--text-secondary)" font-family="var(--font-sans)">'+dateLabel(i)+'</text>';
+    (MOB?[0,14,29]:[0,6,12,18,24,29]).forEach(function(i){
+      var anch=MOB?(i===0?'start':(i===n-1?'end':'middle')):'middle';
+      s+='<text x="'+x(i)+'" y="'+(H-8)+'" text-anchor="'+anch+'" font-size="'+(MOB?10.5:11)+'" fill="var(--text-secondary)" font-family="var(--font-sans)">'+dateLabel(i)+'</text>';
     });
     var laneY=T+PH+8;
     evs.forEach(function(e){
@@ -271,7 +335,7 @@ a:hover{color:var(--link-primary-hover);text-decoration:underline}
       var day=evs.filter(function(e){return e.i===hoverIdx});
       var delta=Math.round((cost[hoverIdx]-avg)/avg*100);
       var right=hoverIdx>n/2;
-      var tip='<div class="tip" style="left:'+(x(hoverIdx)/W*100)+'%;transform:translateX('+(right?'calc(-100% - 12px)':'12px')+')">';
+      var tip='<div class="tip" style="min-width:'+(MOB?168:200)+'px;left:'+(x(hoverIdx)/W*100)+'%;transform:translateX('+(right?'calc(-100% - 12px)':'12px')+')">';
       tip+='<div class="td">'+dateLabel(hoverIdx)+', 2026</div><div class="tc">$'+cost[hoverIdx]+'</div>';
       tip+='<div class="td">'+(delta>=0?'+':'')+delta+'% vs baseline</div>';
       day.forEach(function(e){tip+='<div class="te"><div class="t1">'+esc(e.title)+'</div><div class="t2">'+esc(e.desc)+'</div></div>'});
@@ -280,22 +344,36 @@ a:hover{color:var(--link-primary-hover);text-decoration:underline}
     }
     box.innerHTML=html;
     var svg=box.querySelector('svg');
-    svg.addEventListener('mousemove',function(ev){
+    function idxAt(ev){
       var r=svg.getBoundingClientRect();
       var vx=(ev.clientX-r.left)/r.width*W;
       var i=Math.round((vx-L)/(PW/(n-1)));
-      i=Math.max(0,Math.min(n-1,i));
+      return Math.max(0,Math.min(n-1,i));
+    }
+    svg.addEventListener('mousemove',function(ev){
+      var i=idxAt(ev);
       if(i!==hoverIdx){hoverIdx=i;draw();}
     });
     svg.addEventListener('mouseleave',function(){hoverIdx=null;draw();});
+    /* tap — toggle a day's readout (touch has no hover) */
+    svg.addEventListener('click',function(ev){
+      var i=idxAt(ev);
+      hoverIdx = (i===hoverIdx) ? null : i;
+      draw();
+    });
   }
 
   function impText(v){return v==null?'—':(v===0?'~$0':(v>0?'+$'+v+'/day':'−$'+Math.abs(v)+'/day'))}
   function impColor(v){return v>0?'var(--text-primary)':(v<0?'var(--support-success)':'var(--text-secondary)')}
   function drawLog(){
     var list=filtered().slice().reverse(), s='';
+    var M=window.innerWidth<=700;
     list.forEach(function(e){
-      s+='<div class="evrow"><span class="w">'+e.when+'</span><span class="b"><b>'+esc(e.title)+'</b> <span>— '+esc(e.desc)+'</span></span><span class="a">'+esc(e.actor)+'</span><span class="i" style="color:'+impColor(e.imp)+'">'+impText(e.imp)+'</span></div>';
+      if(M){
+        s+='<div class="evrow"><div class="etop"><span class="w">'+e.when+'</span><span class="i" style="color:'+impColor(e.imp)+'">'+impText(e.imp)+'</span></div><span class="b"><b>'+esc(e.title)+'</b> <span>— '+esc(e.desc)+'</span></span><span class="a">'+esc(e.actor)+'</span></div>';
+      }else{
+        s+='<div class="evrow"><span class="w">'+e.when+'</span><span class="b"><b>'+esc(e.title)+'</b> <span>— '+esc(e.desc)+'</span></span><span class="a">'+esc(e.actor)+'</span><span class="i" style="color:'+impColor(e.imp)+'">'+impText(e.imp)+'</span></div>';
+      }
     });
     document.getElementById('evlist').innerHTML=s;
     document.getElementById('logCaption').textContent = scope===0
@@ -322,6 +400,8 @@ a:hover{color:var(--link-primary-hover);text-decoration:underline}
     var d=ev.data||{};
     if(d.cz==='ack')applyAck(true);
   });
+  /* mode flips when the host resizes the frame — redraw at the new dimensions */
+  window.addEventListener('resize',function(){hoverIdx=null;draw();drawLog();});
 
   draw();drawLog();
 })();
