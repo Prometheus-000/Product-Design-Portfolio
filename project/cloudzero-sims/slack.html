@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Slack — #finops-alerts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#1a1d21; --side:#19171d; --line:#35373b; --line-soft:rgba(255,255,255,.09);
+  --txt:#d1d2d3; --txt-2:#ababad; --txt-3:#9a9b9e; --white:#ffffff;
+  --blue:#1d9bd1; --active:#1164a3; --green:#007a5a; --alert:#fa4d56;
+  --hover:rgba(255,255,255,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);font-family:'Lato',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--txt);-webkit-font-smoothing:antialiased;overflow:hidden;display:flex}
+
+/* ===== far-left workspace rail ===== */
+.wrail{width:68px;background:var(--side);border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;padding:12px 0 14px;flex:none}
+.wtile{width:36px;height:36px;border-radius:9px;background:#3f5873;color:#fff;font-weight:900;font-size:17px;display:grid;place-items:center;margin-bottom:14px}
+.wit{display:flex;flex-direction:column;align-items:center;gap:3px;margin-bottom:12px;color:#bcbdbe}
+.wit .ic{width:36px;height:36px;border-radius:9px;display:grid;place-items:center}
+.wit.on .ic{background:rgba(255,255,255,.18)}
+.wit.on{color:#fff}
+.wit svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.wit .lb{font-size:10.5px;font-weight:700}
+.wsp{flex:1}
+.wme{position:relative;width:36px;height:36px;border-radius:9px;background:#7a5c3e;color:#fff;font-weight:700;font-size:14px;display:grid;place-items:center}
+.wme::after{content:"";position:absolute;right:-2px;bottom:-2px;width:11px;height:11px;border-radius:50%;background:#2bac76;border:2.5px solid var(--side)}
+
+/* ===== channel sidebar ===== */
+.side{width:248px;background:var(--side);display:flex;flex-direction:column;flex:none}
+.shead{height:49px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none}
+.shead .nm{font-size:17px;font-weight:900;color:#fff;display:flex;align-items:center;gap:5px}
+.shead .nm svg{width:11px;height:11px;fill:#fff}
+.shead .pen{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center}
+.shead .pen svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:1.7;stroke-linecap:round}
+.snav{padding:8px 8px 0;overflow:hidden}
+.sit{display:flex;align-items:center;gap:8px;height:28px;padding:0 8px;border-radius:6px;font-size:15px;color:var(--txt-2)}
+.sit svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.sit .hash{font-size:15px;width:15px;text-align:center;flex:none;font-weight:400}
+.sit.on{background:var(--active);color:#fff;font-weight:400}
+.sit.unread{color:#fff;font-weight:900}
+.sit .badge{margin-left:auto;background:#cd2553;color:#fff;font-size:11px;font-weight:700;border-radius:9px;padding:1px 7px}
+.slab{display:flex;align-items:center;gap:6px;height:28px;padding:0 8px;margin-top:14px;font-size:15px;color:var(--txt-2)}
+.slab svg{width:10px;height:10px;fill:var(--txt-2)}
+.dm{display:flex;align-items:center;gap:8px;height:28px;padding:0 8px;border-radius:6px;font-size:15px;color:var(--txt-2)}
+.dm .av{position:relative;width:20px;height:20px;border-radius:5px;flex:none}
+.dm .av.cz{background:#0f62fe;color:#fff;font-size:9px;font-weight:900;display:grid;place-items:center;border-radius:5px}
+.dm .av .st{position:absolute;right:-2px;bottom:-2px;width:9px;height:9px;border-radius:50%;border:2px solid var(--side);background:#616265}
+.dm .av .st.onl{background:#2bac76}
+
+/* ===== main column ===== */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;background:var(--bg)}
+.chead{height:49px;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 16px;gap:8px;flex:none}
+.chead .cn{font-size:18px;font-weight:900;color:#fff;display:flex;align-items:center;gap:4px}
+.chead .cn svg{width:10px;height:10px;fill:var(--txt-2)}
+.chead .topic{font-size:13px;color:var(--txt-2);margin-left:10px;padding-left:14px;border-left:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.chead .mems{display:flex;align-items:center;border:1px solid var(--line);border-radius:6px;padding:3px 8px 3px 4px;gap:6px}
+.chead .mems .stack{display:flex}
+.chead .mems .mv{width:20px;height:20px;border-radius:5px;border:2px solid var(--bg);margin-left:-6px}
+.chead .mems .mv:first-child{margin-left:0}
+.chead .mems .ct{font-size:12.5px;color:var(--txt-2);font-weight:700}
+
+.msgs{flex:1;overflow-y:auto;padding:14px 0 6px;display:flex;flex-direction:column;justify-content:flex-end}
+.msgs::-webkit-scrollbar{width:8px}
+.msgs::-webkit-scrollbar-thumb{background:#424549;border-radius:8px}
+
+.intro{padding:26px 20px 10px}
+.intro h1{font-size:26px;font-weight:900;color:#fff;letter-spacing:-.01em}
+.intro p{font-size:15px;line-height:1.5;color:var(--txt-2);margin-top:8px;max-width:72ch}
+.intro p b{color:var(--txt);font-weight:700}
+
+.divider{position:relative;text-align:center;margin:14px 0 10px}
+.divider::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--line-soft)}
+.divider span{position:relative;background:var(--bg);border:1px solid var(--line);border-radius:24px;padding:5px 13px;font-size:13px;font-weight:700;color:#fff}
+.divider span i{font-style:normal;color:var(--txt-2);font-size:10px;margin-left:5px}
+
+.msg{display:flex;gap:9px;padding:7px 20px;position:relative}
+.msg:hover{background:var(--hover)}
+.msg .avatar{width:38px;height:38px;border-radius:8px;flex:none;background:#0f62fe;display:grid;place-items:center}
+.msg .avatar svg{width:26px;height:26px}
+.msg .body{flex:1;min-width:0}
+.msg .hd{display:flex;align-items:baseline;gap:7px}
+.msg .hd .who{font-size:15px;font-weight:900;color:#fff}
+.msg .hd .app{font-size:10px;font-weight:700;color:var(--txt-2);background:rgba(255,255,255,.1);border-radius:3px;padding:1.5px 4px;position:relative;top:-1px}
+.msg .hd .ts{font-size:12px;color:var(--txt-2)}
+.msg .txt{font-size:15px;line-height:1.46;margin-top:1px}
+
+.att{display:flex;margin-top:6px}
+.att .bar{width:4px;border-radius:8px;flex:none}
+.att .inner{padding:8px 12px 10px;min-width:0}
+.att.calm .bar{background:#4a4d52}
+.att.hot .bar{background:var(--alert)}
+.att .title{font-size:15px;font-weight:900;color:#fff;line-height:1.4}
+.att .line{font-size:15px;line-height:1.46;margin-top:3px}
+.code{font-family:'SF Mono',Monaco,Menlo,monospace;font-size:12.5px;color:#f08fa2;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:3px;padding:1px 4px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;margin-top:12px;max-width:560px}
+.fld .k{font-size:12px;font-weight:700;color:var(--txt-2);margin-bottom:2px}
+.fld .v{font-size:14px;line-height:1.4}
+.mention{color:#3ea6db;background:rgba(29,155,209,.12);border-radius:3px;padding:0 2px}
+.proj{font-size:13px;color:var(--txt-2);margin-top:12px}
+.btns{display:flex;gap:8px;margin-top:12px}
+.sbtn{font-family:inherit;font-size:13px;font-weight:700;border-radius:4px;height:32px;padding:0 14px;cursor:pointer;transition:background .15s,border-color .15s,transform .06s}
+.sbtn:active{transform:translateY(1px)}
+.sbtn.primary{background:var(--green);border:1px solid var(--green);color:#fff}
+.sbtn.primary:hover{background:#148567}
+.sbtn.plain{background:transparent;border:1px solid #565856;color:var(--txt)}
+.sbtn.plain:hover{background:rgba(255,255,255,.05)}
+.sbtn.plain.done{color:var(--txt-2);border-color:#44464a;cursor:default}
+.ctx{display:flex;align-items:center;gap:7px;margin-top:12px;font-size:12px;color:var(--txt-2)}
+.ctx .mini{width:14px;height:14px;border-radius:3.5px;background:#0f62fe;display:grid;place-items:center;flex:none}
+.ctx .mini svg{width:10px;height:10px}
+.reacts{display:flex;gap:6px;margin-top:8px}
+.react{display:inline-flex;align-items:center;gap:5px;background:#27242c;border:1px solid transparent;border-radius:12px;padding:3px 9px;font-size:12.5px;color:var(--txt)}
+.react.mine{background:rgba(29,155,209,.14);border-color:var(--blue)}
+
+/* arrival animation */
+#alertGroup{display:none}
+#alertGroup.in{display:block}
+#alertGroup .msg{background:transparent;transition:background 1.6s ease}
+#alertGroup.flash .msg{background:rgba(242,199,68,.13)}
+@media(prefers-reduced-motion:no-preference){
+  #alertGroup.anim .divider,#alertGroup.anim .msg{animation:up .4s cubic-bezier(.2,.7,.3,1) both}
+  @keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .react.pop{animation:pop .22s cubic-bezier(.2,.7,.3,1.4) both}
+  @keyframes pop{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:scale(1)}}
+  .sbtn.pulse{animation:pulse 1s ease 1}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,164,120,.55)}100%{box-shadow:0 0 0 12px rgba(0,164,120,0)}}
+}
+.hidden{display:none!important}
+
+.composer{margin:2px 20px 18px;border:1px solid #565856;border-radius:8px;flex:none}
+.composer .in{padding:9px 12px;font-size:15px;color:var(--txt-3)}
+.composer .row{display:flex;align-items:center;gap:12px;padding:5px 8px 7px;color:var(--txt-3)}
+.composer .row svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.composer .plus{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.08);display:grid;place-items:center}
+.composer .sp{flex:1}
+.composer .send{width:28px;height:24px;border-radius:5px;background:rgba(255,255,255,.06);display:grid;place-items:center}
+</style>
+</head>
+<body>
+
+<nav class="wrail">
+  <div class="wtile">A</div>
+  <div class="wit on"><span class="ic"><svg viewBox="0 0 20 20"><path d="M3.2 8.6 10 3l6.8 5.6M4.6 7.6V16a1 1 0 0 0 1 1h8.8a1 1 0 0 0 1-1V7.6"/></svg></span><span class="lb">Home</span></div>
+  <div class="wit"><span class="ic"><svg viewBox="0 0 20 20"><path d="M4 4.5h12a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5H9l-3.6 2.8V14.5H4A1.5 1.5 0 0 1 2.5 13V6A1.5 1.5 0 0 1 4 4.5z"/></svg></span><span class="lb">DMs</span></div>
+  <div class="wit"><span class="ic"><svg viewBox="0 0 20 20"><path d="M10 3a4.6 4.6 0 0 0-4.6 4.6c0 3.8-1.8 5.3-1.8 5.3h12.8s-1.8-1.5-1.8-5.3A4.6 4.6 0 0 0 10 3zM8.5 16a1.6 1.6 0 0 0 3 0"/></svg></span><span class="lb">Activity</span></div>
+  <div class="wit"><span class="ic"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 6.2V10l2.6 1.6"/></svg></span><span class="lb">Later</span></div>
+  <div class="wit"><span class="ic"><svg viewBox="0 0 20 20"><circle cx="5" cy="10" r="1.4" fill="currentColor" stroke="none"/><circle cx="10" cy="10" r="1.4" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1.4" fill="currentColor" stroke="none"/></svg></span><span class="lb">More</span></div>
+  <div class="wsp"></div>
+  <div class="wme">K</div>
+</nav>
+
+<nav class="side">
+  <div class="shead">
+    <span class="nm">Acme <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4z"/></svg></span>
+    <span class="pen"><svg viewBox="0 0 16 16"><path d="M11.3 2.2l2.5 2.5L5.6 13H3v-2.6zM10 3.5l2.5 2.5"/></svg></span>
+  </div>
+  <div class="snav">
+    <div class="sit"><svg viewBox="0 0 16 16"><path d="M8 2.5c3.3 0 5.5 1.9 5.5 4.6S11.3 11.7 8 11.7c-.5 0-1-.05-1.4-.13L3.6 13.4l.8-2.6C3.1 9.9 2.5 8.8 2.5 7.1 2.5 4.4 4.7 2.5 8 2.5z"/></svg>Threads</div>
+    <div class="sit"><svg viewBox="0 0 16 16"><path d="M2.5 8L13.5 2.8 11 13.4 7.6 9.9zM7.6 9.9L13.5 2.8"/></svg>Drafts &amp; sent</div>
+    <div class="slab"><svg viewBox="0 0 10 10"><path d="M2 3l3 4 3-4z"/></svg>Channels</div>
+    <div class="sit"><span class="hash">#</span>deploys</div>
+    <div class="sit"><span class="hash">#</span>incident-bridge</div>
+    <div class="sit"><span class="hash">#</span>payments-platform</div>
+    <div class="sit"><span class="hash">#</span>payments-standup</div>
+    <div class="sit on"><span class="hash">#</span>finops-alerts</div>
+    <div class="slab"><svg viewBox="0 0 10 10"><path d="M2 3l3 4 3-4z"/></svg>Direct messages</div>
+    <div class="dm"><span class="av cz">CZ</span>CloudZero</div>
+    <div class="dm"><span class="av" style="background:#5d3d54"><span class="st onl"></span></span>sarah.kim</div>
+    <div class="dm"><span class="av" style="background:#3e5c4a"><span class="st onl"></span></span>d.okafor</div>
+    <div class="dm"><span class="av" style="background:#4a4463"><span class="st"></span></span>m.tanaka</div>
+  </div>
+</nav>
+
+<main class="main">
+  <header class="chead">
+    <span class="cn"># finops-alerts <svg viewBox="0 0 10 10"><path d="M1 3l4 4 4-4z"/></svg></span>
+    <span class="topic">Cost anomalies, routed by owning team — CloudZero</span>
+    <span class="mems"><span class="stack"><span class="mv" style="background:#5d3d54"></span><span class="mv" style="background:#3e5c4a"></span><span class="mv" style="background:#7a5c3e"></span></span><span class="ct">8</span></span>
+  </header>
+
+  <div class="msgs" id="msgs">
+
+    <div class="intro">
+      <h1># finops-alerts</h1>
+      <p><b>m.tanaka</b> created this channel on May 12th. CloudZero routes cost anomalies here — each alert reaches the team that owns the spend.</p>
+    </div>
+
+    <div class="divider"><span>Tuesday, June 23rd <i>▾</i></span></div>
+
+    <div class="msg">
+      <div class="avatar">CZSVG</div>
+      <div class="body">
+        <div class="hd"><span class="who">CloudZero</span><span class="app">APP</span><span class="ts">11:05 AM</span></div>
+        <div class="att calm"><div class="bar"></div><div class="inner">
+          <div class="line">Cost change on <span class="code">acme-prod-payments</span> — RDS read replica added · +$6/day.</div>
+          <div class="ctx"><span class="mini">CZMINI</span>Informational · within threshold · Terraform · ci-terraform</div>
+        </div></div>
+      </div>
+    </div>
+
+    <div id="alertGroup">
+      <div class="divider"><span>Thursday, July 2nd <i>▾</i></span></div>
+
+      <div class="msg">
+        <div class="avatar">CZSVG</div>
+        <div class="body">
+          <div class="hd"><span class="who">CloudZero</span><span class="app">APP</span><span class="ts">9:47 AM</span></div>
+          <div class="att hot"><div class="bar"></div><div class="inner">
+            <div class="title"><span style="margin-right:7px">🚨</span>Cost anomaly — Payments Platform</div>
+            <div class="line">Daily spend on <span class="code">i-0a3f9c2b7e14d8e6a</span> is tracking +122% above baseline.</div>
+            <div class="fields">
+              <div class="fld"><div class="k">Spend rate</div><div class="v">$204/day · baseline $92/day</div></div>
+              <div class="fld"><div class="k">Started</div><div class="v">09:14 UTC · detected 09:47 UTC</div></div>
+              <div class="fld"><div class="k">Resource</div><div class="v">EC2 · r5.4xlarge · us-east-1</div></div>
+              <div class="fld"><div class="k">Owner</div><div class="v">payments-platform · <span class="mention">@sarah.kim</span> on-call</div></div>
+            </div>
+            <div class="proj">≈ +$3,400/month excess if sustained</div>
+            <div class="btns">
+              <button class="sbtn primary" id="openBtn">Open in CloudZero</button>
+              <button class="sbtn plain" id="ackBtn">Acknowledge</button>
+            </div>
+            <div class="ctx"><span class="mini">CZMINI</span><span id="ctxLine">CloudZero · acme-prod-payments · anomaly #a-2216</span></div>
+          </div></div>
+          <div class="reacts" id="reacts"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="composer">
+    <div class="in">Message #finops-alerts</div>
+    <div class="row">
+      <span class="plus"><svg viewBox="0 0 16 16"><path d="M8 3.5v9M3.5 8h9"/></svg></span>
+      <svg viewBox="0 0 16 16"><path d="M4 5.5h8M4 8h8M4 10.5h5"/></svg>
+      <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M5.8 9.2a2.9 2.9 0 0 0 4.4 0M6.2 6.4h0M9.8 6.4h0"/></svg>
+      <svg viewBox="0 0 16 16"><path d="M13 8.5A5 5 0 1 1 8 3.4M13.5 3.5L8 9"/></svg>
+      <span class="sp"></span>
+      <svg viewBox="0 0 16 16"><rect x="6" y="2.5" width="4" height="7.5" rx="2"/><path d="M3.8 8a4.2 4.2 0 0 0 8.4 0M8 12.2v1.6"/></svg>
+      <span class="send"><svg viewBox="0 0 16 16"><path d="M2.5 8L13.5 2.8 11 13.4 7.6 9.9zM7.6 9.9L13.5 2.8"/></svg></span>
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){
+  /* CloudZero avatar mark */
+  var CZ='<svg viewBox="0 0 26 26"><rect width="26" height="26" rx="6" fill="#0f62fe"/><text x="13" y="17.5" text-anchor="middle" font-family="Lato,sans-serif" font-size="11" font-weight="900" fill="#fff">CZ</text></svg>';
+  var CZM='<svg viewBox="0 0 14 14"><rect width="14" height="14" rx="3.5" fill="#0f62fe"/><text x="7" y="10" text-anchor="middle" font-family="Lato,sans-serif" font-size="6.5" font-weight="900" fill="#fff">CZ</text></svg>';
+  document.querySelectorAll('.avatar').forEach(function(el){el.innerHTML=CZ});
+  document.querySelectorAll('.mini').forEach(function(el){el.innerHTML=CZM});
+
+  var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var group=document.getElementById('alertGroup');
+  var reacts=document.getElementById('reacts');
+  var openBtn=document.getElementById('openBtn');
+  var ackBtn=document.getElementById('ackBtn');
+  var msgs=document.getElementById('msgs');
+  var played=false, acked=false;
+
+  function addReact(emoji,cls){
+    var el=document.createElement('span');
+    el.className='react'+(cls?' '+cls:'');
+    el.innerHTML=emoji+' <b style="font-weight:700">1</b>';
+    if(!reduced)el.classList.add('pop');
+    reacts.appendChild(el);
+  }
+
+  function play(){
+    if(played)return; played=true;
+    if(reduced){
+      group.classList.add('in');
+      addReact('👀');
+      msgs.scrollTop=msgs.scrollHeight;
+      return;
+    }
+    group.classList.add('in','anim','flash');
+    msgs.scrollTop=msgs.scrollHeight;
+    setTimeout(function(){group.classList.remove('flash')},900);
+    setTimeout(function(){addReact('👀')},1700);
+    setTimeout(function(){openBtn.classList.add('pulse')},2600);
+    setTimeout(function(){openBtn.classList.remove('pulse')},3800);
+  }
+
+  function applyAck(fromRemote){
+    if(acked)return; acked=true;
+    ackBtn.textContent='✓ Acknowledged';
+    ackBtn.classList.add('done');
+    document.getElementById('ctxLine').textContent='CloudZero · acme-prod-payments · anomaly #a-2216 · acknowledged by you';
+    addReact('✅');
+    if(!fromRemote){try{parent.postMessage({cz:'ack'},'*')}catch(e){}}
+  }
+
+  openBtn.addEventListener('click',function(){
+    try{parent.postMessage({cz:'open'},'*')}catch(e){}
+  });
+  ackBtn.addEventListener('click',function(){if(!acked)applyAck(false)});
+
+  window.addEventListener('message',function(ev){
+    var d=ev.data||{};
+    if(d.cz==='play')play();
+    if(d.cz==='ack')applyAck(true);
+  });
+
+  /* standalone dev: autoplay after load */
+  if(location.search.indexOf('dev')>-1)setTimeout(play,800);
+})();
+</script>
+</body>
+</html>
