@@ -123,7 +123,8 @@ a:hover{color:var(--link-primary-hover);text-decoration:underline}
   .d-only{display:none}
   .m-only{display:inline}
   .mbar{position:fixed;top:0;left:0;right:0;height:56px;display:flex;align-items:center;gap:11px;padding:0 14px;background:#101014;border-bottom:1px solid #24242a;z-index:10}
-  .mbar .mark{width:32px;height:32px;border-radius:8px;background:var(--blue-60);display:grid;place-items:center;font-weight:600;font-size:13px;color:#fff;flex:none}
+  .mbar .menu{width:32px;height:32px;display:grid;place-items:center;flex:none;margin-left:-4px}
+  .mbar .menu svg{width:20px;height:20px;stroke:var(--gray-10);fill:none;stroke-width:1.8;stroke-linecap:butt}
   .mbar .tt{flex:1;min-width:0}
   .mbar .tt .id{font-family:var(--font-mono);font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .mbar .tt .sub{font-size:11px;color:var(--text-secondary);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -168,7 +169,7 @@ a:hover{color:var(--link-primary-hover);text-decoration:underline}
 </header>
 
 <header class="mbar">
-  <div class="mark">CZ</div>
+  <span class="menu"><svg viewBox="0 0 20 20"><path d="M2.5 5h15M2.5 10h15M2.5 15h15"/></svg></span>
   <div class="tt">
     <div class="id">i-0a3f9c2b7e14d8e6a</div>
     <div class="sub">Payments Platform · EC2 · us-east-1 · <span class="ok">● running</span></div>
