@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visionary — alpha</title>
+<style>
+  /* ============================================================
+     Visionary 0.1.0a5 — faithful in-browser recreation of the real
+     macOS app for the portfolio case study. Tokens are copied verbatim
+     from app/ui/theme.py; the sectioned grid mirrors app/ui/qml/ImageGrid.qml
+     (golden-ratio header chips, 2px white selection frame, glance-metadata
+     bar). Native system font — the app is Qt/Fusion, not the mono portfolio.
+     One deliberate improvement over the app's generic chips: in Color mode
+     the header chip shows the band's real colour, not a golden-ratio hue.
+     ============================================================ */
+  :root{
+    --bg-window:#232326; --bg-canvas:#1e1e21; --bg-field:#1c1c1f; --bg-raised:#2c2c30;
+    --bg-hover:#34343a; --bg-pressed:#28282c; --border:#3f3f45; --border-quiet:#333338;
+    --text:#e8e8ea; --text-muted:#9a9aa0; --text-faint:#6f6f76; --text-disabled:#63636a;
+    --action:#f0f0f2; --action-text:#17171a; --sel:#e8e8ea;
+    --head:#26262b; --head-hover:#2d3441; --hair:#33343a;
+    --cell:150px; --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg-canvas); color:var(--text); overflow:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","Segoe UI",sans-serif;
+    font-size:13px; -webkit-font-smoothing:antialiased; user-select:none;
+  }
+  .vz-app{display:flex;flex-direction:column;height:100vh;min-height:0}
+
+  /* ── menubar ─────────────────────────────────────────────── */
+  .vz-menubar{
+    display:flex;align-items:center;gap:2px;height:30px;flex:0 0 30px;
+    background:var(--bg-window);border-bottom:1px solid var(--border-quiet);
+    padding:0 12px;font-size:12.5px;
+  }
+  .vz-menubar .app{display:flex;align-items:center;gap:8px;font-weight:600;margin-right:14px}
+  .vz-menubar .app .glyph{width:15px;height:15px;border-radius:4px;
+    background:conic-gradient(from 210deg,#e0523a,#e2a23c,#3a8f93,#3a6ea5,#e0523a);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+  .vz-menubar .m{padding:3px 9px;border-radius:5px;color:var(--text-muted);cursor:default}
+  .vz-menubar .m:hover{background:var(--bg-hover);color:var(--text)}
+  .vz-menubar .sp{flex:1}
+  .vz-menubar .ver{color:var(--text-faint);font-size:11.5px;letter-spacing:.02em}
+
+  /* ── toolbar ─────────────────────────────────────────────── */
+  .vz-toolbar{
+    display:flex;align-items:center;gap:8px;height:44px;flex:0 0 44px;
+    background:var(--bg-window);border-bottom:1px solid var(--border-quiet);padding:0 12px;
+  }
+  .vz-btn{background:var(--bg-raised);color:var(--text);border:1px solid var(--border);
+    border-radius:6px;padding:6px 13px;font-size:12.5px;font-family:inherit;cursor:pointer;
+    display:inline-flex;align-items:center;gap:7px;transition:background .15s,border-color .15s}
+  .vz-btn:hover{background:var(--bg-hover)}
+  .vz-btn:active{background:var(--bg-pressed)}
+  .vz-btn.ghost{background:transparent;border-color:transparent;color:#d0d0d4;padding:6px 9px}
+  .vz-btn.ghost:hover{background:var(--bg-hover)}
+  .vz-sep{width:1px;height:22px;background:var(--border-quiet);margin:0 3px}
+  .vz-arrange{position:relative}
+  select.vz-select{appearance:none;-webkit-appearance:none;background:var(--bg-raised);color:var(--text);
+    border:1px solid var(--border);border-radius:6px;padding:6px 30px 6px 12px;font-size:12.5px;
+    font-family:inherit;cursor:pointer;min-width:168px}
+  select.vz-select:hover{border-color:#4c4c54}
+  .vz-arrange::after{content:"";position:absolute;right:12px;top:50%;width:8px;height:8px;
+    border-right:1.5px solid var(--text-muted);border-bottom:1.5px solid var(--text-muted);
+    transform:translateY(-70%) rotate(45deg);pointer-events:none}
+  .vz-density{display:inline-flex;align-items:center;gap:0;border:1px solid var(--border);
+    border-radius:6px;overflow:hidden;background:var(--bg-raised)}
+  .vz-density button{width:30px;height:30px;background:transparent;border:0;color:#d0d0d4;
+    font-size:16px;cursor:pointer;font-family:inherit;line-height:1}
+  .vz-density button:hover{background:var(--bg-hover)}
+  .vz-density .bar{width:1px;height:18px;background:var(--border-quiet)}
+  .vz-spring{flex:1}
+
+  /* ── body: docks + canvas ────────────────────────────────── */
+  .vz-body{flex:1;display:flex;min-height:0}
+  .vz-dock{background:var(--bg-window);display:flex;flex-direction:column;min-height:0;flex:0 0 auto}
+  .vz-left{width:238px;border-right:1px solid var(--border-quiet)}
+  .vz-right{width:256px;border-left:1px solid var(--border-quiet)}
+  .vz-tabs{display:flex;gap:0;height:32px;flex:0 0 32px;align-items:stretch;padding:0 6px;
+    border-bottom:1px solid var(--border-quiet)}
+  .vz-tab{padding:0 12px;display:flex;align-items:center;font-size:12.5px;color:#8a8a90;
+    border-bottom:2px solid transparent;cursor:pointer;background:transparent}
+  .vz-tab:hover{color:#c2c2c8}
+  .vz-tab.on{color:var(--action);border-bottom-color:var(--action)}
+  .vz-panelttl{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-faint);
+    padding:12px 14px 7px;font-weight:600}
+
+  /* Folders tree */
+  .vz-tree{padding:4px 6px 8px;overflow:auto;flex:0 0 auto}
+  .vz-tree .row{display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:5px;
+    font-size:12.5px;color:var(--text-muted);cursor:default;white-space:nowrap}
+  .vz-tree .row:hover{background:#2a2a2f}
+  .vz-tree .row.on{background:var(--sel);color:var(--action-text)}
+  .vz-tree .row.on .cnt{color:var(--action-text);opacity:.7}
+  .vz-tree .tw{width:12px;color:var(--text-faint);font-size:10px}
+  .vz-tree .ico{opacity:.85}
+  .vz-tree .cnt{margin-left:auto;color:var(--text-faint);font-size:11px}
+  .vz-tree .indent{padding-left:22px}
+  .vz-tree .indent2{padding-left:38px}
+
+  /* Metadata */
+  .vz-meta{border-top:1px solid var(--border-quiet);margin-top:6px;padding:2px 14px 14px;
+    overflow:auto;flex:1;min-height:0}
+  .vz-meta .empty{color:var(--text-faint);font-size:12px;padding:18px 0;line-height:1.6}
+  .vz-mrow{display:flex;justify-content:space-between;gap:12px;padding:6px 0;
+    border-bottom:1px solid var(--border-quiet);font-size:12px}
+  .vz-mrow .k{color:var(--text-faint)}
+  .vz-mrow .v{color:var(--text);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px}
+  .vz-mrow .sw{display:inline-block;width:10px;height:10px;border-radius:2px;
+    vertical-align:middle;margin-right:6px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+  .vz-capbox{margin-top:12px}
+  .vz-capbox .lbl{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+  .vz-capbox .box{background:var(--bg-field);border:1px solid var(--border);border-radius:6px;
+    padding:8px 9px;font-size:12px;color:var(--text-muted);min-height:54px;line-height:1.5;
+    max-height:120px;overflow:auto}
+  .vz-capbox .box.filled{color:var(--text)}
+
+  /* ── canvas / sectioned grid ─────────────────────────────── */
+  .vz-canvas{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--bg-canvas);position:relative}
+  .vz-isobar{display:none;align-items:center;gap:12px;height:34px;flex:0 0 34px;padding:0 14px;
+    background:#202028;border-bottom:1px solid var(--border-quiet);font-size:12.5px;color:var(--text-muted)}
+  .vz-isobar.on{display:flex}
+  .vz-isobar .back{color:var(--action);cursor:pointer;font-weight:500;display:inline-flex;align-items:center;gap:6px}
+  .vz-isobar .back:hover{text-decoration:underline}
+  .vz-scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding:6px 14px 40px;scrollbar-width:thin;
+    scrollbar-color:var(--border) transparent}
+  .vz-scroll::-webkit-scrollbar{width:10px}
+  .vz-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:5px;border:2px solid var(--bg-canvas)}
+
+  .vz-head{display:flex;align-items:center;height:30px;margin:0 -14px;padding:0 14px 0 12px;
+    background:var(--head);border-top:1px solid var(--hair);cursor:pointer;position:relative}
+  .vz-head:hover{background:var(--head-hover)}
+  .vz-head .chip{width:8px;height:8px;border-radius:4px;flex:0 0 8px;margin-right:12px}
+  .vz-head .nm{font-size:12px;font-weight:600;color:#dfe3ea}
+  .vz-head .nm .ct{font-weight:400;color:var(--text-muted)}
+  .vz-head .open{margin-left:auto;font-size:12px;color:#8a8b93}
+  .vz-head:hover .open{color:var(--action)}
+  .vz-head.flat{background:transparent;border-top:0;cursor:default;height:8px}
+
+  .vz-tiles{display:flex;flex-wrap:wrap;gap:0;padding-top:2px}
+  .vz-tile{width:var(--cell);height:var(--cell);padding:4px;position:relative;cursor:pointer;
+    will-change:transform}
+  .vz-tile .frame{position:absolute;inset:4px;border-radius:4px;border:2px solid transparent;overflow:hidden}
+  .vz-tile:hover .frame{border-color:#4a4b52}
+  .vz-tile.sel .frame{border-color:var(--action)}
+  .vz-tile img{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);
+    object-fit:cover;border-radius:2px;background:#141416;opacity:0;transition:opacity .18s}
+  .vz-tile img.rdy{opacity:1}
+  .vz-tile .glance{position:absolute;left:7px;right:7px;bottom:7px;padding:3px 4px;border-radius:2px;
+    background:rgba(16,16,19,.82);color:#e6e6ea;font-size:10.5px;text-align:center;
+    opacity:0;transition:opacity .12s;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .vz-tile:hover .glance,.vz-tile.sel .glance{opacity:1}
+  .vz-tile.dim{opacity:.28}
+  .vz-tile .lose{position:absolute;top:8px;right:8px;background:var(--action);color:var(--action-text);
+    font-size:9px;font-weight:700;letter-spacing:.04em;padding:2px 5px;border-radius:3px;display:none}
+  .vz-tile.loser .lose{display:block}
+
+  /* Tags panel */
+  .vz-tagwrap{flex:1;display:flex;flex-direction:column;min-height:0}
+  .vz-selbox{border-bottom:1px solid var(--border-quiet);padding:10px 14px 12px;flex:0 0 auto;display:none}
+  .vz-selbox.on{display:block}
+  .vz-selbox .hd{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+  .vz-selrow{display:flex;justify-content:space-between;gap:8px;font-size:12px;padding:3px 0;color:var(--text)}
+  .vz-selrow .cov{color:var(--text-faint);font-size:11px}
+  .vz-addfield{margin-top:9px;background:var(--bg-field);border:1px solid var(--border);border-radius:6px;
+    padding:6px 9px;font-size:12px;color:var(--text-faint)}
+  .vz-vocab{flex:1;overflow:auto;padding:8px 8px 20px;min-height:0}
+  .vz-chips{display:flex;flex-wrap:wrap;gap:6px;padding:2px 6px 10px}
+  .vz-chip{display:inline-flex;align-items:center;gap:6px;background:var(--sel);color:var(--action-text);
+    border-radius:5px;padding:3px 8px;font-size:11.5px;font-weight:600;cursor:pointer}
+  .vz-chip.excl{background:transparent;color:var(--text-muted);border:1px solid var(--border)}
+  .vz-chip .x{opacity:.6}
+  .vz-trow{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:5px;font-size:12.5px;
+    color:var(--text-muted);cursor:pointer}
+  .vz-trow:hover{background:#2a2a2f;color:var(--text)}
+  .vz-trow .dot{width:6px;height:6px;border-radius:3px;background:#3f7f7a;flex:0 0 6px;opacity:0}
+  .vz-trow.analyze .dot{opacity:1}
+  .vz-trow .tg{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .vz-trow .n{color:var(--text-faint);font-size:11px}
+
+  /* Caption panel */
+  .vz-caption{flex:1;overflow:auto;padding:12px 14px 24px;display:none;min-height:0}
+  .vz-caption.on{display:block}
+  .vz-field{margin-bottom:13px}
+  .vz-field>label{display:block;font-size:11px;color:var(--text-faint);text-transform:uppercase;
+    letter-spacing:.07em;margin-bottom:6px}
+  .vz-field select,.vz-field .fake{width:100%;appearance:none;-webkit-appearance:none;background:var(--bg-raised);
+    color:var(--text);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12.5px;font-family:inherit}
+  .vz-disc{font-size:12px;color:var(--text-muted);cursor:pointer;padding:6px 0;user-select:none}
+  .vz-disc:hover{color:var(--text)}
+  .vz-extras{display:none;padding:4px 0 6px}
+  .vz-extras.on{display:block}
+  .vz-check{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--text-muted);padding:5px 0;cursor:pointer}
+  .vz-check .cb{width:15px;height:15px;border-radius:4px;border:1px solid #55555c;background:var(--bg-field);flex:0 0 15px;
+    display:grid;place-items:center;font-size:10px;color:var(--action-text)}
+  .vz-check.on .cb{background:var(--action);border-color:var(--action)}
+  .vz-check.on{color:var(--text)}
+  .vz-preview{background:var(--bg-field);border:1px solid var(--border-quiet);border-radius:6px;
+    padding:9px 10px;font-size:11.5px;color:var(--text-muted);line-height:1.55;margin:6px 0 13px}
+  .vz-preview b{color:var(--text);font-weight:600}
+  .vz-run{width:100%;background:var(--action);color:var(--action-text);border:1px solid var(--action);
+    border-radius:6px;padding:9px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer}
+  .vz-run:hover{background:#fff}
+
+  /* status bar */
+  .vz-status{display:flex;align-items:center;height:26px;flex:0 0 26px;background:var(--bg-window);
+    border-top:1px solid var(--border-quiet);padding:0 14px;font-size:11.5px;color:var(--text-muted)}
+  .vz-status .sp{flex:1}
+  .vz-status .r{color:var(--text-faint)}
+
+  @media(max-width:900px){ .vz-right{display:none} }
+  @media(max-width:680px){ .vz-left{display:none} .vz-menubar .m{display:none} }
+  @media(prefers-reduced-motion:reduce){ .vz-tile{transition:none!important} }
+</style>
+</head>
+<body>
+<div class="vz-app">
+
+  <div class="vz-menubar">
+    <span class="app"><span class="glyph"></span>Visionary</span>
+    <span class="m">File</span><span class="m">Select</span><span class="m">View</span><span class="m">Tools</span>
+    <span class="sp"></span>
+    <span class="ver">test photos · 0.1.0a5 · alpha</span>
+  </div>
+
+  <div class="vz-toolbar">
+    <button class="vz-btn" id="vzOpen">Open Folder…</button>
+    <span class="vz-sep"></span>
+    <span class="vz-arrange">
+      <select class="vz-select" id="vzArrange">
+        <optgroup label="Group">
+          <option value="structure">Group: Structure</option>
+          <option value="color" selected>Group: Color</option>
+          <option value="resolution">Group: Resolution</option>
+          <option value="person">Group: Person</option>
+        </optgroup>
+        <optgroup label="Sort">
+          <option value="name">Sort: Name</option>
+          <option value="filesize">Sort: File size</option>
+        </optgroup>
+      </select>
+    </span>
+    <span class="vz-density">
+      <button id="vzZoomOut" title="Smaller tiles">−</button><span class="bar"></span><button id="vzZoomIn" title="Larger tiles">+</button>
+    </span>
+    <span class="vz-spring"></span>
+    <button class="vz-btn" id="vzDedupe">Dedupe</button>
+    <button class="vz-btn ghost" id="vzReload" title="Reload folder">⟳</button>
+  </div>
+
+  <div class="vz-body">
+    <!-- LEFT: Folders / Favorites + Metadata -->
+    <aside class="vz-dock vz-left">
+      <div class="vz-tabs">
+        <div class="vz-tab on">Folders</div><div class="vz-tab">Favorites</div>
+      </div>
+      <div class="vz-tree">
+        <div class="row on"><span class="tw">▾</span><span class="ico">📁</span>test photos<span class="cnt">44</span></div>
+        <div class="row indent"><span class="ico">📁</span>runway<span class="cnt">18</span></div>
+        <div class="row indent"><span class="ico">📁</span>editorial<span class="cnt">14</span></div>
+        <div class="row indent"><span class="ico">📁</span>portraits<span class="cnt">7</span></div>
+        <div class="row indent"><span class="ico">📁</span>landscapes<span class="cnt">5</span></div>
+      </div>
+      <div class="vz-panelttl">Metadata</div>
+      <div class="vz-meta" id="vzMeta">
+        <div class="empty">Select an image to inspect its dimensions, colour, format and caption.</div>
+      </div>
+    </aside>
+
+    <!-- CENTER: sectioned grid -->
+    <main class="vz-canvas">
+      <div class="vz-isobar" id="vzIso">
+        <span class="back" id="vzBack">← All images</span>
+        <span id="vzIsoLabel"></span>
+      </div>
+      <div class="vz-scroll" id="vzScroll"></div>
+    </main>
+
+    <!-- RIGHT: Tags / Caption -->
+    <aside class="vz-dock vz-right">
+      <div class="vz-tabs">
+        <div class="vz-tab on" data-panel="tags">Tags</div><div class="vz-tab" data-panel="caption">Caption</div>
+      </div>
+      <div class="vz-tagwrap" id="vzTagWrap">
+        <div class="vz-selbox" id="vzSelBox">
+          <div class="hd" id="vzSelHd">In selection</div>
+          <div id="vzSelTags"></div>
+          <div class="vz-addfield" id="vzAddField">Add tag to 1 selected image…</div>
+        </div>
+        <div class="vz-chips" id="vzChips"></div>
+        <div class="vz-vocab" id="vzVocab"></div>
+      </div>
+      <div class="vz-caption" id="vzCaption">
+        <div class="vz-field">
+          <label>Model</label>
+          <div class="fake">JoyCaption Alpha Two · Q6_K</div>
+        </div>
+        <div class="vz-field">
+          <label>Caption type</label>
+          <select id="vzCapType">
+            <option>Descriptive</option><option>Training prompt (SD/Flux)</option>
+            <option>Booru tag list</option><option>MidJourney</option>
+            <option>Art critic</option><option>Product listing</option><option>Social post</option>
+          </select>
+        </div>
+        <div class="vz-field">
+          <label>Length</label>
+          <select id="vzCapLen"><option>Any</option><option>Very short</option><option>Short</option>
+            <option selected>Medium</option><option>Long</option><option>Exact word count…</option></select>
+        </div>
+        <div class="vz-disc" id="vzExtraToggle">▸ Extra instructions (17)</div>
+        <div class="vz-extras" id="vzExtras">
+          <div class="vz-check on" data-x="lighting"><span class="cb">✓</span>Include lighting</div>
+          <div class="vz-check" data-x="camera"><span class="cb"></span>Include camera angle</div>
+          <div class="vz-check on" data-x="depth"><span class="cb">✓</span>Include depth of field</div>
+          <div class="vz-check" data-x="pg"><span class="cb"></span>Keep it PG</div>
+          <div class="vz-check" data-x="name"><span class="cb"></span>Refer to the subject as {name}</div>
+        </div>
+        <div class="vz-preview" id="vzCapPreview"></div>
+        <button class="vz-run" id="vzRun">Caption 44 images</button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="vz-status">
+    <span id="vzStatus">44 images · grouped into 10 groups</span>
+    <span class="sp"></span>
+    <span class="r" id="vzStatusR">Idle · 267 MB</span>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* real app metadata, exported from test photos/.visionary/dataset.db */
+const MANIFEST = [{"id": 567, "f": "567.webp", "w": 2240, "h": 3360, "mp": 7.5, "kb": 1640, "fam": "Red", "res": "2–4K", "dup": 0, "person": 0, "rgb": [86, 63, 64], "tags": ["skirt", "realistic", "jewelry", "gloves", "1girl", "long skirt", "plaid", "earrings", "white gloves"], "cap": "skirt, realistic, jewelry, gloves, 1girl, long skirt, plaid, earrings, white gloves, black hair, red skirt, long hair, plaid skirt, looking at viewer, tiara, solo focus, standing, multiple boys, long sleeves, shirt, sweater, runway, outdoor", "name": "00027-Gucci-Fall-20-RTW-GORUNWAY.jpg", "fmt": "JPEG", "ord": 0}, {"id": 52, "f": "52.webp", "w": 2240, "h": 3360, "mp": 7.5, "kb": 1356, "fam": "Orange", "res": "2–4K", "dup": 0, "person": 1, "rgb": [117, 105, 83], "tags": ["solo", "tree", "outdoors", "realistic", "brown hair", "white pants", "photo background", "photorealistic", "1girl"], "cap": "solo, tree, outdoors, realistic, brown hair, white pants, photo background, photorealistic, 1girl, pants, long hair, standing, blurry, blurry background, looking at viewer, day, nature, long sleeves, full body, runway, outdoor", "name": "00002-melbostad-fall-2023-ready-to-wear-credit-brand.jpg", "fmt": "JPEG", "ord": 1}, {"id": 476, "f": "476.webp", "w": 2240, "h": 3360, "mp": 7.5, "kb": 2160, "fam": "Yellow", "res": "2–4K", "dup": 0, "person": 2, "rgb": [111, 102, 75], "tags": ["solo", "1boy", "male focus", "realistic", "dark skin", "outdoors", "dark-skinned male", "jacket", "pants"], "cap": "solo, 1boy, male focus, realistic, dark skin, outdoors, dark-skinned male, jacket, pants, tree, photo background, black hair, photorealistic, black pants, short hair, full body, nature, black footwear, open jacket, open clothes, asian, grey", "name": "00003-melbostad-fall-2023-ready-to-wear-credit-brand.jpg", "fmt": "JPEG", "ord": 2}, {"id": 216, "f": "216.webp", "w": 2000, "h": 1599, "mp": 3.2, "kb": 2954, "fam": "Green", "res": "1–2K", "dup": 0, "person": 0, "rgb": [50, 63, 46], "tags": [], "cap": "", "name": "06_5484.LAW_037-HR_hi-res_web.jpg", "fmt": "JPEG", "ord": 3}, {"id": 727, "f": "727.webp", "w": 2580, "h": 3226, "mp": 8.3, "kb": 1368, "fam": "Teal", "res": "2–4K", "dup": 0, "person": 0, "rgb": [58, 108, 116], "tags": ["runway", "editorial", "closeup", "test"], "cap": "runway, editorial, closeup, test", "name": "TogoYeye-%20PUIG%20x%20PHOTOVOGUE_-7.jpg", "fmt": "JPEG", "ord": 4}, {"id": 345, "f": "345.webp", "w": 2000, "h": 2000, "mp": 4.0, "kb": 5080, "fam": "Blue", "res": "1–2K", "dup": 0, "person": 0, "rgb": [97, 128, 143], "tags": [], "cap": "", "name": "11_5603.KBW_002-HR-hi-res-web.jpg", "fmt": "JPEG", "ord": 5}, {"id": 214, "f": "214.webp", "w": 1024, "h": 1280, "mp": 1.3, "kb": 1355, "fam": "Purple", "res": "1–2K", "dup": 0, "person": 0, "rgb": [99, 86, 127], "tags": [], "cap": "", "name": "2c4bdb90-c9d5-11ee-9399-a99e86026daf_gallery.jpg", "fmt": "JPEG", "ord": 6}, {"id": 407, "f": "407.webp", "w": 2000, "h": 3000, "mp": 6.0, "kb": 1297, "fam": "Pink", "res": "2–4K", "dup": 0, "person": 0, "rgb": [89, 72, 80], "tags": [], "cap": "", "name": "_A2X0801.jpg", "fmt": "JPEG", "ord": 7}, {"id": 3, "f": "3.webp", "w": 1280, "h": 853, "mp": 1.1, "kb": 533, "fam": "Neutral", "res": "1–2K", "dup": 0, "person": 2, "rgb": [156, 156, 156], "tags": [], "cap": "", "name": "b8b56620-c9ba-11ee-9fde-2794e64102e6_gallery.jpg", "fmt": "JPEG", "ord": 8}, {"id": 136, "f": "136.webp", "w": 989, "h": 1280, "mp": 1.3, "kb": 812, "fam": "Black", "res": "1–2K", "dup": 0, "person": 0, "rgb": [35, 19, 13], "tags": [], "cap": "", "name": "402bb830-c9d8-11ee-9399-a99e86026daf_gallery.jpg", "fmt": "JPEG", "ord": 9}, {"id": 636, "f": "636.webp", "w": 2240, "h": 3360, "mp": 7.5, "kb": 1391, "fam": "Red", "res": "2–4K", "dup": 0, "person": 0, "rgb": [81, 66, 65], "tags": ["boots", "1girl", "gloves", "solo focus", "coat", "skirt", "bag", "realistic", "socks"], "cap": "boots, 1girl, gloves, solo focus, coat, skirt, bag, realistic, socks, looking at viewer, plaid, black footwear, jacket, multiple boys, black hair, hood, standing, fur trim, plaid skirt, full body, runway, outdoor", "name": "00002-Gucci-Fall-20-RTW-GORUNWAY.jpg", "fmt": "JPEG", "ord": 10}, {"id": 432, "f": "432.webp", "w": 2240, "h": 3360, "mp": 7.5, "kb": 1284, "fam": "Orange", "res": "2–4K", "dup": 0, "person": 1, "rgb": [133, 122, 108], "tags": ["solo", "jacket", "brown hair", "outdoors", "pants", "tree", "white pants", "black jacket", "standing"], "cap": "solo, jacket, brown hair, outdoors, pants, tree, white pants, black jacket, standing, shirt, leather jacket, 1girl, leather, day, open jacket, belt, black footwear, hands in pockets, full body, blurry, long sleeves, open clothes, water, rea", "name": "00013-melbostad-fall-2023-ready-to-wear-credit-brand.jpg", "fmt": "JPEG", "ord": 11}, {"id": 125, "f": "125.webp", "w": 2240, "h": 3360, "mp": 7.5, "kb": 1701, "fam": "Yellow", "res": "2–4K", "dup": 0, "person": 2, "rgb": [112, 110, 85], "tags": ["solo", "1boy", "outdoors", "male focus", "facial hair", "photo background", "hood", "realistic", "pants"], "cap": "solo, 1boy, outdoors, male focus, facial hair, photo background, hood, realistic, pants, tree, looking at viewer, hoodie, black hoodie, standing, beard, day, full body, black pants, sleeves past wrists, photorealistic, nature, hood down, ha", "name": "00011-melbostad-fall-2023-ready-to-wear-credit-brand.jpg", "fmt": "JPEG", "ord": 12}, {"id": 316, "f": "316.webp", "w": 2240, "h": 3360, "mp": 7.5, "kb": 1197, "fam": "Green", "res": "2–4K", "dup": 0, "person": 0, "rgb": [57, 63, 51], "tags": ["solo", "realistic", "shirt", "pants", "hand in pocket", "green shirt", "looking at viewer", "brown pants", "collared shirt"], "cap": "solo, realistic, shirt, pants, hand in pocket, green shirt, looking at viewer, brown pants, collared shirt, asian, belt, brown hair, standing, long sleeves, 1boy, heart, male focus, 1girl, border, runway, outdoor", "name": "00004-denzil-patrick-fall-2024-menswear-credit-brand.jpg", "fmt": "JPEG", "ord": 13}, {"id": 130, "f": "130.webp", "w": 853, "h": 1280, "mp": 1.1, "kb": 1186, "fam": "Teal", "res": "1–2K", "dup": 0, "person": 0, "rgb": [76, 118, 125], "tags": [], "cap": "", "name": "989bb640-c9b1-11ee-b105-e98a08300558_gallery.jpg", "fmt": "JPEG", "ord": 14}, {"id": 304, "f": "304.webp", "w": 2000, "h": 2468, "mp": 4.9, "kb": 2048, "fam": "Blue", "res": "2–4K", "dup": 0, "person": 0, "rgb": [35, 107, 155], "tags": [], "cap": "", "name": "253MAG380_Gomes_HR.jpg", "fmt": "JPEG", "ord": 15}, {"id": 472, "f": "472.webp", "w": 853, "h": 1280, "mp": 1.1, "kb": 489, "fam": "Purple", "res": "1–2K", "dup": 0, "person": 0, "rgb": [136, 127, 151], "tags": [], "cap": "", "name": "9b899cb0-c9d8-11ee-9399-a99e86026daf_gallery.jpg", "fmt": "JPEG", "ord": 16}, {"id": 78, "f": "78.webp", "w": 837, "h": 1280, "mp": 1.1, "kb": 920, "fam": "Pink", "res": "1–2K", "dup": 0, "person": 0, "rgb": [180, 119, 146], "tags": [], "cap": "", "name": "3124b6d0-c9b4-11ee-b105-e98a08300558_gallery.jpg", "fmt": "JPEG", "ord": 17}, {"id": 770, "f": "770.webp", "w": 1000, "h": 1500, "mp": 1.5, "kb": 265, "fam": "Neutral", "res": "1–2K", "dup": 1, "person": 0, "rgb": [142, 124, 123], "tags": [], "cap": "", "name": "2013_India_Monkey_Brains_40x6022 2.jpg", "fmt": "JPEG", "ord": 18}, {"id": 333, "f": "333.webp", "w": 989, "h": 1280, "mp": 1.3, "kb": 614, "fam": "Black", "res": "1–2K", "dup": 0, "person": 0, "rgb": [16, 9, 11], "tags": [], "cap": "", "name": "59e8c510-c9d8-11ee-9399-a99e86026daf_gallery.jpg", "fmt": "JPEG", "ord": 19}, {"id": 454, "f": "454.webp", "w": 2240, "h": 3360, "mp": 7.5, "kb": 1070, "fam": "Red", "res": "2–4K", "dup": 0, "person": 0, "rgb": [75, 66, 65], "tags": ["realistic", "pants", "shirt", "1girl", "plaid pants", "earrings", "gloves", "sunglasses", "standing"], "cap": "realistic, pants, shirt, 1girl, plaid pants, earrings, gloves, sunglasses, standing, jewelry, pink shirt, photorealistic, plaid, black hair, looking at viewer, brown hair, solo focus, long sleeves, glasses, multiple boys, outdoor", "name": "00005-Gucci-Fall-20-RTW-GORUNWAY.jpg", "fmt": "JPEG", "ord": 20}, {"id": 299, "f": "299.webp", "w": 2240, "h": 3360, "mp": 7.5, "kb": 1255, "fam": "Orange", "res": "2–4K", "dup": 0, "person": 1, "rgb": [108, 100, 83], "tags": ["2girls", "multiple girls", "realistic", "hood", "blonde hair", "black pants", "jacket", "pants", "black footwear"], "cap": "2girls, multiple girls, realistic, hood, blonde hair, black pants, jacket, pants, black footwear, outdoors, brown hair, white dress, hoodie, photo background, photorealistic, looking at viewer, tree, coat, dress, standing, boots, full body,", "name": "00015-melbostad-fall-2023-ready-to-wear-credit-brand.jpg", "fmt": "JPEG", "ord": 21}, {"id": 124, "f": "124.webp", "w": 2240, "h": 3360, "mp": 7.5, "kb": 1477, "fam": "Yellow", "res": "2–4K", "dup": 0, "person": 1, "rgb": [93, 87, 71], "tags": ["2girls", "tree", "multiple girls", "jacket", "blonde hair", "black jacket", "realistic", "skirt", "outdoors"], "cap": "2girls, tree, multiple girls, jacket, blonde hair, black jacket, realistic, skirt, outdoors, jewelry, pants, brown hair, black pants, black skirt, necklace, shoes, black footwear, open clothes, standing, open jacket, looking at viewer, blac", "name": "00008-melbostad-fall-2023-ready-to-wear-credit-brand.jpg", "fmt": "JPEG", "ord": 22}, {"id": 722, "f": "722.webp", "w": 2240, "h": 3359, "mp": 7.5, "kb": 936, "fam": "Green", "res": "2–4K", "dup": 0, "person": 0, "rgb": [57, 69, 55], "tags": ["1girl", "solo", "coat", "blue coat", "realistic", "standing", "brown hair", "full body", "black footwear"], "cap": "1girl, solo, coat, blue coat, realistic, standing, brown hair, full body, black footwear, gloves, skirt, bag, holding, handbag, photorealistic, short hair", "name": "01-marni-pre-fall-2017.jpg", "fmt": "JPEG", "ord": 23}, {"id": 63, "f": "63.webp", "w": 960, "h": 1280, "mp": 1.2, "kb": 677, "fam": "Teal", "res": "1–2K", "dup": 0, "person": 0, "rgb": [44, 53, 54], "tags": ["solo", "1girl", "black hair", "long hair", "artist name"], "cap": "solo, 1girl, black hair, long hair, artist name", "name": "00421300-c9c3-11ee-8dd1-99f64ac2ed49_gallery.jpg", "fmt": "JPEG", "ord": 24}, {"id": 192, "f": "192.webp", "w": 1280, "h": 853, "mp": 1.1, "kb": 1440, "fam": "Blue", "res": "1–2K", "dup": 0, "person": 0, "rgb": [40, 107, 152], "tags": [], "cap": "", "name": "1cdeec70-c9b1-11ee-a62c-312158d8e3d1_gallery.jpg", "fmt": "JPEG", "ord": 25}, {"id": 409, "f": "409.webp", "w": 1280, "h": 960, "mp": 1.2, "kb": 444, "fam": "Purple", "res": "1–2K", "dup": 0, "person": 0, "rgb": [120, 106, 139], "tags": [], "cap": "", "name": "a5c65420-c9a1-11ee-82be-097467ff0443_gallery.jpg", "fmt": "JPEG", "ord": 26}, {"id": 135, "f": "135.webp", "w": 960, "h": 1280, "mp": 1.2, "kb": 725, "fam": "Pink", "res": "1–2K", "dup": 0, "person": 0, "rgb": [132, 104, 130], "tags": [], "cap": "", "name": "83625a90-c9a2-11ee-82be-097467ff0443_gallery.jpg", "fmt": "JPEG", "ord": 27}, {"id": 759, "f": "759.webp", "w": 1000, "h": 1500, "mp": 1.5, "kb": 265, "fam": "Neutral", "res": "1–2K", "dup": 1, "person": 0, "rgb": [142, 124, 123], "tags": [], "cap": "", "name": "2013_India_Monkey_Brains_40x6022.jpg", "fmt": "JPEG", "ord": 28}, {"id": 206, "f": "206.webp", "w": 2240, "h": 2801, "mp": 6.3, "kb": 772, "fam": "Red", "res": "2–4K", "dup": 0, "person": 0, "rgb": [159, 140, 134], "tags": ["2girls", "multiple girls", "barefoot", "long hair", "standing", "shadow", "brown hair", "holding", "flower"], "cap": "2girls, multiple girls, barefoot, long hair, standing, shadow, brown hair, holding, flower, black hair, branch, dress, long sleeves, white dress", "name": "01-chufy-spring-2018.jpg", "fmt": "JPEG", "ord": 29}, {"id": 266, "f": "266.webp", "w": 1069, "h": 1280, "mp": 1.4, "kb": 742, "fam": "Orange", "res": "1–2K", "dup": 0, "person": 2, "rgb": [90, 83, 73], "tags": [], "cap": "", "name": "bed9c7d0-c9d3-11ee-9399-a99e86026daf_gallery.jpg", "fmt": "JPEG", "ord": 30}, {"id": 359, "f": "359.webp", "w": 2240, "h": 3360, "mp": 7.5, "kb": 1296, "fam": "Yellow", "res": "2–4K", "dup": 0, "person": 2, "rgb": [69, 70, 38], "tags": ["1boy", "nature", "male focus", "realistic", "solo", "jacket", "pants", "forest", "tree"], "cap": "1boy, nature, male focus, realistic, solo, jacket, pants, forest, tree, outdoors, black pants, shirt, black hair, dark-skinned male, traditional media, leaf, looking at viewer, asian, short hair, standing, white shirt, photorealistic, open ", "name": "00005-melbostad-fall-2023-ready-to-wear-credit-brand.jpg", "fmt": "JPEG", "ord": 31}, {"id": 645, "f": "645.webp", "w": 960, "h": 1280, "mp": 1.2, "kb": 288, "fam": "Green", "res": "1–2K", "dup": 0, "person": 0, "rgb": [60, 63, 42], "tags": ["no humans", "flower", "white flower", "nature", "plant", "outdoors", "leaf", "scenery", "green theme"], "cap": "no humans, flower, white flower, nature, plant, outdoors, leaf, scenery, green theme, tree, forest", "name": "0101beb0-c9b1-11ee-a62c-312158d8e3d1_gallery.jpg", "fmt": "JPEG", "ord": 32}, {"id": 725, "f": "725.webp", "w": 2240, "h": 3360, "mp": 7.5, "kb": 530, "fam": "Teal", "res": "2–4K", "dup": 0, "person": 0, "rgb": [143, 163, 167], "tags": ["1girl", "solo", "blonde hair", "dress", "bag", "hat", "white border", "floral print", "holding"], "cap": "1girl, solo, blonde hair, dress, bag, hat, white border, floral print, holding, long hair, looking at viewer, border, realistic, black headwear, handbag, short sleeves, tile wall, tiles, indoors, beret, cowboy shot", "name": "00005b-Gucci-SS21-PF21.jpg", "fmt": "JPEG", "ord": 33}, {"id": 331, "f": "331.webp", "w": 1069, "h": 1280, "mp": 1.4, "kb": 1330, "fam": "Blue", "res": "1–2K", "dup": 0, "person": 0, "rgb": [115, 120, 134], "tags": [], "cap": "", "name": "0bc71500-c9a4-11ee-82be-097467ff0443_gallery.jpg", "fmt": "JPEG", "ord": 34}, {"id": 301, "f": "301.webp", "w": 1659, "h": 2048, "mp": 3.4, "kb": 474, "fam": "Red", "res": "2–4K", "dup": 0, "person": 0, "rgb": [63, 45, 44], "tags": ["1girl", "solo", "broom", "brown hair", "long sleeves", "holding", "short hair", "outdoors", "standing"], "cap": "1girl, solo, broom, brown hair, long sleeves, holding, short hair, outdoors, standing, holding broom, hakama, dress, leaning forward, skirt, white shirt, blurry, photo background, full body, water, fashion photography", "name": "%22In+Memory+of+the+late+Mr.+and+Mrs.+Comfort%22,+a+fable,+Nadja+Auermann,+model,+Montauk,+New+York,+August+1995_03(BH).jpg", "fmt": "JPEG", "ord": 35}, {"id": 778, "f": "778.webp", "w": 1400, "h": 933, "mp": 1.3, "kb": 285, "fam": "Orange", "res": "1–2K", "dup": 2, "person": 0, "rgb": [110, 95, 85], "tags": [], "cap": "", "name": "susannah_swamp_sticks_2013_60x90_web 2.jpg", "fmt": "JPEG", "ord": 36}, {"id": 492, "f": "492.webp", "w": 2240, "h": 3360, "mp": 7.5, "kb": 1250, "fam": "Yellow", "res": "2–4K", "dup": 0, "person": 1, "rgb": [101, 94, 59], "tags": ["1girl", "solo", "brown hair", "dress", "jacket", "black dress", "realistic", "outdoors", "looking at viewer"], "cap": "1girl, solo, brown hair, dress, jacket, black dress, realistic, outdoors, looking at viewer, head tilt, brown eyes, photorealistic, branch, holding, standing, day, arm up, nature, green jacket, curly hair, tree, lips, long sleeves, open jac", "name": "00009-melbostad-fall-2023-ready-to-wear-credit-brand.jpg", "fmt": "JPEG", "ord": 37}, {"id": 391, "f": "391.webp", "w": 1280, "h": 853, "mp": 1.1, "kb": 1151, "fam": "Blue", "res": "1–2K", "dup": 0, "person": 0, "rgb": [117, 134, 155], "tags": [], "cap": "", "name": "b300f290-c9c8-11ee-83c4-f19a416b5b0b_gallery.jpg", "fmt": "JPEG", "ord": 38}, {"id": 101, "f": "101.webp", "w": 1026, "h": 1539, "mp": 1.6, "kb": 383, "fam": "Red", "res": "1–2K", "dup": 0, "person": 0, "rgb": [127, 73, 58], "tags": ["1girl", "solo", "blonde hair", "long hair", "black footwear", "boots", "hat", "plant", "looking at viewer"], "cap": "1girl, solo, blonde hair, long hair, black footwear, boots, hat, plant, looking at viewer, sunglasses, standing, blue eyes, border, jewelry, floral print, long sleeves, red border, full body", "name": "01-Gucci-Pre-Fall-18.jpg", "fmt": "JPEG", "ord": 39}, {"id": 761, "f": "761.webp", "w": 1400, "h": 933, "mp": 1.3, "kb": 285, "fam": "Orange", "res": "1–2K", "dup": 2, "person": 0, "rgb": [110, 95, 85], "tags": [], "cap": "", "name": "susannah_swamp_sticks_2013_60x90_web.jpg", "fmt": "JPEG", "ord": 40}, {"id": 637, "f": "637.webp", "w": 2240, "h": 3360, "mp": 7.5, "kb": 1174, "fam": "Yellow", "res": "2–4K", "dup": 0, "person": 1, "rgb": [54, 50, 33], "tags": ["solo", "jacket", "realistic", "tree", "pants", "black pants", "shirt", "brown hair", "male focus"], "cap": "solo, jacket, realistic, tree, pants, black pants, shirt, brown hair, male focus, 1boy, outdoors, nature, forest, hand in pocket, green jacket, looking at viewer, open jacket, open clothes, standing, blurry background, medium hair, white sh", "name": "00007-melbostad-fall-2023-ready-to-wear-credit-brand.jpg", "fmt": "JPEG", "ord": 41}, {"id": 773, "f": "773.webp", "w": 1000, "h": 669, "mp": 0.7, "kb": 693, "fam": "Yellow", "res": "<1K", "dup": 3, "person": 0, "rgb": [55, 55, 46], "tags": [], "cap": "", "name": "Dash_Bombing_2001_30x40_Web 2.jpg", "fmt": "JPEG", "ord": 42}, {"id": 775, "f": "775.webp", "w": 1000, "h": 669, "mp": 0.7, "kb": 693, "fam": "Yellow", "res": "<1K", "dup": 3, "person": 0, "rgb": [55, 55, 46], "tags": [], "cap": "", "name": "Dash_Bombing_2001_30x40_Web.jpg", "fmt": "JPEG", "ord": 43}];
+
+const FAM_ORDER = ["Red","Orange","Yellow","Green","Teal","Blue","Purple","Pink","Neutral","Black"];
+const FAM_COLOR = {Red:"#c0392b",Orange:"#d9803a",Yellow:"#c9a227",Green:"#4f7a3a",Teal:"#2f8f93",
+  Blue:"#3a6ea5",Purple:"#7d5ba6",Pink:"#c56b9c",Neutral:"#8a8a86",Black:"#54545a"};
+const RES_ORDER = ["≥4K","2–4K","1–2K","<1K"];
+
+const $ = s => document.querySelector(s);
+const scroll = $("#vzScroll");
+const state = { mode:"color", cell:150, sel:new Set(), filterInc:new Set(), filterExc:new Set(), iso:null };
+const byId = Object.fromEntries(MANIFEST.map(m=>[m.id,m]));
+
+/* golden-ratio hue (app/ui/qml/ImageGrid.qml) for generic modes */
+function goldenHue(i){ return `hsl(${(i*0.61803*360)%360} 42% 55%)`; }
+
+/* ── grouping: one function per Arrange mode, all from real metadata ── */
+function computeGroups(mode){
+  const rows = MANIFEST.filter(passesFilter);
+  if(mode==="name")     return [{flat:true, items:[...rows].sort((a,b)=>a.name.localeCompare(b.name))}];
+  if(mode==="filesize") return [{flat:true, items:[...rows].sort((a,b)=>b.kb-a.kb)}];
+
+  if(mode==="color"){
+    const g={}; rows.forEach(m=>(g[m.fam]=g[m.fam]||[]).push(m));
+    return FAM_ORDER.filter(f=>g[f]).map(f=>({key:f,label:f,chip:FAM_COLOR[f],items:g[f]}));
+  }
+  if(mode==="resolution"){
+    const g={}; rows.forEach(m=>(g[m.res]=g[m.res]||[]).push(m));
+    return RES_ORDER.filter(r=>g[r]).map((r,i)=>({key:r,label:r,chip:goldenHue(i),
+      items:g[r].sort((a,b)=>(b.w*b.h)-(a.w*a.h))}));
+  }
+  if(mode==="structure"){
+    // real perceptual near-duplicate groups first (keeper = highest resolution),
+    // then the similar-ordered tail — mirrors core/grouping + adjacency.py
+    const dups={}; rows.forEach(m=>{ if(m.dup) (dups[m.dup]=dups[m.dup]||[]).push(m); });
+    const out=[];
+    Object.keys(dups).sort().forEach((k,i)=>{
+      const items=dups[k].sort((a,b)=>(b.w*b.h)-(a.w*a.h)); // keeper first
+      out.push({key:"dup"+k,label:"Near-duplicates",chip:goldenHue(i),items,badge:"copies"});
+    });
+    const tail=rows.filter(m=>!m.dup).sort(adjacency);
+    if(tail.length) out.push({key:"tail",label:"Similar shots",chip:null,items:tail,muted:true});
+    return out;
+  }
+  if(mode==="person"){
+    const g={1:[],2:[],0:[]}; rows.forEach(m=>g[m.person||0].push(m));
+    const out=[];
+    if(g[1].length) out.push({key:"p1",label:"Person 1",chip:goldenHue(3),items:g[1]});
+    if(g[2].length) out.push({key:"p2",label:"Person 2",chip:goldenHue(6),items:g[2]});
+    if(g[0].length) out.push({key:"none",label:"No repeated person",chip:null,items:g[0],muted:true});
+    return out;
+  }
+  return [{flat:true,items:rows}];
+}
+/* greedy colour-adjacency: keeps the ungrouped tail visually coherent */
+function adjacency(a,b){
+  const fa=FAM_ORDER.indexOf(a.fam), fb=FAM_ORDER.indexOf(b.fam);
+  if(fa!==fb) return fa-fb;
+  return (a.rgb[0]+a.rgb[1]+a.rgb[2])-(b.rgb[0]+b.rgb[1]+b.rgb[2]);
+}
+function passesFilter(m){
+  if(state.iso && !state.iso.has(m.id)) return false;
+  for(const t of state.filterInc) if(!m.tags.includes(t)) return false;
+  for(const t of state.filterExc) if(m.tags.includes(t)) return false;
+  return true;
+}
+
+/* ── tile elements (persistent, so FLIP can move the same nodes) ── */
+const tileEls = new Map();
+function tileEl(m){
+  let el = tileEls.get(m.id);
+  if(!el){
+    el = document.createElement("div");
+    el.className="vz-tile"; el.dataset.id=m.id;
+    el.innerHTML =
+      `<div class="frame"><img loading="lazy" src="assets/th/${m.f}" alt="">
+       <div class="glance">${m.w}×${m.h} · ${human(m.kb)}</div></div><div class="lose">DUPLICATE</div>`;
+    const img = el.querySelector("img");
+    img.addEventListener("load",()=>img.classList.add("rdy"));
+    if(img.complete) img.classList.add("rdy");
+    el.addEventListener("click",e=>onTileClick(m,e));
+    tileEls.set(m.id, el);
+  }
+  el.classList.toggle("sel", state.sel.has(m.id));
+  el.classList.toggle("loser", el.classList.contains("loser") && state.sel.has(m.id));
+  return el;
+}
+function human(kb){ return kb>=1024 ? (kb/1024).toFixed(1)+" MB" : kb+" KB"; }
+
+/* ── render with a FLIP reflow (tiles fly to their new group) ── */
+function render(animate=true){
+  const groups = computeGroups(state.mode);
+  const first = new Map();
+  if(animate) tileEls.forEach((el,id)=>{ if(el.isConnected) first.set(id, el.getBoundingClientRect()); });
+
+  scroll.innerHTML="";
+  let nGroups=0, nImgs=0;
+  for(const g of groups){
+    if(!g.flat){
+      nGroups++;
+      const h=document.createElement("div");
+      h.className="vz-head"+(g.muted?" muted":"");
+      h.innerHTML =
+        `${g.chip?`<span class="chip" style="background:${g.chip}"></span>`
+                 :`<span class="chip" style="background:transparent;box-shadow:inset 0 0 0 1.5px #55555c"></span>`}
+         <span class="nm">${g.label}<span class="ct">  ·  ${g.items.length} ${g.items.length===1?"image":"images"}</span></span>
+         <span class="open">open ▸</span>`;
+      h.addEventListener("click",()=>isolate(g));
+      scroll.appendChild(h);
+    }
+    const row=document.createElement("div"); row.className="vz-tiles";
+    for(const m of g.items){ row.appendChild(tileEl(m)); nImgs++; }
+    scroll.appendChild(row);
+  }
+  if(!groups.length){
+    scroll.innerHTML=`<div style="color:var(--text-faint);padding:60px 20px;text-align:center;font-size:13px">Nothing matches this filter.</div>`;
+  }
+
+  if(animate){
+    requestAnimationFrame(()=>{
+      tileEls.forEach((el,id)=>{
+        const f=first.get(id); if(!f||!el.isConnected) return;
+        const l=el.getBoundingClientRect();
+        const dx=f.left-l.left, dy=f.top-l.top;
+        if(dx||dy){
+          el.style.transition="none";
+          el.style.transform=`translate(${dx}px,${dy}px)`;
+          requestAnimationFrame(()=>{
+            el.style.transition="transform .55s var(--ease)";
+            el.style.transform="";
+          });
+        }
+      });
+    });
+  }
+  const flat = groups.length===1 && groups[0].flat;
+  $("#vzStatus").textContent = state.iso
+    ? `Showing one group · ${nImgs} images`
+    : flat ? `${nImgs} images · ${state.mode==="name"?"filename order":"largest first"}`
+           : `${nImgs} images · grouped into ${nGroups} group${nGroups===1?"":"s"}`;
+}
+
+/* ── interactions ── */
+function onTileClick(m,e){
+  if(e.metaKey||e.ctrlKey){ state.sel.has(m.id)?state.sel.delete(m.id):state.sel.add(m.id); }
+  else if(e.shiftKey && state._anchor!=null){
+    const order = [...scroll.querySelectorAll(".vz-tile")].map(t=>+t.dataset.id);
+    const a=order.indexOf(state._anchor), b=order.indexOf(m.id);
+    if(a>-1&&b>-1){ const [lo,hi]=[Math.min(a,b),Math.max(a,b)]; for(let i=lo;i<=hi;i++) state.sel.add(order[i]); }
+  } else { state.sel=new Set([m.id]); state._anchor=m.id; }
+  if(!e.shiftKey) state._anchor=m.id;
+  syncSelection();
+}
+function syncSelection(){
+  tileEls.forEach((el,id)=>el.classList.toggle("sel", state.sel.has(id)));
+  updateMeta(); updateTagPanel();
+}
+function isolate(g){
+  state.iso = new Set(g.items.map(m=>m.id));
+  $("#vzIso").classList.add("on");
+  $("#vzIsoLabel").textContent = `${g.label} · ${g.items.length} images`;
+  render(true);
+}
+$("#vzBack").addEventListener("click",()=>{ state.iso=null; $("#vzIso").classList.remove("on"); render(true); });
+
+$("#vzArrange").addEventListener("change",e=>{ state.mode=e.target.value; state.sel.clear();
+  tileEls.forEach(el=>el.classList.remove("loser")); syncSelection(); render(true); });
+$("#vzZoomIn").addEventListener("click",()=>setCell(state.cell+18));
+$("#vzZoomOut").addEventListener("click",()=>setCell(state.cell-18));
+function setCell(v){ state.cell=Math.max(104,Math.min(210,v));
+  document.documentElement.style.setProperty("--cell",state.cell+"px"); render(false); }
+$("#vzReload").addEventListener("click",()=>{ scroll.style.opacity=.4; setTimeout(()=>scroll.style.opacity=1,180);
+  $("#vzStatusR").textContent="Reloaded · 267 MB"; setTimeout(()=>$("#vzStatusR").textContent="Idle · 267 MB",1400); });
+$("#vzOpen").addEventListener("click",()=>{ $("#vzStatusR").textContent="test photos · 44 scanned"; });
+
+/* Dedupe = switch to Structure, isolate the duplicate groups, SELECT the lower-res copies
+   (never auto-delete) — exactly the app's "review before you delete" flow. */
+$("#vzDedupe").addEventListener("click",()=>{
+  state.mode="structure"; $("#vzArrange").value="structure";
+  const dupItems = MANIFEST.filter(m=>m.dup);
+  state.iso = new Set(dupItems.map(m=>m.id));
+  // keeper per group = highest resolution; the rest are losers
+  const groups={}; dupItems.forEach(m=>(groups[m.dup]=groups[m.dup]||[]).push(m));
+  state.sel.clear(); tileEls.forEach(el=>el.classList.remove("loser"));
+  Object.values(groups).forEach(g=>{
+    g.sort((a,b)=>(b.w*b.h)-(a.w*a.h));
+    g.slice(1).forEach(m=>{ state.sel.add(m.id); tileEls.get(m.id) && tileEls.get(m.id).classList.add("loser"); });
+  });
+  $("#vzIso").classList.add("on");
+  $("#vzIsoLabel").textContent="Reviewing duplicates — copies selected";
+  render(true); syncSelection();
+  $("#vzStatus").textContent=`${Object.keys(groups).length} near-duplicate groups · ${state.sel.size} copies selected — press ⌫ to trash`;
+});
+
+/* ── Metadata panel ── */
+function updateMeta(){
+  const box=$("#vzMeta");
+  if(state.sel.size!==1){ box.innerHTML=`<div class="empty">${state.sel.size>1?state.sel.size+" images selected.":"Select an image to inspect its dimensions, colour, format and caption."}</div>`; return; }
+  const m=byId[[...state.sel][0]];
+  const folder = m.tags.includes("runway")||m.name.match(/GORUNWAY|Gucci|melbostad|patrick|marni|chufy/i) ? "runway"
+               : m.tags.includes("editorial")||m.name.match(/VOGUE|PHOTOVOGUE|MAG/i) ? "editorial"
+               : m.tags.includes("no humans") ? "landscapes" : "editorial";
+  const rgb=`rgb(${m.rgb.join(",")})`;
+  box.innerHTML =
+    `<div class="vz-mrow"><span class="k">Name</span><span class="v" title="${m.name}">${m.name}</span></div>
+     <div class="vz-mrow"><span class="k">Folder</span><span class="v">${folder}</span></div>
+     <div class="vz-mrow"><span class="k">Dimensions</span><span class="v">${m.w} × ${m.h}</span></div>
+     <div class="vz-mrow"><span class="k">Megapixels</span><span class="v">${m.mp} MP</span></div>
+     <div class="vz-mrow"><span class="k">File size</span><span class="v">${human(m.kb)}</span></div>
+     <div class="vz-mrow"><span class="k">Format</span><span class="v">${m.fmt}</span></div>
+     <div class="vz-mrow"><span class="k">Colour</span><span class="v"><span class="sw" style="background:${rgb}"></span>${m.fam}</span></div>
+     <div class="vz-capbox"><div class="lbl">Caption</div>
+       <div class="box ${m.cap?"filled":""}">${m.cap || "— no caption yet —"}</div></div>`;
+}
+
+/* ── Tags panel: selection tags (k/n) + dataset vocabulary filter ── */
+const VOCAB = (()=>{
+  const c={}, src={};
+  MANIFEST.forEach(m=>m.tags.forEach((t,i)=>{ c[t]=(c[t]||0)+1; if(!(t in src)) src[t] = i>=6?"analyze":"caption"; }));
+  return Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([t,n])=>({t,n,src:src[t]}));
+})();
+function updateTagPanel(){
+  const selBox=$("#vzSelBox");
+  const ids=[...state.sel];
+  if(ids.length){
+    selBox.classList.add("on");
+    $("#vzSelHd").textContent = ids.length===1 ? "Tags · this image" : `Tags · ${ids.length} selected`;
+    $("#vzAddField").textContent = `Add tag to ${ids.length} selected image${ids.length===1?"":"s"}…`;
+    const cnt={};
+    ids.forEach(id=>byId[id].tags.forEach(t=>cnt[t]=(cnt[t]||0)+1));
+    const rows=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,14);
+    $("#vzSelTags").innerHTML = rows.length ? rows.map(([t,n])=>
+      `<div class="vz-selrow"><span>${t}</span><span class="cov">${n}/${ids.length}</span></div>`).join("")
+      : `<div class="vz-selrow"><span style="color:var(--text-faint)">no tags yet — run a tagger</span></div>`;
+  } else { selBox.classList.remove("on"); }
+  renderVocab();
+}
+function renderVocab(){
+  const chips=$("#vzChips"); chips.innerHTML="";
+  state.filterInc.forEach(t=>{ const c=document.createElement("span"); c.className="vz-chip";
+    c.innerHTML=`${t} <span class="x">✕</span>`; c.onclick=()=>{state.filterInc.delete(t);applyFilter();}; chips.appendChild(c); });
+  state.filterExc.forEach(t=>{ const c=document.createElement("span"); c.className="vz-chip excl";
+    c.innerHTML=`⊘ ${t} <span class="x">✕</span>`; c.onclick=()=>{state.filterExc.delete(t);applyFilter();}; chips.appendChild(c); });
+
+  // narrow the vocabulary to tags co-occurring in the filtered set (faceted)
+  const shown = MANIFEST.filter(passesFilter);
+  const live={}; shown.forEach(m=>m.tags.forEach(t=>live[t]=(live[t]||0)+1));
+  const vocab=$("#vzVocab"); vocab.innerHTML="";
+  VOCAB.filter(v=>live[v.t] && !state.filterInc.has(v.t) && !state.filterExc.has(v.t))
+       .sort((a,b)=>live[b.t]-live[a.t])
+       .forEach(v=>{
+    const r=document.createElement("div"); r.className="vz-trow"+(v.src==="analyze"?" analyze":"");
+    r.innerHTML=`<span class="dot"></span><span class="tg">${v.t}</span><span class="n">${live[v.t]}</span>`;
+    r.onclick=()=>{ state.filterInc.add(v.t); applyFilter(); };
+    r.oncontextmenu=e=>{ e.preventDefault(); state.filterExc.add(v.t); applyFilter(); };
+    vocab.appendChild(r);
+  });
+}
+function applyFilter(){ state.sel.clear(); syncSelectionSilent(); render(true); updateTagPanel(); }
+function syncSelectionSilent(){ tileEls.forEach(el=>el.classList.remove("sel")); updateMeta(); }
+
+/* right-dock tab switch */
+document.querySelectorAll(".vz-right .vz-tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".vz-right .vz-tab").forEach(x=>x.classList.remove("on")); t.classList.add("on");
+  const cap = t.dataset.panel==="caption";
+  $("#vzCaption").classList.toggle("on",cap); $("#vzTagWrap").style.display=cap?"none":"flex";
+}));
+/* JoyCaption controls */
+$("#vzExtraToggle").addEventListener("click",()=>{ const e=$("#vzExtras"); e.classList.toggle("on");
+  $("#vzExtraToggle").textContent=(e.classList.contains("on")?"▾":"▸")+" Extra instructions (17)"; capPreview(); });
+$("#vzExtras").addEventListener("click",e=>{ const c=e.target.closest(".vz-check"); if(!c)return; c.classList.toggle("on");
+  c.querySelector(".cb").textContent=c.classList.contains("on")?"✓":""; capPreview(); });
+$("#vzCapType").addEventListener("change",capPreview); $("#vzCapLen").addEventListener("change",capPreview);
+function capPreview(){
+  const type=$("#vzCapType").value, len=$("#vzCapLen").value;
+  const extras=[...document.querySelectorAll("#vzExtras .vz-check.on")].map(c=>({
+    lighting:"include information about lighting",camera:"include camera angle",
+    depth:"include depth of field",pg:"keep it PG",name:"refer to the subject as {name}"}[c.dataset.x]));
+  let base = type==="Booru tag list" ? "Write a list of Booru tags for this image."
+    : type==="Training prompt (SD/Flux)" ? "Write a stable-diffusion prompt for this image."
+    : type==="MidJourney" ? "Write a MidJourney prompt for this image."
+    : type==="Art critic" ? "Write a caption for this image as though it were a piece of art."
+    : `Write a ${len==="Any"?"":len.toLowerCase()+" "}descriptive caption for this image.`.replace(/  +/," ");
+  const tail = extras.length ? " "+extras.join(". ")+"." : "";
+  $("#vzCapPreview").innerHTML = `<b>Instruction →</b> ${base}${tail}`;
+}
+
+/* boot */
+document.documentElement.style.setProperty("--cell",state.cell+"px");
+render(false); updateTagPanel(); capPreview();
+window.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if(state.iso){state.iso=null;$("#vzIso").classList.remove("on");render(true);} else {state.sel.clear();syncSelection();} } });
+
+/* let the embedding case study drive the Arrange mode (CloudZero lens-picker pattern) */
+window.addEventListener("message",e=>{
+  const d=e.data||{};
+  if(d.vz==="mode" && d.mode){
+    state.mode=d.mode; $("#vzArrange").value=d.mode;
+    state.iso=null; $("#vzIso").classList.remove("on");
+    state.filterInc.clear(); state.filterExc.clear();
+    state.sel.clear(); tileEls.forEach(el=>el.classList.remove("loser"));
+    scroll.scrollTop=0; syncSelection(); render(true); updateTagPanel();
+  } else if(d.vz==="dedupe"){ $("#vzDedupe").click(); }
+});
+</script>
+</body>
+</html>
