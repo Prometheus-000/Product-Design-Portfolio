@@ -287,12 +287,12 @@
   @media(max-width:820px){.autopsy{grid-template-columns:1fr}.aplist{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);scrollbar-width:none}.aplist::-webkit-scrollbar{display:none}.apitem{border-bottom:0;border-right:1px solid var(--line);min-width:210px}.apba{grid-template-columns:1fr;gap:20px}.apdetail{min-height:0;padding:26px 22px}}
 
   /* Performance — the part users never see */
-  .perf{margin-top:30px;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .perf{margin-top:30px;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   .perf .cell{background:var(--bg);padding:26px 22px 24px}
   .perf .n{font-weight:700;font-size:clamp(28px,3.8vw,42px);letter-spacing:-.02em;line-height:1;color:var(--ink)}
   .perf .n .u{font-size:.46em;color:var(--ink-soft);font-weight:600;margin-left:4px;letter-spacing:0}
   .perf .l{margin-top:13px;font-size:12.5px;color:var(--ink-soft);font-weight:500;line-height:1.5}
-  @media(max-width:720px){.perf{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:640px){.perf{grid-template-columns:1fr}}
   .membar{margin-top:30px;border-top:1px solid var(--line);padding-top:26px}
   .membar .mhead{font-size:13px;color:var(--ink-soft);font-weight:600;margin-bottom:18px}
   .membar .mhead b{color:var(--ink);font-weight:700}
@@ -745,10 +745,9 @@
         <div class="beat-title">Built for speed.</div>
         <p class="beat-pov">It processes 100,000 photos in under a minute on an 8&nbsp;GB machine. The heavy analysis runs in the background while you browse.</p>
         <div class="perf">
-          <div class="cell"><div class="n">100<span class="u">K imgs</span></div><div class="l">in a single folder</div></div>
+          <div class="cell"><div class="n">100<span class="u">K+</span></div><div class="l">images</div></div>
           <div class="cell"><div class="n">120<span class="u">fps</span></div><div class="l">sustained scrolling</div></div>
-          <div class="cell"><div class="n">0<span class="u">janky</span></div><div class="l">dropped frames in 24&nbsp;s</div></div>
-          <div class="cell"><div class="n">267<span class="u">MB</span></div><div class="l">for a 750-photo set</div></div>
+          <div class="cell"><div class="n">0</div><div class="l">dropped frames in 24&nbsp;s</div></div>
         </div>
         <div class="membar">
           <div class="mhead">Memory footprint against an <b>8&nbsp;GB</b> budget.</div>
