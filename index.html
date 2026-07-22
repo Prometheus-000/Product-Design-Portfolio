@@ -247,6 +247,8 @@
   .vzcap{margin-top:18px;font-size:14.5px;color:var(--ink-soft);font-weight:500;line-height:1.55;max-width:66ch}
   .vzcap b{color:var(--ink);font-weight:600}
   .vznote{margin-top:10px;font-size:12px;color:var(--ink-faint);font-weight:500;letter-spacing:.01em;max-width:66ch}
+  .vznote a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line);transition:color .2s}
+  .vznote a:hover{color:var(--ink);text-decoration-color:var(--ink-soft)}
 
   /* Autopsy — pivots that shipped, met a user, and lost */
   .autopsy{margin-top:36px;display:grid;grid-template-columns:270px 1fr;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#0A0A0F}
@@ -674,7 +676,7 @@
         <div class="vzbar">
           <span class="lead">Arrange by</span>
           <div class="picker" id="vzPicker" role="tablist" aria-label="Arrange the dataset">
-            <button class="on" data-mode="color">Colour</button>
+            <button class="on" data-mode="color">Color</button>
             <button data-mode="structure">Structure</button>
             <button data-mode="resolution">Resolution</button>
             <button data-mode="person">Person</button>
@@ -684,8 +686,8 @@
         <div class="vzscreen">
           <iframe id="vzApp" src="visionary/" title="Visionary — interactive alpha" loading="lazy"></iframe>
         </div>
-        <p class="vzcap"><b>Structure</b> gathers near-duplicates for review before you delete. <b>Colour</b> and <b>Person</b> come from the app's own perceptual hashes and on-device face clusters. Select a tile and its real dimensions, colour and tags fill the panels.</p>
-        <p class="vznote">Rebuilt in the browser from the app's own index — every dimension, colour, duplicate and tag here is Visionary's output on a 44-image set. The native app does the same on your folders at a hundred thousand.</p>
+        <p class="vzcap"><b>Structure</b> gathers near-duplicates for review before you delete. <b>Color</b> and <b>Person</b> come from the app's own perceptual hashes and on-device face clusters. Select a tile and its real dimensions, color and tags fill the panels.</p>
+        <p class="vznote">Rebuilt in the browser from the app's own index — every dimension, color, duplicate and tag here is Visionary's output on a 44-image set. The native app does the same on your folders at a hundred thousand. This is only the demo — the full app is on <a href="https://github.com/Prometheus-000/visionary" target="_blank" rel="noopener">GitHub</a>.</p>
       </div>
 
       <!-- THE ROAD: autopsy of what got cut -->
@@ -722,7 +724,7 @@
             <span><i class="a"></i>267&nbsp;MB · a 750-photo set</span>
             <span><i class="b"></i>~1.5&nbsp;GB · 100,000 images</span>
           </div>
-          <p class="cap">The grid decodes only the tiles on screen. Hashes and colour read from thumbnails rather than the source files. Duplicate thresholds are computed once so a scroll is just an array lookup. Memory moved from 1497 to 1505&nbsp;MB across 90 seconds of scrolling at 100,000 images. One file-descriptor leak surfaced at that scale and was closed.</p>
+          <p class="cap">The grid decodes only the tiles on screen. Hashes and color read from thumbnails rather than the source files. Duplicate thresholds are computed once so a scroll is just an array lookup. Memory moved from 1497 to 1505&nbsp;MB across 90 seconds of scrolling at 100,000 images. One file-descriptor leak surfaced at that scale and was closed.</p>
         </div>
       </div>
 
@@ -733,8 +735,8 @@
         <div class="creed">
           <div class="c">
             <div class="ce">Design</div>
-            <div class="ct">One action colour. White.</div>
-            <p>The chrome is dark and neutral so nothing tints how you read a photograph. White is the only colour that <i>acts</i> — the primary button, the selection frame. Everything else recedes.</p>
+            <div class="ct">One action color. White.</div>
+            <p>The chrome is dark and neutral so nothing tints how you read a photograph. White is the only color that <i>acts</i> — the primary button, the selection frame. Everything else recedes.</p>
           </div>
           <div class="c">
             <div class="ce">Control</div>
@@ -1061,7 +1063,7 @@
     { nm:"The proximity slider", tg:"cut",
       quote:"The slider does nothing.", who:"My design review",
       before:"A slider from 0 to 12 set the similarity threshold and regrouped the set live. You couldn't see it work — every affected group sat below the fold and a framebuffer diff showed no pixels changing.",
-      after:"I removed it. Grouping became a choice between named axes — Colour, Structure, Resolution, Person — instead of a number to guess. The number was invented complexity." },
+      after:"I removed it. Grouping became a choice between named axes — Color, Structure, Resolution, Person — instead of a number to guess. The number was invented complexity." },
     { nm:"Grid selection", tg:"rebuilt",
       quote:"Currently unusable. Users want ultimate authority.", who:"My design review",
       before:"I'd invented my own selection model. A click grabbed a whole duplicate group, deleting took several steps, and selecting a tile flooded it blue and shrank the image. It read as broken.",

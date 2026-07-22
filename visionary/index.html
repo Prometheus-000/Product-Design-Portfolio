@@ -12,7 +12,7 @@
      (golden-ratio header chips, 2px white selection frame, glance-metadata
      bar). Native system font — the app is Qt/Fusion, not the mono portfolio.
      One deliberate improvement over the app's generic chips: in Color mode
-     the header chip shows the band's real colour, not a golden-ratio hue.
+     the header chip shows the band's real color, not a golden-ratio hue.
      ============================================================ */
   :root{
     --bg-window:#232326; --bg-canvas:#1e1e21; --bg-field:#1c1c1f; --bg-raised:#2c2c30;
@@ -267,7 +267,7 @@
       </div>
       <div class="vz-panelttl">Metadata</div>
       <div class="vz-meta" id="vzMeta">
-        <div class="empty">Select an image to inspect its dimensions, colour, format and caption.</div>
+        <div class="empty">Select an image to inspect its dimensions, color, format and caption.</div>
       </div>
     </aside>
 
@@ -389,7 +389,7 @@ function computeGroups(mode){
   }
   return [{flat:true,items:rows}];
 }
-/* greedy colour-adjacency: keeps the ungrouped tail visually coherent */
+/* greedy color-adjacency: keeps the ungrouped tail visually coherent */
 function adjacency(a,b){
   const fa=FAM_ORDER.indexOf(a.fam), fb=FAM_ORDER.indexOf(b.fam);
   if(fa!==fb) return fa-fb;
@@ -532,7 +532,7 @@ $("#vzDedupe").addEventListener("click",()=>{
 /* ── Metadata panel ── */
 function updateMeta(){
   const box=$("#vzMeta");
-  if(state.sel.size!==1){ box.innerHTML=`<div class="empty">${state.sel.size>1?state.sel.size+" images selected.":"Select an image to inspect its dimensions, colour, format and caption."}</div>`; return; }
+  if(state.sel.size!==1){ box.innerHTML=`<div class="empty">${state.sel.size>1?state.sel.size+" images selected.":"Select an image to inspect its dimensions, color, format and caption."}</div>`; return; }
   const m=byId[[...state.sel][0]];
   const folder = m.tags.includes("runway")||m.name.match(/GORUNWAY|Gucci|melbostad|patrick|marni|chufy/i) ? "runway"
                : m.tags.includes("editorial")||m.name.match(/VOGUE|PHOTOVOGUE|MAG/i) ? "editorial"
@@ -545,7 +545,7 @@ function updateMeta(){
      <div class="vz-mrow"><span class="k">Megapixels</span><span class="v">${m.mp} MP</span></div>
      <div class="vz-mrow"><span class="k">File size</span><span class="v">${human(m.kb)}</span></div>
      <div class="vz-mrow"><span class="k">Format</span><span class="v">${m.fmt}</span></div>
-     <div class="vz-mrow"><span class="k">Colour</span><span class="v"><span class="sw" style="background:${rgb}"></span>${m.fam}</span></div>
+     <div class="vz-mrow"><span class="k">Color</span><span class="v"><span class="sw" style="background:${rgb}"></span>${m.fam}</span></div>
      <div class="vz-capbox"><div class="lbl">Caption</div>
        <div class="box ${m.cap?"filled":""}">${m.cap || "— no caption yet —"}</div></div>`;
 }
