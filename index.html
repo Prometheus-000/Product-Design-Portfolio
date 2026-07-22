@@ -150,8 +150,7 @@
   .pullquote{margin-top:36px;font-size:clamp(19px,2.5vw,26px);font-weight:400;color:var(--ink);line-height:1.35;letter-spacing:-.02em;max-width:24ch}
   .drill{margin-top:84px}
   /* drill path — the switcher IS the drill: click the anomaly to descend, the root to surface */
-  .drill-lead{margin-top:52px}
-  .drillpath{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px;margin-bottom:20px;font-family:ui-monospace,"SF Mono","Menlo",monospace}
+  .drillpath{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:26px;margin-bottom:20px;font-family:ui-monospace,"SF Mono","Menlo",monospace}
   .crumb{font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.01em;background:transparent;border:0;padding:6px 0;cursor:pointer;color:var(--ink-faint);transition:color .2s;display:inline-flex;align-items:center;gap:9px;white-space:nowrap}
   .crumb:not(.on):hover{color:var(--ink-soft)}
   .crumb.on{color:var(--ink);cursor:default}
@@ -446,17 +445,23 @@
             </ul>
           </div>
         </div>
-        <p class="lenscap">Raw metadata resolves into owned business dimensions without a code change.</p>
       </div>
 
-      <!-- ACT 2 — Triage starts in Slack: the ML baseline feeds the alert -->
-      <div class="beat drill reveal">
-        <div class="beat-eyebrow">The instrument</div>
+      <!-- BEAT — the model: a learned baseline -->
+      <div class="beat reveal">
+        <div class="beat-eyebrow">The model</div>
+        <div class="beat-title">Every resource against its own baseline.</div>
         <p class="beat-pov">A learned ML baseline detects cost anomalies in your environment in real time.</p>
         <div class="scatter reveal">
           <svg id="mlscatter" viewBox="0 0 1000 380" role="img" aria-label="A field of gray cost readings clustered around a white learned baseline, with a single red outlier — resource i-0a3f9c2b at plus 122 percent — far above the normal range"></svg>
         </div>
-        <p class="beat-pov drill-lead">The platform sends cost anomalies in Slack, routed to the relevant team by design, reducing dependency on dashboards.</p>
+      </div>
+
+      <!-- BEAT — the instrument: the product demo -->
+      <div class="beat drill reveal">
+        <div class="beat-eyebrow">The instrument</div>
+        <div class="beat-title">Triage where engineers work.</div>
+        <p class="beat-pov">The platform sends cost anomalies in Slack, routed to the relevant team by design, reducing dependency on dashboards.</p>
         <nav class="drillpath" id="drillpath" aria-label="Flow path">
           <button class="crumb on" data-v="slack" aria-current="true">#finops-alerts</button>
           <span class="crumb-sep" aria-hidden="true">/</span>
