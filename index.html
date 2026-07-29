@@ -584,22 +584,22 @@
         <div class="beat-title">Triage where engineers work.</div>
         <p class="beat-pov">The platform sends cost anomalies in Slack, routed to the relevant team by design, reducing dependency on dashboards.</p>
         <nav class="drillpath" id="drillpath" aria-label="Flow path">
-          <button class="crumb on" data-v="slack" aria-current="true">#finops-alerts</button>
+          <button class="crumb" data-v="slack" aria-current="false">#finops-alerts</button>
           <span class="crumb-sep" aria-hidden="true">/</span>
-          <button class="crumb leaf" data-v="res" aria-current="false">i-0a3f9c2b7e14d8e6a <span class="delta">+122%</span></button>
+          <button class="crumb leaf on" data-v="res" aria-current="true">i-0a3f9c2b7e14d8e6a <span class="delta">+122%</span></button>
         </nav>
         <div class="screen" id="screen">
-          <div class="pane show" id="paneSlack" data-b64="slackB64"></div>
-          <div class="pane" id="paneRes" data-b64="resB64"></div>
+          <div class="pane" id="paneSlack" data-b64="slackB64"></div>
+          <div class="pane show" id="paneRes" data-b64="resB64"></div>
         </div>
-        <p class="drillcap" id="cap"><b>The page as it lands.</b> Resource, delta, baseline, owner — the decision happens in the channel. The buttons are live.</p>
+        <p class="drillcap" id="cap"><b>The resource, opened on the anomaly.</b> Causes ranked by cost correlation — the deploy on top. Acknowledge reports back to the channel.</p>
         <div class="notes" id="notes">
-          <div class="noteset show" data-v="slack">
+          <div class="noteset" data-v="slack">
             <div class="note"><div class="ne">Signal over noise</div><p>Routine drift logs quietly. A departure from baseline pages the on-call in 33 minutes.</p></div>
             <div class="note"><div class="ne">Routed by ownership</div><p>Every resource carries an owning team. The alert lands in that team's channel, not a company-wide feed.</p></div>
             <div class="note"><div class="ne">Triage before the click</div><p>Rate against baseline, start time and projected impact travel with the alert.</p></div>
           </div>
-          <div class="noteset" data-v="res">
+          <div class="noteset show" data-v="res">
             <div class="note"><div class="ne">Likely causes</div><p>Changes from the 24 hours before the spike, ranked by cost correlation. The deploy sits two minutes before the inflection.</p></div>
             <div class="note"><div class="ne">Scoped to the actionable</div><p>My team's changes is the default view. AWS noise sits one tab away.</p></div>
             <div class="note"><div class="ne">The loop closes</div><p>An acknowledgement here updates the channel. The team sees it is handled.</p></div>
@@ -1268,13 +1268,13 @@
   (function(){
     const paneSlack=document.getElementById('paneSlack'), paneRes=document.getElementById('paneRes');
     if(!paneSlack) return;
-    const screen=document.getElementById('screen'), path=document.getElementById('drillpath'), cap=document.getElementById('cap');
+    const path=document.getElementById('drillpath'), cap=document.getElementById('cap');
     const notesets=document.querySelectorAll('#notes .noteset');
     const CAPS={
-      slack:'<b>The page as it lands.</b> Resource, delta, baseline, owner &mdash; the decision happens in the channel. The buttons are live.',
-      res:'<b>One click later.</b> The resource opens on the anomaly. Causes ranked by cost correlation &mdash; the deploy on top. Acknowledge reports back to the channel.'
+      slack:'<b>Where it came from.</b> Resource, delta, baseline, owner &mdash; the decision happens in the channel, not a dashboard. The buttons are live.',
+      res:'<b>The resource, opened on the anomaly.</b> Causes ranked by cost correlation &mdash; the deploy on top. Acknowledge reports back to the channel.'
     };
-    let ifS=null, ifR=null, seen=false, slackReady=false, played=false;
+    let ifS=null, ifR=null, slackReady=false, played=false, wantPlay=false;
     const decode=id=>{const bin=atob(document.getElementById(id).textContent.trim());return new TextDecoder().decode(Uint8Array.from(bin,c=>c.charCodeAt(0)));};
     function mk(pane,title){
       const f=document.createElement('iframe');
@@ -1291,8 +1291,12 @@
       const s=paneSlack.clientWidth/nw;
       [ifS,ifR].forEach(f=>{if(f){f.style.width=nw+'px';f.style.height=nh+'px';f.style.transform='scale('+s+')';}});
     }
+    // The alert arriving is the liveliest moment here, so it is spent when the
+    // visitor walks back to the channel rather than on a pane they may never
+    // open. Guarded on slackReady because the click can beat the iframe load.
     function maybePlay(){
-      if(seen&&slackReady&&!played){played=true;ifS.contentWindow.postMessage({cz:'play'},'*');}
+      if(played||!wantPlay||!slackReady) return;
+      played=true; ifS.contentWindow.postMessage({cz:'play'},'*');
     }
     function boot(){
       if(ifS) return;
@@ -1309,6 +1313,7 @@
       notesets.forEach(n=>n.classList.toggle('show',n.dataset.v===view));
       cap.style.opacity=0;
       setTimeout(()=>{cap.innerHTML=CAPS[view];cap.style.opacity=1;},200);
+      if(!toRes){wantPlay=true;maybePlay();}
     }
     path.addEventListener('click',e=>{const b=e.target.closest('.crumb');if(b)go(b.dataset.v);});
     window.addEventListener('message',e=>{
@@ -1316,18 +1321,8 @@
       if(d.cz==='open') go('res');
       if(d.cz==='ack') [ifS,ifR].forEach(f=>{if(f&&f.contentWindow!==e.source)f.contentWindow.postMessage({cz:'ack'},'*');});
     });
-    window.addEventListener('resize',()=>{size();checkPlay();});
-    /* deterministic trigger — IO callbacks stall on hidden/occluded pages,
-       so the arrival is driven by real scroll position instead */
-    function checkPlay(){
-      if(played) return;
-      const r=screen.getBoundingClientRect(), vh=window.innerHeight;
-      const vis=Math.min(r.bottom,vh)-Math.max(r.top,0);
-      if(vis>r.height*.45){seen=true;maybePlay();}
-    }
-    document.addEventListener('scroll',checkPlay,{capture:true,passive:true});
+    window.addEventListener('resize',size);
     boot();
-    checkPlay();
   })();
 
   /* ===== CloudZero milestones — static grid, documentation in plain view ===== */
