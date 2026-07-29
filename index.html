@@ -457,17 +457,17 @@
                what problem, what outcome. The name is the least useful column,
                so it carries the least weight. -->
           <nav class="palette" id="palette" aria-label="Case studies">
-            <a href="#cloudzero" data-k="cost anomaly detection aws cloud spend finops enterprise saas b2b slack alerts startup founding seed series scale"><span class="pk">1</span><span class="pn">cloudzero</span><span class="pc">enterprise SaaS &middot; cloud cost</span><span class="pr2">founding designer, solo</span><span class="po">one user &rarr; 30+ enterprise customers</span></a>
-            <a href="#cummins" data-k="engine diagnostics fortune 500 industrial manufacturing guidanz design system enterprise b2b hardware"><span class="pk">2</span><span class="pn">cummins</span><span class="pc">industrial &middot; Fortune 500</span><span class="pr2">senior product designer</span><span class="po">design-to-ship 3 months &rarr; 2 weeks</span></a>
-            <a href="#concept" data-k="sound audio music radio ambient landscape emotion consumer prototype"><span class="pk">3</span><span class="pn">concept</span><span class="pc">consumer audio</span><span class="pr2">designed &amp; built solo</span><span class="po">working prototype, playable here</span></a>
-            <a href="#greenlight" data-k="film video motion diffusion generative wan gpu still image research creative"><span class="pk">4</span><span class="pn">greenlight</span><span class="pc">generative video</span><span class="pr2">sole designer &amp; engineer</span><span class="po">shipped on serverless GPUs</span></a>
-            <a href="#visionary" data-k="dataset captioning local offline open source images research developer tooling free mit"><span class="pk">5</span><span class="pn">visionary</span><span class="pc">developer tools &middot; open source</span><span class="pr2">sole designer &amp; engineer</span><span class="po">100K+ images at 120 fps</span></a>
+            <a href="#cloudzero" data-k="cost costs cloud aws spend spending bill billing finops anomaly anomalies detection alert alerts slack saas b2b enterprise startup founding founder solo seed series scale scaling zero to one 0-1 dashboard analytics data devops infrastructure infra engineers engineering monitoring observability ml machine learning research interviews carbon black"><span class="pk">1</span><span class="pn">cloudzero</span><span class="pc">enterprise SaaS &middot; cloud cost</span><span class="pr2">founding designer, solo</span><span class="po">one user &rarr; 30+ enterprise customers</span></a>
+            <a href="#cummins" data-k="engine diagnostics industrial manufacturing fortune 500 hardware guidanz design system systems component library tokens process delivery velocity sprint agile cadence b2b corporate large company technician field service enterprise senior pilot rollout adoption"><span class="pk">2</span><span class="pn">cummins</span><span class="pc">industrial &middot; Fortune 500</span><span class="pr2">senior product designer</span><span class="po">design-to-ship 3 months &rarr; 2 weeks</span></a>
+            <a href="#concept" data-k="sound audio music radio ambient listening consumer b2c prototype concept emotion mood player playback creative personal side project experiment"><span class="pk">3</span><span class="pn">concept</span><span class="pc">consumer audio</span><span class="pr2">designed &amp; built solo</span><span class="po">working prototype, playable here</span></a>
+            <a href="#greenlight" data-k="film video motion generative diffusion wan gpu serverless still image to video creative media entertainment ai video model inference research solo shipped deployed two years"><span class="pk">4</span><span class="pn">greenlight</span><span class="pc">generative video</span><span class="pr2">sole designer &amp; engineer</span><span class="po">shipped on serverless GPUs</span></a>
+            <a href="#visionary" data-k="dataset datasets caption captioning labeling labelling annotation local offline open source oss mit free developer tools tooling researcher research images pipeline curation macos apple silicon privacy on-device alpha release"><span class="pk">5</span><span class="pn">visionary</span><span class="pc">developer tools &middot; open source</span><span class="pr2">sole designer &amp; engineer</span><span class="po">100K+ images at 120 fps</span></a>
           </nav>
           <nav class="pmeta" id="pmeta" aria-label="More">
-            <a href="Kenan-Alsarabi-Resume.pdf" download data-k="cv pdf download experience history background years hire hiring role job apply"><span class="pk">6</span><span class="pn">resume</span></a>
-            <a href="mailto:kenanalsarabi@proton.me" data-k="email hire hiring reach out hello talk available availability work together role job"><span class="pk">7</span><span class="pn">contact</span></a>
-            <a href="#" data-cmd="stack" data-k="how built build building made make tech tools framework code ai claude process stack"><span class="pk">8</span><span class="pn">stack</span></a>
-            <a href="#" data-cmd="git log" data-k="commits history decisions reasoning changelog why"><span class="pk">9</span><span class="pn">git log</span></a>
+            <a href="Kenan-Alsarabi-Resume.pdf" download data-k="cv resume pdf download experience background history years work history employment career hire hiring role job apply application recruiter credentials qualifications how long seniority level staff principal senior"><span class="pk">6</span><span class="pn">resume</span></a>
+            <a href="mailto:kenanalsarabi@proton.me" data-k="contact email mail reach reach out hello hi talk chat call connect hire hiring available availability open to work together freelance contract opportunity role job message get in touch boston remote remotely relocation location where based relocate salary rate compensation"><span class="pk">7</span><span class="pn">contact</span></a>
+            <a href="#" data-cmd="stack" data-k="stack tech how built build building made make tools framework code coding engineering ai claude process workflow html css javascript static site website no framework build step"><span class="pk">8</span><span class="pn">stack</span></a>
+            <a href="#" data-cmd="git log" data-k="git log commits history decisions reasoning why changelog process thinking rationale choices craft revisions"><span class="pk">9</span><span class="pn">git log</span></a>
           </nav>
         </div>
       </div>
@@ -1026,6 +1026,10 @@
     // The haystack is the row's own visible text — domain, role, outcome — plus
     // its keywords, so a search matches what a recruiter actually reads.
     const HAY=ROWS.map(a=>(a.textContent+" "+(a.dataset.k||"")).toLowerCase());
+    // Short tokens must match a whole word. Substring matching on them is how
+    // "can I see his cv" landed on cloudzero ("see" inside "seed") and "what
+    // tools does he use" did too ("use" inside "user").
+    const WORDS=HAY.map(h=>new Set(h.split(/[^a-z0-9+]+/).filter(Boolean)));
 
     const OUT={
       stack:["Hand-built HTML, CSS and JavaScript. No framework, no build step.",
@@ -1065,14 +1069,16 @@
       for(const ch of t){ i=name.indexOf(ch,i); if(i<0) return false; i++; }
       return true;
     }
-    function score(hay,name,q){
+    function score(i,q){
+      const hay=HAY[i], name=NAMES[i], words=WORDS[i];
       const toks=q.split(/[^a-z0-9+]+/).filter(t=>t&&!STOP.has(t));
       if(!toks.length) return 0;
       let s=0;
       for(const t of toks){
         if(name===t) s+=100;
         else if(name.startsWith(t)) s+=50;
-        else if(hay.includes(t)) s+=20;
+        else if(words.has(t)) s+=20;                     // whole word beats
+        else if(t.length>=5&&hay.includes(t)) s+=12;     // a partial hit
         else if(t.length>=3&&subseq(name,t)) s+=5;
       }
       return s;
@@ -1094,7 +1100,7 @@
       if(!q){ROWS.forEach(a=>a.hidden=false);sel=0;return paint();}
       let best=-1,bestScore=0,any=false;
       ROWS.forEach((a,i)=>{
-        const sc=score(HAY[i],NAMES[i],q);
+        const sc=score(i,q);
         a.hidden=!sc; a.dataset.score=sc;
         if(sc){any=true; if(sc>bestScore){bestScore=sc;best=i;}}
       });
