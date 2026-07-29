@@ -49,23 +49,29 @@ function overDailyBudget() {
   return false;
 }
 
+// Fallbacks carry a coarse reason so a bad deploy can be diagnosed from the
+// browser instead of from the Vercel logs. The client ignores everything but
+// `text`, so this is invisible to visitors and reveals nothing sensitive.
+const fall = (res, reason, code, status = 200) =>
+  res.status(status).json(code ? { fallback: true, reason, code } : { fallback: true, reason });
+
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
-    return res.status(405).json({ fallback: true });
+    return fall(res, "method", null, 405);
   }
-  if (!process.env.ANTHROPIC_API_KEY) return res.status(200).json({ fallback: true });
+  if (!process.env.ANTHROPIC_API_KEY) return fall(res, "no-key");
 
   const ip = (req.headers["x-forwarded-for"] || "").split(",")[0].trim() || "unknown";
   if (rateLimited(ip)) {
     return res.status(200).json({ text: "Slow down — too many questions from this address in the last hour. Try again later, or email kenanalsarabi@proton.me." });
   }
-  if (overDailyBudget()) return res.status(200).json({ fallback: true });
+  if (overDailyBudget()) return fall(res, "budget");
 
   // Accept only the shape we expect; anything else falls back rather than
   // being coerced into a request.
   const raw = Array.isArray(req.body?.messages) ? req.body.messages : null;
-  if (!raw || !raw.length) return res.status(400).json({ fallback: true });
+  if (!raw || !raw.length) return fall(res, "bad-payload", null, 400);
 
   const messages = raw
     .slice(-MAX_TURNS)
@@ -73,7 +79,7 @@ module.exports = async (req, res) => {
     .map(m => ({ role: m.role, content: m.content.slice(0, MAX_CHARS) }));
 
   if (!messages.length || messages[messages.length - 1].role !== "user") {
-    return res.status(400).json({ fallback: true });
+    return fall(res, "bad-payload", null, 400);
   }
 
   try {
@@ -87,7 +93,7 @@ module.exports = async (req, res) => {
       messages,
     });
 
-    if (reply.stop_reason === "refusal") return res.status(200).json({ fallback: true });
+    if (reply.stop_reason === "refusal") return fall(res, "refusal");
 
     const text = reply.content
       .filter(b => b.type === "text")
@@ -95,9 +101,11 @@ module.exports = async (req, res) => {
       .join("")
       .trim();
 
-    return res.status(200).json(text ? { text } : { fallback: true });
+    return text ? res.status(200).json({ text }) : fall(res, "empty");
   } catch (err) {
     console.error("session:", err?.status || "", err?.message || err);
-    return res.status(200).json({ fallback: true });
+    // err.status distinguishes a rejected key (401) from a rate limit (429)
+    // from the SDK never being reached at all (undefined).
+    return fall(res, "upstream", err?.status ?? null);
   }
 };
