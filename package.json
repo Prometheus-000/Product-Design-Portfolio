@@ -1,8 +1,0 @@
-{
-  "name": "kenanalsarabi-portfolio",
-  "private": true,
-  "description": "Static site. The only server-side code is api/session.js, the live half of the hero console.",
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.115.0"
-  }
-}
