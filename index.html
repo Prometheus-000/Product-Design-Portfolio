@@ -869,8 +869,8 @@
         <div class="vzscreen">
           <iframe id="vzApp" src="visionary/" title="Visionary — interactive alpha" loading="lazy"></iframe>
         </div>
-        <p class="vzcap"><b>Structure</b> gathers near-duplicates for review before you delete. <b>Color</b> and <b>Person</b> come from the app's own perceptual hashes and on-device face clusters. Select a tile and its real dimensions, color and tags fill the panels.</p>
-        <p class="vznote">Rebuilt in the browser from the app's own index — every dimension, color, duplicate and tag here is Visionary's output on a 44-image set. The native app does the same on your folders at a hundred thousand. This is only the demo — the full app is on <a href="https://github.com/Prometheus-000/visionary" target="_blank" rel="noopener">GitHub</a>.</p>
+        <p class="vzcap"><b>Structure</b> gathers near-duplicates before you delete. <b>Color</b> and <b>Person</b> come from perceptual hashes and on-device face clusters.</p>
+        <p class="vznote">Every dimension, color, duplicate and tag here is Visionary's real output, on 44 images. The native app does this at a hundred thousand — it's on <a href="https://github.com/Prometheus-000/visionary" target="_blank" rel="noopener">GitHub</a>.</p>
       </div>
 
       <!-- PACKAGING: the hand-off to training -->
@@ -932,7 +932,7 @@
             <span><i class="a"></i>267&nbsp;MB · a 750-photo set</span>
             <span><i class="b"></i>~1.5&nbsp;GB · 100,000 images</span>
           </div>
-          <p class="cap">The grid decodes only the tiles on screen. Hashes and color read from thumbnails rather than the source files. Duplicate thresholds are computed once so a scroll is just an array lookup. Memory moved from 1497 to 1505&nbsp;MB across 90 seconds of scrolling at 100,000 images. One file-descriptor leak surfaced at that scale and was closed.</p>
+          <p class="cap">The grid decodes only what's on screen, hashes read from thumbnails, and duplicate thresholds are computed once — so scrolling is an array lookup. Memory moved 1497 to 1505&nbsp;MB across 90 seconds at 100,000 images. One file-descriptor leak surfaced at that scale and was closed.</p>
         </div>
       </div>
 
@@ -945,12 +945,12 @@
           <div class="c">
             <div class="ce">Design</div>
             <div class="ct">One action color. White.</div>
-            <p>The chrome is dark and neutral so nothing tints how you read a photograph. White is the only color that <i>acts</i> — the primary button, the selection frame. Everything else recedes.</p>
+            <p>The chrome is dark and neutral so nothing tints how you read a photograph. White is the only color that <i>acts</i>. Everything else recedes.</p>
           </div>
           <div class="c">
             <div class="ce">Control</div>
             <div class="ct">Standard idioms. Ultimate authority.</div>
-            <p>Finder selection, Quick Look, delete to the Trash — patterns everyone has used for decades. You only notice them when they're gone. The app never overwrites an edit you made. Every destructive step stays reversible until you commit.</p>
+            <p>Finder selection, Quick Look, delete to the Trash — you only notice them when they're gone. Nothing overwrites an edit you made, and every destructive step stays reversible.</p>
           </div>
           <div class="c">
             <div class="ce">Community</div>
