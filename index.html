@@ -1025,12 +1025,9 @@
     const NAMES=ROWS.map(a=>a.querySelector(".pn").textContent.toLowerCase());
     // The haystack is the row's own visible text — domain, role, outcome — plus
     // its keywords, so a search matches what a recruiter actually reads.
-    const HAY=ROWS.map(a=>(a.textContent+" "+(a.dataset.k||"")).toLowerCase());
-    // Short tokens must match a whole word. Substring matching on them is how
-    // "can I see his cv" landed on cloudzero ("see" inside "seed") and "what
-    // tools does he use" did too ("use" inside "user").
-    const WORDS=HAY.map(h=>new Set(h.split(/[^a-z0-9+]+/).filter(Boolean)));
-
+    // Joined with spaces, not via textContent: the spans are adjacent in the
+    // markup, so textContent yields "5visionary" and the digit is never a word.
+    const KEYS=ROWS.map(a=>a.querySelector(".pk").textContent.trim());
     const OUT={
       stack:["Hand-built HTML, CSS and JavaScript. No framework, no build step.",
         "The case demos are live &mdash; Slack and dashboard simulations, a working radio, an offline dataset workspace.",
@@ -1054,35 +1051,11 @@
       dockout.classList.add("on");
     }
 
-    // Scoring, not loose filtering. A bare subsequence over the whole keyword
-    // string matches nearly everything ("cost" hit all nine rows), so the query
-    // is tokenised, stopwords are dropped, and each token is scored against the
-    // row: exact name beats name-prefix beats keyword hit beats a name-only
-    // subsequence (the typo escape hatch, e.g. "clzr" -> cloudzero). Rows are
-    // filtered on score but never reordered — a list that reshuffles under the
-    // cursor while you type is worse than one that just narrows.
-    const STOP=new Set(("a an and any are as at be by can did do does for from get give had has have he her him his how "+
-      "i in is it its me my of on or that the their them there these this to was were what when where which who whom "+
-      "why will with would you your about tell show").split(" "));
-    function subseq(name,t){
-      let i=0;
-      for(const ch of t){ i=name.indexOf(ch,i); if(i<0) return false; i++; }
-      return true;
-    }
-    function score(i,q){
-      const hay=HAY[i], name=NAMES[i], words=WORDS[i];
-      const toks=q.split(/[^a-z0-9+]+/).filter(t=>t&&!STOP.has(t));
-      if(!toks.length) return 0;
-      let s=0;
-      for(const t of toks){
-        if(name===t) s+=100;
-        else if(name.startsWith(t)) s+=50;
-        else if(words.has(t)) s+=20;                     // whole word beats
-        else if(t.length>=5&&hay.includes(t)) s+=12;     // a partial hit
-        else if(t.length>=3&&subseq(name,t)) s+=5;
-      }
-      return s;
-    }
+    // Navigation, not search. A row matches on its own name or its number and
+    // nothing else — you can only type what you can already see on screen, so
+    // there is never a result you can't explain. The data-k aliases stay on the
+    // markup, unused, for a later pass.
+    const matches=(i,q)=>NAMES[i].startsWith(q)||NAMES[i].split(" ").some(w=>w.startsWith(q));
 
     let sel=0;
     function paint(){
@@ -1098,18 +1071,13 @@
       if(!swap.contains(INDEX_EL)){swap.innerHTML="";swap.appendChild(INDEX_EL);cmdline.textContent="ls work";}
       const note=swap.querySelector(".nomatch"); if(note) note.remove();
       if(!q){ROWS.forEach(a=>a.hidden=false);sel=0;return paint();}
-      let best=-1,bestScore=0,any=false;
-      ROWS.forEach((a,i)=>{
-        const sc=score(i,q);
-        a.hidden=!sc; a.dataset.score=sc;
-        if(sc){any=true; if(sc>bestScore){bestScore=sc;best=i;}}
-      });
-      if(any){
-        // Land the cursor on the strongest match, not merely the first survivor.
-        const vis=ROWS.filter(a=>!a.hidden);
-        sel=Math.max(0,vis.indexOf(ROWS[best]));
-        return paint();
-      }
+      // A number you typed is a selection, not a search. Without this, "3"
+      // also surfaces cummins, whose outcome reads "3 months -> 2 weeks".
+      const numbered=KEYS.indexOf(q);
+      if(numbered>=0){ROWS.forEach((a,n)=>a.hidden=n!==numbered);sel=0;return paint();}
+      let any=false;
+      ROWS.forEach((a,i)=>{const m=matches(i,q);a.hidden=!m;if(m)any=true;});
+      if(any){sel=0;return paint();}
       if(!any){
         // Never a dead end — say so and put everything back.
         ROWS.forEach(a=>a.hidden=false);
@@ -1168,12 +1136,14 @@
     dockbar.addEventListener("mousedown",focusInput);
     [hint,hint2].forEach(el=>el&&el.addEventListener("click",()=>{cin.focus();cin.value="";sync();filter("");}));
 
-    // Type, arrow, or press a digit anywhere on the page and the index responds.
+    // Type or arrow anywhere on the page and the index responds. Digits are
+    // not special-cased: "7" filters to row 7 the same way "con" filters to
+    // contact, so a number and a name behave identically and you always see
+    // what you picked before Enter commits it.
     addEventListener("keydown",e=>{
       if(e.metaKey||e.ctrlKey||e.altKey)return;
       const t=document.activeElement;
       if(t===cin||(t&&/INPUT|TEXTAREA|SELECT/.test(t.tagName)))return;
-      if(/^[1-9]$/.test(e.key)&&!cin.value){e.preventDefault();return activate(ROWS[+e.key-1]);}
       if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();cin.focus();return move(e.key==="ArrowDown"?1:-1);}
       if(e.key.length===1){cin.focus();cin.value+=e.key;sync();filter(cin.value);e.preventDefault();}
       else if(e.key==="Backspace"){cin.focus();e.preventDefault();}
