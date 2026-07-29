@@ -52,8 +52,14 @@ function overDailyBudget() {
 // Fallbacks carry a coarse reason so a bad deploy can be diagnosed from the
 // browser instead of from the Vercel logs. The client ignores everything but
 // `text`, so this is invisible to visitors and reveals nothing sensitive.
-const fall = (res, reason, code, status = 200) =>
-  res.status(status).json(code ? { fallback: true, reason, code } : { fallback: true, reason });
+// `detail` is only ever the API's own 400 message, which describes the request
+// shape we sent — it never echoes the key or the visitor's input.
+const fall = (res, reason, code, status = 200, detail) => {
+  const body = { fallback: true, reason };
+  if (code) body.code = code;
+  if (detail && code === 400) body.detail = detail;
+  return res.status(status).json(body);
+};
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
@@ -87,7 +93,8 @@ module.exports = async (req, res) => {
     const reply = await client.messages.create({
       model: MODEL,
       max_tokens: MAX_TOKENS,
-      thinking: { type: "disabled" },     // short factual answers; keep it quick and cheap
+      // Adaptive thinking is the default; `effort: low` keeps a three-line
+      // factual answer quick and cheap without disabling thinking outright.
       output_config: { effort: "low" },
       system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
       messages,
@@ -105,7 +112,9 @@ module.exports = async (req, res) => {
   } catch (err) {
     console.error("session:", err?.status || "", err?.message || err);
     // err.status distinguishes a rejected key (401) from a rate limit (429)
-    // from the SDK never being reached at all (undefined).
-    return fall(res, "upstream", err?.status ?? null);
+    // from the SDK never being reached at all (undefined). On a 400 the
+    // message names the parameter the API rejected, which is the whole
+    // diagnostic — Vercel logs aren't reachable from the browser.
+    return fall(res, "upstream", err?.status ?? null, 200, err?.message);
   }
 };
