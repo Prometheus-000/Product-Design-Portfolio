@@ -15,8 +15,13 @@ const Anthropic = require("@anthropic-ai/sdk");
 
 const SYSTEM = fs.readFileSync(path.join(__dirname, "persona.md"), "utf8");
 
-const MODEL = "claude-sonnet-5";
-const MAX_TOKENS = 300;          // the console prints a few lines, not a page
+const MODEL = "claude-opus-5";
+// A ceiling, not a spend: you are billed for tokens generated, not for headroom.
+// It has to clear 300 because thinking is on by default on Opus 5 and max_tokens
+// caps thinking *plus* response text together — at 300 the reasoning would eat
+// the budget and the answer would truncate mid-sentence. The persona caps
+// answers at three sentences, so real output stays far below this.
+const MAX_TOKENS = 1024;
 const MAX_CHARS = 400;           // per message from the visitor
 const MAX_TURNS = 6;             // conversation depth sent back to the model
 
@@ -93,9 +98,12 @@ module.exports = async (req, res) => {
     const reply = await client.messages.create({
       model: MODEL,
       max_tokens: MAX_TOKENS,
-      // Adaptive thinking is the default; `effort: low` keeps a three-line
-      // factual answer quick and cheap without disabling thinking outright.
+      // Adaptive thinking is on by default on Opus 5; `effort: low` is the
+      // cheap lever. Disabling thinking outright is the more expensive one and
+      // risks leaking internal tags into a console that prints raw text.
       output_config: { effort: "low" },
+      // Opus 5's cache minimum is 512 tokens, so the ~900-token persona
+      // actually caches here — on Sonnet 5 (1024) this marker did nothing.
       system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
       messages,
     });
