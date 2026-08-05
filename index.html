@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kenan Alsarabi — Product Designer</title>
-<meta name="description" content="Product designer. Interfaces for autonomous systems — cloud cost intelligence, industrial diagnostics, generative film tools, and local AI tooling.">
+<meta name="description" content="Product designer. Interfaces for autonomous systems — a generative studio on serverless GPUs, cloud cost intelligence, and industrial diagnostics.">
 <link rel="canonical" href="https://kenanalsarabi.com/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kenanalsarabi.com/">
 <meta property="og:title" content="Kenan Alsarabi — Product Designer">
-<meta property="og:description" content="Interfaces for autonomous systems — cloud cost intelligence, industrial diagnostics, generative film tools, and local AI tooling.">
+<meta property="og:description" content="Interfaces for autonomous systems — a generative studio on serverless GPUs, cloud cost intelligence, and industrial diagnostics.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Kenan Alsarabi — Product Designer">
-<meta name="twitter:description" content="Interfaces for autonomous systems — cloud cost intelligence, industrial diagnostics, generative film tools, and local AI tooling.">
+<meta name="twitter:description" content="Interfaces for autonomous systems — a generative studio on serverless GPUs, cloud cost intelligence, and industrial diagnostics.">
 <!-- og:image / twitter:image: add a 1200×630 preview once one is deployed, e.g. <meta property="og:image" content="https://kenanalsarabi.com/og.png"> -->
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
@@ -321,7 +321,7 @@
   .ccard .detail p{font-size:14px;line-height:1.65;color:var(--ink-soft);font-weight:500}
   @media(max-width:900px){.carousel .rail{grid-template-columns:1fr}.ccard{padding:30px 24px}.ccard .motif{margin:26px auto;max-width:130px}}
 
-  /* ===== CASE 4 — Greenlight: the reel + the instrument ===== */
+  /* ===== CASE 1 — the origin reel: no autoplay, the visitor runs the projector ===== */
   .projector{margin-top:72px}
   .screenv{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:radial-gradient(120% 90% at 50% 20%,#131318 0%,#0B0B0D 62%);box-shadow:0 40px 90px -40px rgba(0,0,0,.9);cursor:pointer}
   .screenv video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
@@ -332,17 +332,22 @@
   .direction{margin-top:20px;font-size:13px;line-height:1.6;color:var(--ink-soft);min-height:44px;transition:opacity .3s;max-width:72ch}
   .direction b{color:var(--ink-faint);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;display:block;margin-bottom:5px}
   .projector .picker{margin-top:22px}
-  .glbeat{margin-top:110px}
-  .console-face{position:relative;margin-top:44px;width:100%;aspect-ratio:1440/900;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#EFEDE8;box-shadow:0 40px 90px -40px rgba(0,0,0,.9);cursor:pointer;transition:border-color .3s var(--ease)}
-  .console-face:hover{border-color:rgba(255,255,255,.22)}
-  .console-face iframe{position:absolute;top:0;left:0;border:0;pointer-events:none;transform-origin:0 0;background:#EFEDE8}
-  .consolecap{margin-top:18px;font-size:13px;color:var(--ink-faint);font-weight:500}
   @media(max-width:640px){.direction{min-height:64px}}
 
-  /* ===== CASE 5 — Visionary: the live alpha, the autopsy, the footprint ===== */
-  .vzscreen{margin-top:26px;position:relative;width:100%;aspect-ratio:1440/900;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#1e1e21;box-shadow:0 40px 90px -40px rgba(0,0,0,.9)}
-  .vzscreen iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#1e1e21}
-  @media(max-width:820px){.vzscreen{aspect-ratio:auto;height:min(72vh,560px)}}
+  /* ===== CASE 1 — Visionary: the shipped product, its console, the endstate ===== */
+  /* Screenshots of a real app. A frame and a shadow, nothing else — the picture
+     is the argument and a caption bar would only repeat it. */
+  .shot{display:block;width:100%;margin-top:26px;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    background:#000;box-shadow:0 40px 90px -40px rgba(0,0,0,.9);cursor:zoom-in;padding:0;transition:border-color .3s var(--ease)}
+  .shot:hover{border-color:rgba(255,255,255,.22)}
+  .shot img{display:block;width:100%;height:auto}
+  /* A citation, not an exhibit. The real bar sits directly under the facsimile
+     of it, and at full width the two read as one element repeated — which is
+     the opposite of the point. Half width says "this is the source". */
+  .shot.cite{max-width:620px;margin-top:20px}
+  .shots2{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+  .shots2 .shot{margin-top:0}
+  @media(max-width:820px){.shots2{grid-template-columns:1fr}}
   .vzbar{margin-top:24px;display:flex;align-items:center;gap:14px 18px;flex-wrap:wrap}
   .vzbar .lead{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
   .vzcap{margin-top:18px;font-size:14.5px;color:var(--ink-soft);font-weight:500;line-height:1.55;max-width:66ch}
@@ -350,6 +355,56 @@
   .vznote{margin-top:10px;font-size:12px;color:var(--ink-faint);font-weight:500;letter-spacing:.01em;max-width:66ch}
   .vznote a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line);transition:color .2s}
   .vznote a:hover{color:var(--ink);text-decoration-color:var(--ink-soft)}
+
+  /* The console, rebuilt per model — the one operable thing in this case.
+     It carries the product's own tokens, not the page's, because a facsimile
+     that adopts the surrounding style stops being evidence and becomes a
+     diagram. Values lifted from the deployment: --panel, --line, --mut, --dim. */
+  .cons{--c-line:rgba(255,255,255,.10);--c-panel:rgba(255,255,255,.04);--c-fg:#f5f5f5;--c-mut:#8a8a8a;--c-dim:#5a5a5a;
+    margin-top:24px;background:#000;border:1px solid var(--line);border-radius:14px;padding:20px 18px 18px;
+    font-family:-apple-system,system-ui,"Segoe UI",Inter,sans-serif;color:var(--c-fg);
+    box-shadow:0 40px 90px -40px rgba(0,0,0,.9);overflow:hidden}
+  .cons .field{background:var(--c-panel);border:1px solid var(--c-line);border-radius:14px;padding:13px 14px 10px}
+  .cons .ptxt{font-size:14px;line-height:1.45;color:var(--c-fg);font-weight:400}
+  .cons .kinds{display:inline-flex;gap:2px;margin-top:11px;background:rgba(255,255,255,.05);border-radius:99px;padding:3px}
+  .cons .kinds button{font-family:inherit;font-size:12.5px;font-weight:500;color:var(--c-mut);padding:5px 12px;
+    border:0;background:none;border-radius:99px;cursor:pointer;transition:.2s}
+  .cons .kinds button:hover{color:var(--c-fg)}
+  .cons .kinds button.on{background:rgba(255,255,255,.12);color:var(--c-fg)}
+  .cons .opts{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:9px}
+  .cons .opt{display:inline-flex;align-items:center;gap:5px;height:36px;padding:0 11px;border:1px solid var(--c-line);
+    border-radius:11px;background:var(--c-panel);font-size:12.5px;font-weight:400;color:var(--c-fg);white-space:nowrap}
+  .cons .opt.gh{color:var(--c-dim)}
+  .cons .opt.ib{width:36px;padding:0;justify-content:center;color:var(--c-mut)}
+  /* the advanced row is shown open here, so the control that opens it is drawn
+     open too — a toggle that lies about its own state is worse than no toggle */
+  .cons .opt.ib.on{background:rgba(255,255,255,.14);color:var(--c-fg);border-color:rgba(255,255,255,.24)}
+  .cons .opt.ib.on svg{color:var(--c-fg)}
+  .cons .opt.ib.dash{background:none;border-style:dashed}
+  .cons .opt svg{width:13px;height:13px;flex:none;color:var(--c-dim)}
+  .cons .cv{width:9px;height:9px;flex:none;opacity:.55;margin-left:1px}
+  .cons .vr{width:1px;height:22px;background:var(--c-line);margin:0 3px;flex:none}
+  .cons .actions{display:flex;align-items:center;gap:7px;margin-left:auto}
+  .cons .note{font-size:11.5px;color:var(--c-dim);white-space:nowrap}
+  .cons .gen{height:36px;padding:0 20px;border-radius:11px;background:#fff;color:#000;font-size:13px;font-weight:600;
+    display:inline-flex;align-items:center}
+  .cons .adv{margin-top:12px;padding-top:14px;border-top:1px solid var(--c-line)}
+  .cons .neg{background:var(--c-panel);border:1px solid var(--c-line);border-radius:12px;padding:12px 13px;
+    font-size:13px;color:var(--c-dim)}
+  .cons .neg+.opts{margin-top:9px}
+  /* Nothing here reflows when a control leaves — the row is already wrapped and
+     the bar is measured at its fullest state, so switching models never moves
+     the Generate button out from under the cursor. */
+  .cons [hidden]{display:none!important}
+  @media(max-width:720px){
+    .cons{padding:16px 13px 14px}
+    .cons .actions{margin-left:0;width:100%;justify-content:flex-end}
+    .cons .note{display:none}
+  }
+  /* What the switch just did, said in one line. The controls vanishing is the
+     demonstration; this is the sentence that makes it legible on first click. */
+  .conswhy{margin-top:16px;font-size:13.5px;line-height:1.6;color:var(--ink-soft);font-weight:500;max-width:74ch;min-height:44px;transition:opacity .28s}
+  .conswhy b{color:var(--ink);font-weight:600}
 
   /* Packaging — the hand-off to training */
   .ship{margin-top:32px;display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch}
@@ -455,17 +510,16 @@
                what problem, what outcome. The name is the least useful column,
                so it carries the least weight. -->
           <nav class="palette" id="palette" aria-label="Case studies">
-            <a href="#cloudzero" data-k="cost costs cloud aws spend spending bill billing finops anomaly anomalies detection alert alerts slack saas b2b enterprise startup founding founder solo seed series scale scaling zero to one 0-1 dashboard analytics data devops infrastructure infra engineers engineering monitoring observability ml machine learning research interviews carbon black"><span class="pk">1</span><span class="pn">cloudzero</span><span class="pc">enterprise SaaS &middot; cloud cost</span><span class="pr2">founding designer</span><span class="po">one user &rarr; 30+ enterprise customers</span></a>
-            <a href="#cummins" data-k="engine diagnostics industrial manufacturing fortune 500 hardware guidanz design system systems component library tokens process delivery velocity sprint agile cadence b2b corporate large company technician field service enterprise senior pilot rollout adoption"><span class="pk">2</span><span class="pn">cummins</span><span class="pc">industrial &middot; Fortune 500</span><span class="pr2">senior product designer</span><span class="po">design-to-ship 3 months &rarr; 2 weeks</span></a>
-            <a href="#concept" data-k="sound audio music radio ambient listening consumer b2c prototype concept emotion mood player playback creative personal side project experiment"><span class="pk">3</span><span class="pn">concept</span><span class="pc">consumer audio</span><span class="pr2">designed &amp; built solo</span><span class="po">working prototype, playable here</span></a>
-            <a href="#greenlight" data-k="film video motion generative diffusion wan gpu serverless still image to video creative media entertainment ai video model inference research solo shipped deployed two years"><span class="pk">4</span><span class="pn">greenlight</span><span class="pc">generative video</span><span class="pr2">sole designer &amp; engineer</span><span class="po">shipped on serverless GPUs</span></a>
-            <a href="#visionary" data-k="dataset datasets caption captioning labeling labelling annotation local offline open source oss mit free developer tools tooling researcher research images pipeline curation macos apple silicon privacy on-device alpha release"><span class="pk">5</span><span class="pn">visionary</span><span class="pc">developer tools &middot; open source</span><span class="pr2">sole designer &amp; engineer</span><span class="po">100K+ images at 120 fps</span></a>
+            <a href="#visionary" data-k="generative ai studio platform modal serverless gpu lora training diffusion video wan comfyui krea python pytorch infrastructure design engineer designed engineered shipped deployed solo open source oss developer tools tooling model inference dataset datasets caption captioning film motion two years"><span class="pk">1</span><span class="pn">visionary</span><span class="pc">generative studio &middot; open source</span><span class="pr2">designed, engineered &amp; shipped solo</span><span class="po">one file &rarr; a whole GPU platform</span></a>
+            <a href="#cloudzero" data-k="cost costs cloud aws spend spending bill billing finops anomaly anomalies detection alert alerts slack saas b2b enterprise startup founding founder solo seed series scale scaling zero to one 0-1 dashboard analytics data devops infrastructure infra engineers engineering monitoring observability ml machine learning research interviews carbon black"><span class="pk">2</span><span class="pn">cloudzero</span><span class="pc">enterprise SaaS &middot; cloud cost</span><span class="pr2">founding designer</span><span class="po">one user &rarr; 30+ enterprise customers</span></a>
+            <a href="#cummins" data-k="engine diagnostics industrial manufacturing fortune 500 hardware guidanz design system systems component library tokens process delivery velocity sprint agile cadence b2b corporate large company technician field service enterprise senior pilot rollout adoption"><span class="pk">3</span><span class="pn">cummins</span><span class="pc">industrial &middot; Fortune 500</span><span class="pr2">senior product designer</span><span class="po">design-to-ship 3 months &rarr; 2 weeks</span></a>
+            <a href="#concept" data-k="sound audio music radio ambient listening consumer b2c prototype concept emotion mood player playback creative personal side project experiment"><span class="pk">4</span><span class="pn">concept</span><span class="pc">consumer audio</span><span class="pr2">designed &amp; built solo</span><span class="po">working prototype, playable here</span></a>
           </nav>
           <nav class="pmeta" id="pmeta" aria-label="More">
-            <a href="Kenan-Alsarabi-Resume.pdf" download data-k="cv resume pdf download experience background history years work history employment career hire hiring role job apply application recruiter credentials qualifications how long seniority level staff principal senior"><span class="pk">6</span><span class="pn">resume</span></a>
-            <a href="mailto:kenanalsarabi@proton.me" data-k="contact email mail reach reach out hello hi talk chat call connect hire hiring available availability open to work together freelance contract opportunity role job message get in touch boston remote remotely relocation location where based relocate salary rate compensation"><span class="pk">7</span><span class="pn">contact</span></a>
-            <a href="#" data-cmd="stack" data-k="stack tech how built build building made make tools framework code coding engineering ai claude process workflow html css javascript static site website no framework build step"><span class="pk">8</span><span class="pn">stack</span></a>
-            <a href="#" data-cmd="git log" data-k="git log commits history decisions reasoning why changelog process thinking rationale choices craft revisions"><span class="pk">9</span><span class="pn">git log</span></a>
+            <a href="Kenan-Alsarabi-Resume.pdf" download data-k="cv resume pdf download experience background history years work history employment career hire hiring role job apply application recruiter credentials qualifications how long seniority level staff principal senior"><span class="pk">5</span><span class="pn">resume</span></a>
+            <a href="mailto:kenanalsarabi@proton.me" data-k="contact email mail reach reach out hello hi talk chat call connect hire hiring available availability open to work together freelance contract opportunity role job message get in touch boston remote remotely relocation location where based relocate salary rate compensation"><span class="pk">6</span><span class="pn">contact</span></a>
+            <a href="#" data-cmd="stack" data-k="stack tech how built build building made make tools framework code coding engineering ai claude process workflow html css javascript static site website no framework build step"><span class="pk">7</span><span class="pn">stack</span></a>
+            <a href="#" data-cmd="git log" data-k="git log commits history decisions reasoning why changelog process thinking rationale choices craft revisions"><span class="pk">8</span><span class="pn">git log</span></a>
           </nav>
         </div>
       </div>
@@ -474,12 +528,244 @@
     </div>
   </header>
 
-  <!-- CASE 1 — LENS PICKER (the product's own core interaction) -->
-  <section class="case alt" id="cloudzero">
+  <!-- CASE 1 — VISIONARY. It opens the site because it is the only case that was
+       designed, engineered and deployed by one person, and because the hero has
+       just claimed exactly that. The reel sits second: a claim followed by its
+       motive reads better than a claim followed by an architecture. -->
+  <section class="case alt" id="visionary">
+    <div class="wrap">
+      <!-- INTRO -->
+      <div class="reveal">
+        <div class="ov">01 · Visionary · Generative studio</div>
+        <h2 class="bighead">One file is the whole studio.</h2>
+        <p class="sublead">Training, images, video and datasets in a single application that installs with one command and runs on your own GPUs. I designed it, engineered it and deployed it.</p>
+        <div class="plate">
+          <div class="cell"><div class="k">Role</div><div class="v">Design engineer &mdash; sole designer &amp; builder</div></div>
+          <div class="cell"><div class="k">Scope</div><div class="v">Product · UX · Python · written with an AI pair</div></div>
+          <div class="cell"><div class="k">Stack</div><div class="v">Modal · ComfyUI · PyTorch · serverless GPU</div></div>
+          <div class="cell"><div class="k">Status</div><div class="v">Deployed and running · open source</div></div>
+        </div>
+        <p class="vznote" style="margin-top:22px">Four phases shipped: LoRA training, image inference, datasets and captioning, and video across two model families. The source is on <a href="https://github.com/Prometheus-000/visionary-platform" target="_blank" rel="noopener">GitHub</a>.</p>
+      </div>
+
+      <!-- THE ORIGIN — the films. No autoplay: the visitor runs the projector. -->
+      <div class="beat reveal">
+        <div class="beat-eyebrow">Why it exists</div>
+        <div class="beat-title">Old photographs in motion.</div>
+        <p class="beat-pov">Two years of diffusion research. The first thing it made was a gift for my father.</p>
+        <div class="projector">
+          <div class="screenv" id="screenv">
+            <span class="takebadge" id="takebadge">Take 01 / 05</span>
+            <span class="playhint" id="playhint">Play</span>
+            <video id="reelv" preload="metadata" playsinline></video>
+          </div>
+          <p class="direction" id="direction"><b>Direction</b></p>
+          <div class="picker" id="reel" role="tablist" aria-label="Select take">
+            <button class="on">01</button>
+            <button>02</button>
+            <button>03</button>
+            <button>04</button>
+            <button>05</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- THE PROBLEM -->
+      <div class="beat reveal">
+        <div class="beat-eyebrow">The problem</div>
+        <div class="beat-title">Three subscriptions and a terminal window to make one video.</div>
+        <p class="beat-pov">Weights in one service, the interface in another, datasets in a third. Each one a login, a bill and a format. Making the thing is the smallest part of the day.</p>
+        <div class="ship">
+          <div class="stage">
+            <div class="se">Install</div>
+            <div class="st">Nothing to configure.</div>
+            <p>No secrets, no CLI setup, no account. The one token it needs is pasted into the UI and stored where the app can reach it.</p>
+          </div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="stage">
+            <div class="se">Deploy</div>
+            <div class="st">One command, one URL.</div>
+            <p><b>modal deploy app.py</b> builds the images and returns an address that is the entire application — interface, API and GPU jobs.</p>
+          </div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="stage">
+            <div class="se">Run</div>
+            <div class="st">Your compute, your storage.</div>
+            <p>Weights land on your own volume, chosen explicitly. Nothing downloads on its own, and the folder layout is the contract — datasets are images with text beside them.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- THE CONSOLE — the one operable artifact in the case -->
+      <div class="beat reveal">
+        <div class="beat-eyebrow">The console · try it</div>
+        <div class="beat-title">The controls rebuild themselves.</div>
+        <p class="beat-pov">Two families of video model that genuinely differ. Rather than one panel with half its controls quietly inert, the composer is rebuilt from what the chosen model says it reads. Change the model, or change the medium on the chip inside the field — the prompt survives both.</p>
+        <div class="vzbar">
+          <span class="lead">Model</span>
+          <div class="picker" id="ccPicker" role="tablist" aria-label="Choose a model">
+            <button data-m="krea">Krea 2 Turbo</button>
+            <button data-m="h3">MiniMax-H3</button>
+            <button class="on" data-m="wan14b">Wan 2.2 A14B</button>
+            <button data-m="wan5b">Wan 2.2 TI2V 5B</button>
+          </div>
+        </div>
+        <div class="cons" id="cons">
+          <div class="field">
+            <p class="ptxt">a red paper boat drifting across rain-flooded pavement, slow push in, overcast daylight</p>
+            <!-- The kind switch is a control here too, not a readout. It is the
+                 coarse version of the model picker above, and the only thing on
+                 this bar that never changes when you use it is the sentence. -->
+            <div class="kinds"><button type="button" id="ccKindI">Image</button><button type="button" class="on" id="ccKindV">Video</button></div>
+          </div>
+          <div class="opts">
+            <span class="opt"><span id="ccModel">Wan 2.2 A14B</span><svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
+            <span class="opt">16:9<svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
+            <span class="opt" data-f="tier"><span id="ccTier">720p</span><svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
+            <span class="opt" data-f="len"><span id="ccLen">5s</span><svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
+            <span class="opt gh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>random</span>
+            <span class="opt">H100<svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
+            <span class="vr"></span>
+            <span class="opt ib dash" data-f="last" title="Last frame" aria-label="Last frame"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2.5"/><path d="M14 6v12"/></svg></span>
+            <span class="opt ib dash" data-f="refs" title="References" aria-label="References"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="10" height="14" rx="2.2"/><path d="M16 8h5v11h-9"/></svg></span>
+            <span class="opt" data-f="loras">+ LoRA</span>
+            <span class="actions">
+              <span class="note" id="ccNote">Two experts · silent</span>
+              <span class="opt ib on" title="Advanced"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>
+              <span class="gen">Generate</span>
+            </span>
+          </div>
+          <div class="adv">
+            <div class="neg" data-f="negative">Negative prompt</div>
+            <div class="opts">
+              <span class="opt"><span id="ccSampler">euler</span><svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
+              <span class="opt">simple<svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
+              <span class="opt gh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h4v-5h5v-5h5V5h4"/></svg><span id="ccSteps">20</span></span>
+              <span class="opt gh" data-f="cfg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 3v2M12 19v2M4.2 7.5l1.7 1M18.1 15.5l1.7 1M4.2 16.5l1.7-1M18.1 8.5l1.7-1"/><circle cx="12" cy="12" r="4"/></svg><span id="ccCfg">3.5</span></span>
+              <span class="opt gh" data-f="cfg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 16c4 0 5-8 9-8s5 8 9 8"/></svg><span id="ccShift">shift 8.0</span></span>
+              <span class="vr" data-f="experts"></span>
+              <span class="opt" data-f="experts">high noise → low noise</span>
+            </div>
+          </div>
+        </div>
+        <p class="conswhy" id="ccWhy"></p>
+        <p class="vznote">A control that is present but ignored is worse than one that is absent — it is the interface making a promise the model will not keep. Below, the real bar in the deployed app.</p>
+        <button class="shot cite" data-cap="<b>The composer, in the running app.</b> Wan 2.2 TI2V 5B — 24 fps, silent, so there is no audio control to disable." aria-label="Open the composer screenshot">
+          <img src="assets/visionary/video-bar.webp" alt="The deployed app's composer bar set to Wan 2.2 TI2V 5B: prompt, Image and Video chips, then model, aspect, resolution, length, seed, GPU, LoRA and a Generate button" loading="lazy" width="2000" height="490">
+        </button>
+      </div>
+
+      <!-- DATASETS — the part that decides whether training works at all -->
+      <div class="beat reveal">
+        <div class="beat-eyebrow">Before the GPU hours</div>
+        <div class="beat-title">Most training runs fail in the dataset.</div>
+        <p class="beat-pov">Not in the trainer. A caption set that repeats itself teaches the repetition, and you find that out eight hours and a GPU bill later. So the dataset screen counts what the trainer is actually going to read.</p>
+        <button class="shot" data-cap="<b>The dataset screen.</b> Coverage, caption length and every repeated clause — read from the same .txt sidecars the trainer opens." aria-label="Open the dataset screenshot">
+          <img src="assets/visionary/dataset.webp" alt="Visionary's dataset view: a grid of 80 captioned runway photographs, with a panel showing the trigger word, coverage bars reading 80 of 80, a median caption length of 70 words, and a ranked list of repeated clauses" loading="lazy" width="2000" height="1250">
+        </button>
+        <p class="vzcap"><b>80 of 80</b> carry the trigger word, <b>80 of 80</b> are captioned, median seventy words. The list on the right is every clause appearing more than once — <i>even lighting</i> five times, <i>with soft</i> five times. That is the overfitting warning, delivered before the run instead of after it.</p>
+        <p class="vznote">Captions are written by a vision model as prose, not tags, because the text encoders these models use parse grammar.</p>
+      </div>
+
+      <!-- THE WORKSPACE -->
+      <div class="beat reveal">
+        <div class="beat-eyebrow">The decision nobody sees</div>
+        <div class="beat-title">Image and video were never two places.</div>
+        <p class="beat-pov">The decisions that matter most leave no trace. There is no video mode to enter, no project type to choose at the start, and nothing announcing that two systems were joined — one canvas, one prompt, one gallery. Done properly it is unremarkable, which is why it has to be claimed here and nowhere in the product.</p>
+        <div class="shots2">
+          <button class="shot" data-cap="<b>Generate.</b> One prompt for both image and video — the switch is a chip inside the field, and the prompt survives it." aria-label="Open the generate screenshot">
+            <img src="assets/visionary/generate.webp" alt="The generate view: a wide cinematic image of a figure on a rain-slicked street fills the canvas, with the prompt field and a single row of controls beneath it and a results rail on the right" loading="lazy" width="2000" height="1250">
+          </button>
+          <button class="shot" data-cap="<b>The gallery.</b> Stills and clips in one place — because a still that becomes a clip should never leave the application to do it." aria-label="Open the gallery screenshot">
+            <img src="assets/visionary/gallery.webp" alt="The gallery view: a grid of generated stills and video clips with relative timestamps" loading="lazy" width="2000" height="1250">
+          </button>
+        </div>
+        <p class="vzcap">The switch lives inside the prompt field rather than in the chrome, because which one you get is a property of what you're making, not an address you navigate to. What differs between them is only the options. <b>The canvas holds the screen</b> either way — options sit in a bar under the picture, never a rail beside it, since a settings column costs the image 384 pixels of the one dimension it cannot get back.</p>
+      </div>
+
+      <!-- THE ENDSTATE — clearly labelled as concept, and governed by a veto list -->
+      <div class="beat reveal">
+        <div class="beat-eyebrow">Concept · not built</div>
+        <div class="beat-title">When the latency goes, the panel should go with it.</div>
+        <p class="beat-pov">Where this goes once the models are fast enough: a gesture-driven canvas for iPad. Nothing is labelled and everything is live — you touch her face to change her. What the machine invented is marked differently from what you actually said, and rerolling it costs nothing.</p>
+        <button class="shot" data-cap="<b>Dream Engine — concept.</b> The endstate for this work: still frames by default, motion as a feature rather than a path." aria-label="Open the Dream Engine concept">
+          <img src="assets/visionary/dream-engine.webp" alt="Three App Store style panels for a concept iPad app called Dream Engine: a typed fragment with some words underlined as the user's own, a figure on a canvas with no visible panel, and a drawer of saved characters, places and looks" loading="lazy" width="2200" height="1187">
+        </button>
+        <p class="vzcap">Speculative, and deliberately labelled as such. What makes it a design rather than a mood board is the list underneath it.</p>
+      </div>
+
+      <!-- THE VETO LIST — the judgment artifact, on the .autopsy component -->
+      <div class="beat reveal">
+        <div class="beat-eyebrow">How it stays empty</div>
+        <div class="beat-title">A veto list, not a manifesto.</div>
+        <p class="beat-pov">Eleven sentences, each written to kill a specific thing when the cheap fix gets proposed. If a sentence has never vetoed anything, it isn't earning its place — cut it.</p>
+        <div class="autopsy">
+          <div class="aplist" id="apList" role="tablist" aria-label="The veto list"></div>
+          <div class="apdetail" id="apDetail"></div>
+        </div>
+        <p class="vznote">The failure to guard against isn't the model, or latency, or scope. It's month four, when something doesn't fit cleanly and the cheapest fix is a panel.</p>
+      </div>
+
+      <!-- UNDER THE SURFACE -->
+      <div class="beat reveal">
+        <div class="beat-eyebrow">Under the surface</div>
+        <div class="beat-title">Never rent a GPU to do CPU work.</div>
+        <p class="beat-pov">Scale here isn't requests per second. It's dataset size, model size and cost per job — so the decisions that matter are about what runs where.</p>
+        <div class="perf">
+          <div class="cell"><div class="n">1<span class="u">file</span></div><div class="l">interface, API and GPU jobs</div></div>
+          <div class="cell"><div class="n">50<span class="u">%</span></div><div class="l">less weight memory, quantized to FP8</div></div>
+          <div class="cell"><div class="n">0</div><div class="l">accounts, secrets or CLI setup</div></div>
+        </div>
+        <div class="membar">
+          <div class="mhead">One captioning job, before the storage was split: <b>23 minutes</b>.</div>
+          <div class="track" role="img" aria-label="A 23 minute job, of which 8 minutes was the work and 15 minutes was committing unchanged model weights to the volume">
+            <!-- No label inside the track: the second segment now fills the rest
+                 of it, so an in-bar caption sits on grey and cannot be read. The
+                 legend below already names both parts. -->
+            <div class="seg a" style="width:34.8%"></div>
+            <div class="seg b" style="left:34.8%;width:65.2%"></div>
+          </div>
+          <div class="ticks"><span>0</span><span>23 min</span></div>
+          <div class="mlegend">
+            <span><i class="a"></i>8&nbsp;min · writing 80 captions</span>
+            <span><i class="b"></i>15&nbsp;min · committing 17&nbsp;GB of unchanged weights</span>
+          </div>
+          <p class="cap">The model cache moved onto its own volume and the job went back to eight minutes. Storage boundaries follow write patterns, not tidiness. The same logic puts downloads, thumbnails and validation on cheap CPU containers — pulling 26&nbsp;GB while an A100 sits idle is money burned, and a bad file path should be a form error in milliseconds rather than a cold start and 35&nbsp;GB of loading before it fails.</p>
+        </div>
+      </div>
+
+      <!-- PHILOSOPHY -->
+      <div class="beat reveal">
+        <div class="beat-eyebrow">Design philosophy</div>
+        <div class="beat-title">The best design leaves no trace.</div>
+        <p class="beat-pov">The work I&rsquo;m proudest of here is the work nobody will notice &mdash; two systems joined so completely that no one thinks to ask when they were separate. Good design is unobtrusive <span class="qcite">&mdash; Dieter Rams</span>. Underneath sit three words that settle the arguments, in priority order when they conflict.</p>
+        <div class="creed">
+          <div class="c">
+            <div class="ce">Antifragile</div>
+            <div class="ct">Errors diagnose themselves.</div>
+            <p>A missing model prints the volume, the exact path it wanted and what is actually there — the three facts that separate a wrong profile from a typo. Any error you can hit twice should have explained itself the first time.</p>
+          </div>
+          <div class="c">
+            <div class="ce">Scalable</div>
+            <div class="ct">Keep the polled thing small.</div>
+            <p>Job records carry filenames; bytes are served off the volume by their own route. A dictionary polled every two seconds must never grow with the size of the result.</p>
+          </div>
+          <div class="c">
+            <div class="ce">Future-proof</div>
+            <div class="ct">Don't build a second way to do the first thing.</div>
+            <p>Adding a second family of video model added no backend — it reuses the container, the warm process and the same job contract. What is per-family is a graph builder and a row in a table.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE 2 — LENS PICKER (the product's own core interaction) -->
+  <section class="case" id="cloudzero">
     <div class="wrap">
       <!-- INTRO: statement + Get-to-know card carousel -->
       <div class="reveal">
-        <div class="ov">01 · CloudZero</div>
+        <div class="ov">02 · CloudZero</div>
         <h2 class="bighead">Scaling from a single user to thirty enterprise clients.</h2>
         <p class="sublead">Cloud cost intelligence for engineering teams.</p>
         <div class="plate">
@@ -616,10 +902,10 @@
   </section>
 
   <!-- CASE 2 — DRAG TO COMPRESS (the metric, made physical) -->
-  <section class="case" id="cummins">
+  <section class="case alt" id="cummins">
     <div class="wrap">
       <div class="reveal">
-        <div class="ov">02 · Cummins · Product, system, process</div>
+        <div class="ov">03 · Cummins · Product, system, process</div>
         <h2 class="bighead">Accelerating enterprise product cycles.</h2>
         <p class="sublead">Synchronizing software design systems with industrial manufacturing cadences.</p>
         <div class="plate">
@@ -659,10 +945,10 @@
   </section>
 
   <!-- CASE 2b — THE RECEIPT (the five moves, in artifacts) -->
-  <section class="case alt" data-nav="cummins">
+  <section class="case" data-nav="cummins">
     <div class="wrap">
       <div class="reveal">
-        <div class="ov">02 · Cummins</div>
+        <div class="ov">03 · Cummins</div>
         <div class="h2">Systemizing product design.</div>
         <p class="pov">Aligning software component architecture with industrial manufacturing cadences.</p>
       </div>
@@ -778,10 +1064,10 @@
   </div>
 
   <!-- CASE 3 — MOOD VISUALIZER (feeling, made the interface) -->
-  <section class="case" id="concept">
+  <section class="case alt" id="concept">
     <div class="wrap" style="text-align:center">
       <div class="reveal">
-        <div class="ov">03 · Concept · Sound landscape</div>
+        <div class="ov">04 · Concept · Sound landscape</div>
         <div class="h2" style="margin-inline:auto">An audio landscape shaped by emotion.</div>
         <p class="pov" style="margin-inline:auto">A minimalist audio terminal removing cognitive overload through responsive geometry.</p>
       </div>
@@ -800,167 +1086,9 @@
     </div>
   </section>
 
-  <!-- CASE 4 — GREENLIGHT (the reel + the instrument) -->
-  <section class="case alt" id="greenlight">
-    <div class="wrap">
-      <div class="reveal">
-        <div class="ov">04 · Greenlight · Diffusion research</div>
-        <h2 class="bighead">Old photographs in motion.</h2>
-        <p class="sublead">Two years of diffusion research. The first thing it made was a gift for my father.</p>
-      </div>
-
-      <div class="projector reveal">
-        <div class="screenv" id="screenv">
-          <span class="takebadge" id="takebadge">Take 01 / 05</span>
-          <span class="playhint" id="playhint">Play</span>
-          <video id="reelv" preload="metadata" playsinline></video>
-        </div>
-        <p class="direction" id="direction"><b>Direction</b></p>
-        <div class="picker" id="reel" role="tablist" aria-label="Select take">
-          <button class="on">01</button>
-          <button>02</button>
-          <button>03</button>
-          <button>04</button>
-          <button>05</button>
-        </div>
-      </div>
-
-      <div class="beat glbeat reveal">
-        <div class="beat-eyebrow">The instrument</div>
-        <div class="beat-title">Greenlight — A still-to-film console.</div>
-        <p class="beat-pov">Designed, built, and deployed solo. Wan 2.2 on serverless GPUs. Output resolution matches the source frame.</p>
-        <div class="console-face" id="consoleFace" role="button" tabindex="0" aria-label="Open the Greenlight console" data-cap="<b>Greenlight.</b> The console behind the reel. Wan 2.2 &middot; PyTorch &middot; serverless GPU."></div>
-        <p class="consolecap">The live app runs the session behind the reel. GPU asleep between runs.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- CASE 5 — VISIONARY (the live alpha + the autopsy) -->
-  <section class="case" id="visionary">
-    <div class="wrap">
-      <!-- INTRO -->
-      <div class="reveal">
-        <div class="ov">05 · Visionary · Local AI tooling</div>
-        <h2 class="bighead">Simplifying the AI dataset pipeline.</h2>
-        <p class="sublead">Consolidating the entire curation and captioning pipeline into one offline workspace. Free and open source.</p>
-        <div class="plate">
-          <div class="cell"><div class="k">Role</div><div class="v">Sole designer &amp; engineer</div></div>
-          <div class="cell"><div class="k">Scope</div><div class="v">Product · UX · built in Claude Code</div></div>
-          <div class="cell"><div class="k">Platform</div><div class="v">macOS · Apple Silicon</div></div>
-          <div class="cell"><div class="k">Release</div><div class="v">Alpha 0.1.0 · open source (MIT)</div></div>
-        </div>
-      </div>
-
-      <!-- CENTERPIECE: the live alpha -->
-      <div class="beat reveal">
-        <div class="beat-eyebrow">The alpha · live</div>
-        <div class="beat-title">Six ways to see the same photographs.</div>
-        <p class="beat-pov">Curation is re-seeing one set until the right cut is obvious. Each arrangement surfaces a different structure.</p>
-        <div class="vzbar">
-          <span class="lead">Arrange by</span>
-          <div class="picker" id="vzPicker" role="tablist" aria-label="Arrange the dataset">
-            <button class="on" data-mode="color">Color</button>
-            <button data-mode="structure">Structure</button>
-            <button data-mode="resolution">Resolution</button>
-            <button data-mode="person">Person</button>
-            <button data-mode="__dedupe">Find duplicates</button>
-          </div>
-        </div>
-        <div class="vzscreen">
-          <iframe id="vzApp" src="visionary/" title="Visionary — interactive alpha" loading="lazy"></iframe>
-        </div>
-        <p class="vzcap"><b>Structure</b> gathers near-duplicates before you delete. <b>Color</b> and <b>Person</b> come from perceptual hashes and on-device face clusters.</p>
-        <p class="vznote">Every dimension, color, duplicate and tag here is Visionary's real output, on 44 images. The native app does this at a hundred thousand — it's on <a href="https://github.com/Prometheus-000/visionary" target="_blank" rel="noopener">GitHub</a>.</p>
-      </div>
-
-      <!-- PACKAGING: the hand-off to training -->
-      <div class="beat reveal">
-        <div class="beat-eyebrow">The hand-off</div>
-        <div class="beat-title">Packaged for wherever you train.</div>
-        <p class="beat-pov">A curated set only matters if it leaves clean. Visionary writes the caption and packages the folder in the format the trainer already reads.</p>
-        <div class="ship">
-          <div class="stage">
-            <div class="se">Caption</div>
-            <div class="st">JoyCaption's own grammar.</div>
-            <p>Each caption is built from a type, a length and opt-in extras — no prompt engineering. Taggers and VLMs write to the same <b>.txt</b>.</p>
-          </div>
-          <div class="arrow" aria-hidden="true">→</div>
-          <div class="stage">
-            <div class="se">Package</div>
-            <div class="st">The format the trainer already reads.</div>
-            <p>Export writes <b>.txt</b> sidecars or one <b>metadata.jsonl</b>. Files renumber in grid order, so your arrangement becomes the training order.</p>
-          </div>
-          <div class="arrow" aria-hidden="true">→</div>
-          <div class="stage">
-            <div class="se">Ship</div>
-            <div class="st">This Mac or a GPU box.</div>
-            <p>Keep it local, zip it, or <b>scp</b> the set straight to the machine that trains. One way, key auth, nothing stored.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- THE ROAD: autopsy of what got cut -->
-      <div class="beat reveal">
-        <div class="beat-eyebrow">The road to alpha</div>
-        <div class="beat-title">Five things that didn't survive review.</div>
-        <p class="beat-pov">Good tools are subtractive. Every one of these shipped before it was cut or rebuilt.</p>
-        <div class="autopsy">
-          <div class="aplist" id="apList" role="tablist" aria-label="Design decisions"></div>
-          <div class="apdetail" id="apDetail"></div>
-        </div>
-      </div>
-
-      <!-- PERFORMANCE -->
-      <div class="beat reveal">
-        <div class="beat-eyebrow">Under the surface</div>
-        <div class="beat-title">Built for speed.</div>
-        <p class="beat-pov">It processes 100,000 photos in under a minute on an 8&nbsp;GB machine. The heavy analysis runs in the background while you browse.</p>
-        <div class="perf">
-          <div class="cell"><div class="n">100<span class="u">K+</span></div><div class="l">images</div></div>
-          <div class="cell"><div class="n">120<span class="u">fps</span></div><div class="l">sustained scrolling</div></div>
-          <div class="cell"><div class="n">0</div><div class="l">dropped frames in 24&nbsp;s</div></div>
-        </div>
-        <div class="membar">
-          <div class="mhead">Memory footprint against an <b>8&nbsp;GB</b> budget.</div>
-          <div class="track" role="img" aria-label="Visionary uses 267 MB for 750 photos and about 1.5 GB at 100,000 photos, out of 8 GB total — the rest stays free">
-            <div class="seg a"></div>
-            <div class="seg b"></div>
-            <div class="seg free">the rest stays free</div>
-          </div>
-          <div class="ticks"><span>0</span><span>8&nbsp;GB total</span></div>
-          <div class="mlegend">
-            <span><i class="a"></i>267&nbsp;MB · a 750-photo set</span>
-            <span><i class="b"></i>~1.5&nbsp;GB · 100,000 images</span>
-          </div>
-          <p class="cap">The grid decodes only what's on screen, hashes read from thumbnails, and duplicate thresholds are computed once — so scrolling is an array lookup. Memory moved 1497 to 1505&nbsp;MB across 90 seconds at 100,000 images. One file-descriptor leak surfaced at that scale and was closed.</p>
-        </div>
-      </div>
-
-      <!-- PHILOSOPHY -->
-      <div class="beat reveal">
-        <div class="beat-eyebrow">Design philosophy</div>
-        <div class="beat-title">Less but better. <span class="qcite">— Dieter Rams</span></div>
-        <p class="beat-pov">Designed and built end to end in Claude Code — one design review at a time.</p>
-        <div class="creed">
-          <div class="c">
-            <div class="ce">Design</div>
-            <div class="ct">One action color. White.</div>
-            <p>Dark, neutral chrome. Nothing tints how you read a photograph.</p>
-          </div>
-          <div class="c">
-            <div class="ce">Control</div>
-            <div class="ct">Standard idioms. Ultimate authority.</div>
-            <p>Finder selection, Quick Look, delete to the Trash. Every destructive step is reversible.</p>
-          </div>
-          <div class="c">
-            <div class="ce">Community</div>
-            <div class="ct">Free. Offline. Yours.</div>
-            <p>MIT, one command, no account, no telemetry. The images never leave your machine.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- (Greenlight was case 04. Its research became a phase of Visionary and its
+       reel moved there — the films are the reason the platform exists, so they
+       open it rather than closing a case of their own.) -->
 
   <!-- THE WHISPER — the one sanctioned break: a second-person line in a void, then the prior lives, rolled like credits -->
   <section class="whisper">
@@ -982,7 +1110,7 @@
     <div class="dockbar">
       <span class="pr">&rsaquo;</span><span class="pt" id="ptext2"></span><span class="caret"></span>
       <nav class="dockjump">
-        <a href="#cloudzero">cloudzero</a><a href="#cummins">cummins</a><a href="#concept">concept</a><a href="#greenlight">greenlight</a><a href="#visionary">visionary</a>
+        <a href="#visionary">visionary</a><a href="#cloudzero">cloudzero</a><a href="#cummins">cummins</a><a href="#concept">concept</a>
         <button class="hint" id="hint2" type="button">help</button>
       </nav>
     </div>
@@ -1323,24 +1451,34 @@
     rail.addEventListener('pointermove',e=>{if(!down)return;const dx=e.clientX-sx;if(Math.abs(dx)>6){moved=true;rail.classList.add('dragging');rail.scrollLeft=sl-dx;}});
     ['pointerup','pointercancel','pointerleave'].forEach(ev=>rail.addEventListener(ev,()=>{down=false;rail.classList.remove('dragging');}));
 
-    /* lightbox */
-    const lbox=document.getElementById('lbox'), limg=document.getElementById('limg'), lcap=document.getElementById('lcap'), lclose=document.getElementById('lclose');
-    function openBox(face){
-      const img=face.querySelector('img'), svg=face.querySelector(':scope>svg');
-      limg.innerHTML='';
-      if(img){const big=img.cloneNode();big.removeAttribute('style');limg.appendChild(big);}
-      else if(svg){limg.appendChild(svg.cloneNode(true));}
-      else{const ph=face.querySelector('.ph').cloneNode(true);ph.classList.add('ph');limg.appendChild(ph);}
-      lcap.innerHTML=face.dataset.cap||'';
-      lbox.classList.add('open');document.body.style.overflow='hidden';lclose.focus();
-    }
-    function closeBox(){lbox.classList.remove('open');document.body.style.overflow='';setTimeout(()=>{limg.innerHTML='';},380);}
+    /* the rail's own click — drag-guarded, so a drag that ends on a card does
+       not also open it. The box itself lives below, outside this IIFE. */
     rail.addEventListener('click',e=>{if(moved)return;const face=e.target.closest('.rface');if(face)openBox(face);});
-    lclose.addEventListener('click',closeBox);
-    lbox.addEventListener('click',e=>{if(e.target===lbox)closeBox();});
-    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&lbox.classList.contains('open'))closeBox();});
   })();
-  /* ===== CASE 4 — Greenlight: reel (no autoplay — the visitor runs the projector) ===== */
+
+  /* ===== The lightbox — shared by the Cummins rail and the Visionary shots =====
+     It used to live inside the rail's IIFE, which early-returns when the rail is
+     absent; the case that opens the page now depends on it, so it stands alone.
+     Anything with a data-cap and an image inside is openable. */
+  const lbox=document.getElementById('lbox'), limg=document.getElementById('limg'),
+        lcap=document.getElementById('lcap'), lclose=document.getElementById('lclose');
+  function openBox(face){
+    const img=face.querySelector('img'), svg=face.querySelector(':scope>svg');
+    limg.innerHTML='';
+    if(img){const big=img.cloneNode();big.removeAttribute('style');big.removeAttribute('loading');limg.appendChild(big);}
+    else if(svg){limg.appendChild(svg.cloneNode(true));}
+    else{const ph=face.querySelector('.ph').cloneNode(true);ph.classList.add('ph');limg.appendChild(ph);}
+    lcap.innerHTML=face.dataset.cap||'';
+    lbox.classList.add('open');document.body.style.overflow='hidden';lclose.focus();
+  }
+  function closeBox(){lbox.classList.remove('open');document.body.style.overflow='';setTimeout(()=>{limg.innerHTML='';},380);}
+  lclose.addEventListener('click',closeBox);
+  lbox.addEventListener('click',e=>{if(e.target===lbox)closeBox();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&lbox.classList.contains('open'))closeBox();});
+  /* A .shot is already a <button>, so Enter and Space arrive as clicks and no
+     key handling is needed here. */
+  document.querySelectorAll('.shot').forEach(s=>s.addEventListener('click',()=>openBox(s)));
+  /* ===== CASE 1 — the origin reel (no autoplay — the visitor runs the projector) ===== */
   (function(){
     const v=document.getElementById('reelv'); if(!v) return;
     const badge=document.getElementById('takebadge'), dir=document.getElementById('direction'),
@@ -1371,108 +1509,127 @@
     load(0);
   })();
 
-  /* ===== CASE 4 — Greenlight console: live miniature + interactive lightbox =====
-     srcdoc, not src — scaled src-iframes fail to composite; the pilot proved srcdoc paints. */
-  (function(){
-    const cf=document.getElementById('consoleFace'); if(!cf) return;
-    const VW=1440, VH=900;
-    let srcP=null;
-    const getSrc=()=>srcP||(srcP=fetch('greenlight/console.html').then(r=>r.text()));
-    function boot(){
-      getSrc().then(html=>{
-        const ifr=document.createElement('iframe');
-        ifr.setAttribute('sandbox','allow-scripts'); ifr.setAttribute('scrolling','no'); ifr.setAttribute('tabindex','-1');
-        ifr.title='Greenlight — image-to-video console (preview)';
-        function size(){const s=cf.clientWidth/VW; ifr.style.width=VW+'px'; ifr.style.height=VH+'px'; ifr.style.transform='scale('+s+')';}
-        ifr.srcdoc=html; cf.appendChild(ifr); size();
-        window.addEventListener('resize',size);
-      });
-    }
-    if('IntersectionObserver' in window){
-      const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){boot();io.disconnect();}})},{rootMargin:'400px'});
-      io.observe(cf);
-    } else boot();
-    const lbox=document.getElementById('lbox'), limg=document.getElementById('limg'), lcap=document.getElementById('lcap');
-    function openConsole(){
-      getSrc().then(html=>{
-        limg.innerHTML='';
-        const ifr=document.createElement('iframe');
-        ifr.setAttribute('sandbox','allow-scripts');
-        ifr.title='Greenlight — image-to-video console';
-        ifr.style.background='#EFEDE8';
-        ifr.srcdoc=html;
-        limg.appendChild(ifr);
-        lcap.innerHTML=cf.dataset.cap||'';
-        lbox.classList.add('open'); document.body.style.overflow='hidden';
-      });
-    }
-    cf.addEventListener('click',openConsole);
-    cf.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openConsole();}});
-  })();
 
 </script>
 
-<!-- ===== CASE 5 — Visionary: arrange picker (drives the embedded alpha) + the autopsy ===== -->
+<!-- ===== CASE 1 — Visionary: the composer that rebuilds itself, and the veto list ===== -->
 <script>
 (function(){
-  /* the portfolio's Arrange picker postMessages the embedded app — same
-     pattern as CloudZero's lens picker driving its product view. */
-  const app=document.getElementById('vzApp'), picker=document.getElementById('vzPicker');
-  if(picker && app){
-    picker.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
-      picker.querySelectorAll('button').forEach(x=>x.classList.remove('on'));
-      b.classList.add('on');
-      const m=b.dataset.mode;
-      const send=()=>app.contentWindow&&app.contentWindow.postMessage(
-        m==='__dedupe'?{vz:'dedupe'}:{vz:'mode',mode:m},'*');
-      send();
-    }));
+  /* THE COMPOSER.
+     Ground truth is VIDEO_MODELS in the application — what each model actually
+     reads. This facsimile hides exactly what the running app hides, so the
+     interesting part, which is how much disappears, is not an illustration of
+     the behaviour. It is the behaviour, on the same table.
+     The prompt is deliberately never touched by a switch: losing the sentence
+     to a mode change is the fastest way to make two things that should feel
+     like one feel like two. */
+  const MODELS={
+    krea:{ label:'Krea 2 Turbo', kind:'image', note:'8 steps · CFG 1.0',
+      tier:'1344×768', len:'', sampler:'euler', steps:'8', cfg:'1.0', shift:'shift 1.15',
+      has:{len:0,last:0,refs:0,loras:1,negative:1,cfg:1,experts:0},
+      why:'<b>Krea 2 Turbo</b> makes still frames, so duration and the keyframe tiles have nothing to attach to. Eight steps at CFG 1.0.' },
+    h3:{ label:'MiniMax-H3', kind:'video', note:'Sound and picture in one pass',
+      tier:'768p', len:'5s', sampler:'res_multistep', steps:'20', cfg:'', shift:'',
+      has:{len:1,last:1,refs:1,loras:0,negative:0,cfg:0,experts:0},
+      why:'<b>MiniMax-H3</b> carries a soundtrack in the same latent as the picture. It is guidance-distilled, so CFG, shift and the negative prompt are gone — and there is no LoRA ecosystem for the repackage, so that goes too. What it gains is references.' },
+    wan14b:{ label:'Wan 2.2 A14B', kind:'video', note:'Two experts · silent',
+      tier:'720p', len:'5s', sampler:'euler', steps:'20', cfg:'3.5', shift:'shift 8.0',
+      has:{len:1,last:1,refs:0,loras:1,negative:1,cfg:1,experts:1},
+      why:'<b>Wan 2.2 A14B</b> is two checkpoints split by noise level, sampled in sequence — so a LoRA row has to say which expert it patches. Takes CFG, a negative prompt and LoRA stacking. Silent.' },
+    wan5b:{ label:'Wan 2.2 TI2V 5B', kind:'video', note:'24 fps · silent',
+      tier:'704p', len:'5s', sampler:'euler', steps:'30', cfg:'5.0', shift:'shift 8.0',
+      has:{len:1,last:0,refs:0,loras:1,negative:1,cfg:1,experts:0},
+      why:'<b>Wan 2.2 TI2V 5B</b> is one expert at 24 fps. The same controls as the A14B minus the expert switch — and it cannot take a last frame, so that tile goes with it.' }
+  };
+  /* The chip and the picker are two views of one state, so both go through
+     select(). The line underneath differs by which one you used: changing model
+     is a question about controls, changing medium is a question about whether
+     you just lost your sentence. */
+  const KIND_WHY={
+    image:'<b>Same sentence, a different medium.</b> Duration and the keyframe tiles have nothing to attach to a still, so they leave — and your words are exactly where you left them. There was never a video mode to enter or a project type to pick.',
+    video:'<b>Same sentence, a different medium.</b> The options came back and the prompt never moved. Most people will never notice this decision was made, which is the whole of it.'
+  };
+  const picker=document.getElementById('ccPicker'), cons=document.getElementById('cons');
+  if(picker&&cons){
+    const why=document.getElementById('ccWhy');
+    const kindI=document.getElementById('ccKindI'), kindV=document.getElementById('ccKindV');
+    let lastVideo='wan14b';
+    const put=(id,v)=>{const el=document.getElementById(id); if(el)el.textContent=v;};
+    const show=(f,on)=>cons.querySelectorAll('[data-f="'+f+'"]').forEach(el=>{el.hidden=!on;});
+    const say=html=>{ if(!why) return; why.style.opacity=0; setTimeout(()=>{why.innerHTML=html;why.style.opacity=1;},150); };
+    function select(key,note){
+      const m=MODELS[key]; if(!m) return;
+      if(m.kind==='video') lastVideo=key;
+      put('ccModel',m.label); put('ccNote',m.note); put('ccTier',m.tier); put('ccLen',m.len);
+      put('ccSampler',m.sampler); put('ccSteps',m.steps); put('ccCfg',m.cfg); put('ccShift',m.shift);
+      Object.keys(m.has).forEach(f=>show(f,m.has[f]));
+      kindI.classList.toggle('on',m.kind==='image');
+      kindV.classList.toggle('on',m.kind==='video');
+      picker.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.m===key));
+      say(note||m.why);
+    }
+    picker.addEventListener('click',e=>{
+      const b=e.target.closest('button'); if(b) select(b.dataset.m);
+    });
+    kindI.addEventListener('click',()=>select('krea',KIND_WHY.image));
+    kindV.addEventListener('click',()=>select(lastVideo,KIND_WHY.video));
+    /* Opens on the fullest state on purpose. Every switch from here subtracts,
+       which is the argument; starting lean would make it look like a feature
+       list growing. */
+    select('wan14b');
   }
 
-  /* Autopsy — the five decisions, each a real user moment. Content is the
-     honest record from the build's DECISIONS_LOG. */
-  const PIVOTS=[
-    { nm:"The proximity slider", tg:"cut",
-      quote:"The slider does nothing.", who:"My design review",
-      before:"A slider from 0 to 12 set the similarity threshold and regrouped the set live. You couldn't see it work — every affected group sat below the fold and a framebuffer diff showed no pixels changing.",
-      after:"I removed it. Grouping became a choice between named axes — Color, Structure, Resolution, Person — instead of a number to guess. The number was invented complexity." },
-    { nm:"Grid selection", tg:"rebuilt",
-      quote:"Currently unusable. Users want ultimate authority.", who:"My design review",
-      before:"I'd invented my own selection model. A click grabbed a whole duplicate group, deleting took several steps, and selecting a tile flooded it blue and shrank the image. It read as broken.",
-      after:"Now it respects the conventions everyone has used for decades — click to select, shift for a range, ⌘ to toggle, a marquee from empty space. Selection is a thin frame and nothing moves. Delete goes to the system Trash which is the undo." },
-    { nm:"Group-by-Person", tg:"fixed",
-      quote:"One band held 421 faces.", who:"First run on 749 real photos",
-      before:"Single-linkage clustering chained identities — one ambiguous face bridging two people fused them and the merges cascaded into one mega-band. The embeddings were sound; the fault was the clustering.",
-      after:"Average-linkage fixed it: two groups now merge only when their mean similarity clears the threshold. A single bridging face can no longer fuse two identities. The single band became eleven with no re-scan." },
-    { nm:"“Batch refactor”", tg:"cut",
-      quote:"I have no idea what that means — and neither will users.", who:"My design review",
-      before:"A rule builder — images with tag X and without tag Y, append Z — with a live match count. Powerful and blind to its own effect: you never saw the images you were about to change.",
-      after:"Deleted. Its one real power — excluding a tag — moved into the filter people already use: right-click a tag and choose “show images without this.” Same query. Now the images are in front of you." },
-    { nm:"The right-hand panels", tg:"consolidated",
-      quote:"This is a professional workspace, not a plaything.", who:"Rams pass",
-      before:"Five tabs down the right edge — Tags, Analyze, Caption, Balance, Training. Each one more piece of chrome competing with the photographs.",
-      after:"There were only two jobs here. Balance became a toggle inside Tags; Training moved under Caption. Fewer surfaces and the same power." },
+  /* THE VETO LIST.
+     Six of the eleven, on the same component the old case used for its autopsy —
+     a list and a detail pane was already the right shape for a sentence, what it
+     kills, and what the platform forces in its place. Numbers are the real ones,
+     so six of eleven reads as a selection rather than the whole list. */
+  const SENTENCES=[
+    { n:'01', nm:'No label, no panel', tg:'kills the tutorial',
+      quote:"If a gesture cannot communicate intent without a UI label, the answer is not a control panel — it's a better spatial gesture or a smarter model interpretation.",
+      kills:"The panel, obviously — but also the tutorial. Onboarding, coach marks, first-run overlays, the little animated hand demonstrating a swipe. Those are labels wearing a costume. If a gesture needs teaching, the gesture is wrong.",
+      forces:"Two escape hatches, both real work: the gesture gets more physical, or the model gets better at reading what the touch meant. The sentence exists so that work gets done rather than deferred into chrome." },
+    { n:'03', nm:'Touch decides the mode', tg:'kills tool palettes',
+      quote:"What you touch decides the mode.",
+      kills:"Tool palettes, mode switchers, a selected-tool state — anything you must do <i>before</i> the thing you want to do. You don't enter character mode. You touch her face.",
+      forces:"Ambiguity resolves toward the smaller object: her hand over the counter is her, not the room. Widening is a cheap, obvious gesture. Guessing large silently changes the wrong scope." },
+    { n:'04', nm:'Live, unlabelled', tg:'kills inspectors',
+      quote:"Everything is live. Nothing is labeled.",
+      kills:"Inspectors, sidebars, property panels, toolbars, persistent chrome of any kind. Every element stays addressable — her, her coat, the counter, the light, the camera — while none of it is drawn as a control.",
+      forces:"No hover means no tooltips and no reveal-on-hover. Discoverability is by touch or it doesn't exist, and every affordance has to survive a finger arriving with no warning. This is the hardest engineering in the product, and it exists so the screen can stay empty." },
+    { n:'05', nm:'Nothing confirms', tg:'kills the render button',
+      quote:"Nothing asks for confirmation.",
+      kills:"Modals, confirmation dialogs, are-you-sure, staged edits, a render button. Move her and the frame changes.",
+      forces:"Undo is a two-finger gesture and it is always available. Reversibility replaces confirmation entirely — that's the trade, and it only works if undo is genuinely total." },
+    { n:'09', nm:'Derived or invented', tg:'kills the chat panel',
+      quote:"Derived or invented, always visible.",
+      kills:"A chat panel, an assistant sidebar, opaque proposals, clarifying questions. Every question asked is a small failure — pick something, mark it invented, move on.",
+      forces:"Anything read from your words is marked one way, anything filled in for you another, and rerolling it is cheap. The mark has to be legible at arm's length, on a glossy screen, in daylight." },
+    { n:'11', nm:'No memory unless told', tg:'kills personalization',
+      quote:"The blank canvas never remembers unless you tell it to.",
+      kills:"Personalization, suggestion engines, learned preferences, recently-used defaults, anything that pre-populates a new scene. The library grows; the compiler doesn't change.",
+      forces:"The first screen of the thousandth session is identical to the first screen of the first. Same words, same result, a year later." }
   ];
   const list=document.getElementById('apList'), detail=document.getElementById('apDetail');
   if(list && detail){
-    PIVOTS.forEach((p,i)=>{
+    SENTENCES.forEach((s,i)=>{
       const b=document.createElement('button');
       b.className='apitem'+(i===0?' on':''); b.setAttribute('role','tab');
-      b.innerHTML=`<span class="idx">0${i+1}</span><span><span class="nm">${p.nm}</span><span class="tg">${p.tg}</span></span>`;
-      b.addEventListener('click',()=>{ list.querySelectorAll('.apitem').forEach(x=>x.classList.remove('on')); b.classList.add('on'); paint(i); });
+      b.innerHTML='<span class="idx">'+s.n+'</span><span><span class="nm">'+s.nm+'</span><span class="tg">'+s.tg+'</span></span>';
+      b.addEventListener('click',()=>{ list.querySelectorAll('.apitem').forEach(x=>x.classList.remove('on')); b.classList.add('on'); paintS(i); });
       list.appendChild(b);
     });
-    function paint(i){
-      const p=PIVOTS[i];
+    function paintS(i){
+      const s=SENTENCES[i];
       detail.innerHTML=
-        `<div class="apquote">${p.quote}</div>
-         <div class="apwho">${p.who}</div>
-         <div class="apba">
-           <div class="apcol before"><div class="h"><span class="mk">✕</span>Before</div><p>${p.before}</p></div>
-           <div class="apcol after"><div class="h"><span class="mk">✓</span>What replaced it</div><p>${p.after}</p></div>
-         </div>`;
+        '<div class="apquote">'+s.quote+'</div>'+
+        '<div class="apwho">Sentence '+s.n+' of 11</div>'+
+        '<div class="apba">'+
+          '<div class="apcol before"><div class="h"><span class="mk">✕</span>Kills</div><p>'+s.kills+'</p></div>'+
+          '<div class="apcol after"><div class="h"><span class="mk">✓</span>What touch forces</div><p>'+s.forces+'</p></div>'+
+        '</div>';
     }
-    paint(0);
+    paintS(0);
   }
 })();
 </script>
