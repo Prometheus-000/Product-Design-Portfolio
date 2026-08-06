@@ -801,7 +801,7 @@
       <div class="beat reveal">
         <div class="beat-eyebrow">Where design engineering stops being a title</div>
         <div class="beat-title">Two lines inside the model, so the canvas could take regions.</div>
-        <p class="beat-pov">Regional prompting is live: different prompts over different parts of one canvas, as columns or rows you add and weight. The existing extension for it could not be made to work &mdash; not configured wrong, <b>architecturally unreachable</b>. Krea 2 is single-stream: text and image tokens run through one self-attention pass, so there is no cross-attention to patch, and switching the extension on was a silent no-op that concatenated the prompts and regionalised nothing.</p>
+        <p class="beat-pov">Regional prompting is live &mdash; different prompts over different parts of one canvas, as columns or rows you add and weight. It sits under <b>Advanced</b>, and the direction and the region rows stay hidden until the checkbox is on. The existing extension for it could not be made to work &mdash; not configured wrong, <b>architecturally unreachable</b>. Krea 2 is single-stream: text and image tokens run through one self-attention pass, so there is no cross-attention to patch, and switching the extension on was a silent no-op that concatenated the prompts and regionalised nothing.</p>
         <div class="creed">
           <div class="c">
             <div class="ce">The dead end</div>
@@ -819,7 +819,7 @@
             <p>An explicit mask drops off the flash kernel and the bias is quadratic in sequence &mdash; about <b>70&nbsp;MB at 1024px</b>. Both are paid only when regions are actually in play, so a plain prompt costs nothing.</p>
           </div>
         </div>
-        <p class="vzcap">The patch itself is <b>two lines</b> in one vendored file, and with no region builder present the behaviour is byte-identical to upstream. That is the whole bet: the smallest possible change to somebody else&rsquo;s model, at the one place it was already prepared to accept it.</p>
+        <p class="vzcap">Where it lives follows what it costs. Under Advanced, beside the negative prompt and the sampler &mdash; and nested once more inside that, since a direction and an empty region row are meaningless until you have said you want regions at all. Almost every generation is one prompt over the whole frame; a control that applies to the rare case should be present for the rare case and absent the rest of the time. The patch itself is <b>two lines</b> in one vendored file, and with no region builder present the behaviour is byte-identical to upstream. That is the whole bet: the smallest possible change to somebody else&rsquo;s model, at the one place it was already prepared to accept it.</p>
         <p class="vznote">It also decides what the images may install. The fast attention kernels assert the mask is empty, so the inference image deliberately ships without them &mdash; while the video image, whose models never pass a mask, ships with them and gets the speed. And because an upstream sync would overwrite the patch and let regional prompting fail quietly, the smoke test asserts the patch is still there. A capability this thin has to be guarded by something that shouts.</p>
       </div>
 
