@@ -522,6 +522,10 @@
   .perf .n .u{font-size:.46em;color:var(--ink-soft);font-weight:600;margin-left:4px;letter-spacing:0}
   .perf .l{margin-top:13px;font-size:12.5px;color:var(--ink-soft);font-weight:500;line-height:1.5}
   @media(max-width:640px){.perf{grid-template-columns:1fr}}
+  /* the same band, leading the case — unit sits under the number, since these
+     read as words rather than the symbols the engineering band carries */
+  .perf.outcome{margin-top:40px}
+  .perf.outcome .n .u{display:block;margin:8px 0 0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
   .membar{margin-top:30px;border-top:1px solid var(--line);padding-top:26px}
   .membar .mhead{font-size:13px;color:var(--ink-soft);font-weight:600;margin-bottom:18px}
   .membar .mhead b{color:var(--ink);font-weight:700}
@@ -612,13 +616,22 @@
         <div class="ov">01 · Visionary · Generative studio</div>
         <h2 class="bighead">One file is the whole studio.</h2>
         <p class="sublead">Training, images, video and datasets in a single application that installs with one command and runs on your own GPUs. I designed it, engineered it and deployed it.</p>
+        <!-- What shipped, before what it is. The band leads because the case has
+             no revenue number to lead with, and scope delivered is the outcome a
+             solo platform actually has. The engineering band stays where it
+             belongs, eight beats down under "Under the surface". -->
+        <div class="perf outcome">
+          <div class="cell"><div class="n">4<span class="u">phases</span></div><div class="l">LoRA training, image inference, datasets and captioning, video</div></div>
+          <div class="cell"><div class="n">2<span class="u">model families</span></div><div class="l">Wan and Krea, added without a second backend</div></div>
+          <div class="cell"><div class="n">1<span class="u">command</span></div><div class="l">from clone to a running URL, on your own GPUs</div></div>
+        </div>
         <div class="plate">
           <div class="cell"><div class="k">Role</div><div class="v">Design engineer &mdash; sole designer &amp; builder</div></div>
           <div class="cell"><div class="k">Scope</div><div class="v">Product · UX · Python · written with an AI pair</div></div>
           <div class="cell"><div class="k">Stack</div><div class="v">Modal · ComfyUI · PyTorch · serverless GPU</div></div>
           <div class="cell"><div class="k">Status</div><div class="v">Deployed and running · open source</div></div>
         </div>
-        <p class="vznote" style="margin-top:22px">Four phases shipped: LoRA training, image inference, datasets and captioning, and video across two model families. The source is on <a href="https://github.com/Prometheus-000/visionary-platform" target="_blank" rel="noopener">GitHub</a>.</p>
+        <p class="vznote" style="margin-top:22px">The source is on <a href="https://github.com/Prometheus-000/visionary-platform" target="_blank" rel="noopener">GitHub</a>.</p>
         <!-- The product, first. The case opens on the thing that was built, not
              on the reason it was built — that is the coda at the end. -->
         <button class="shot lead" data-cap="<b>Generate.</b> One prompt for both image and video &mdash; the switch is a chip inside the field, and the prompt survives it." aria-label="Open the generate screenshot">
