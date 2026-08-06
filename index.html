@@ -448,6 +448,17 @@
   .cons .opt{display:inline-flex;align-items:center;gap:5px;height:36px;padding:0 11px;border:1px solid var(--c-line);
     border-radius:11px;background:var(--c-panel);font-size:12.5px;font-weight:400;color:var(--c-fg);white-space:nowrap}
   .cons .opt.gh{color:var(--c-dim)}
+  /* The label a number cannot carry itself. Set dim and small so it reads as
+     the field's name rather than as a second value beside it. */
+  .cons .opt .lead{font-size:11.5px;line-height:1;color:var(--c-dim);flex:none;user-select:none}
+  .cons .opt .ph{color:var(--c-dim)}
+  .cons .opt.n{gap:7px}
+  .cons button.opt{font-family:inherit;cursor:pointer;transition:background .15s,border-color .15s}
+  .cons button.opt:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.24)}
+  /* Nothing to say most of the time, and it costs nothing when it has nothing
+     to say — the empty rule reclaims its own margin. */
+  .cons .cnote{margin:9px 2px 0;font-size:12px;line-height:1.45;color:#d8a08f}
+  .cons .cnote:empty{margin:0}
   .cons .opt.ib{width:36px;padding:0;justify-content:center;color:var(--c-mut)}
   /* the advanced row is shown open here, so the control that opens it is drawn
      open too — a toggle that lies about its own state is worse than no toggle */
@@ -693,7 +704,7 @@
       <div class="beat reveal">
         <div class="beat-eyebrow">The console · try it</div>
         <div class="beat-title">The controls rebuild themselves.</div>
-        <p class="beat-pov">Two families of video model that genuinely differ. Rather than one panel with half its controls quietly inert, the composer is rebuilt from what the chosen model says it reads. Change the model, or change the medium on the chip inside the field — the prompt survives both.</p>
+        <p class="beat-pov">Four models across two media that genuinely differ. Rather than one panel with half its controls quietly inert, the composer is assembled from what the chosen model says it reads. Change the model, or change the medium on the chip inside the field, and the strip rebuilds around a sentence that never moves. <b>Add a LoRA</b> and it is written into that sentence rather than stacked under it.</p>
         <div class="vzbar">
           <span class="lead">Model</span>
           <div class="picker" id="ccPicker" role="tablist" aria-label="Choose a model">
@@ -703,49 +714,63 @@
             <button data-m="wan5b">Wan 2.2 TI2V 5B</button>
           </div>
         </div>
+        <!-- The strip is rendered from the model table rather than hidden field
+             by field, because that is what the app does: the composer is built
+             from what the chosen model says it reads. The markup below is the
+             opening state, so this is a working composer with scripting off. -->
         <div class="cons" id="cons">
           <div class="field">
-            <p class="ptxt">a red paper boat drifting across rain-flooded pavement, slow push in, overcast daylight</p>
+            <p class="ptxt" id="ccPrompt">a red paper boat drifting across rain-flooded pavement, slow push in, overcast daylight</p>
             <!-- The kind switch is a control here too, not a readout. It is the
                  coarse version of the model picker above, and the only thing on
                  this bar that never changes when you use it is the sentence. -->
             <div class="kinds"><button type="button" id="ccKindI">Image</button><button type="button" class="on" id="ccKindV">Video</button></div>
           </div>
-          <div class="opts">
-            <span class="opt"><span id="ccModel">Wan 2.2 A14B</span><svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
+          <!-- Only ever says what is wrong; empty, it costs nothing. -->
+          <p class="cnote" id="ccLoraNote"></p>
+          <div class="opts" id="ccOpts">
+            <span class="opt">Wan 2.2 A14B<svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
             <span class="opt">16:9<svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
-            <span class="opt" data-f="tier"><span id="ccTier">720p</span><svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
-            <span class="opt" data-f="len"><span id="ccLen">5s</span><svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
-            <span class="opt gh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>random</span>
+            <span class="opt">720p<svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
+            <span class="opt">5s<svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
+            <span class="opt n"><span class="lead">Seed</span><span class="ph">random</span></span>
             <span class="opt">H100<svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
             <span class="vr"></span>
-            <span class="opt ib dash" data-f="last" title="Last frame" aria-label="Last frame"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2.5"/><path d="M14 6v12"/></svg></span>
-            <span class="opt ib dash" data-f="refs" title="References" aria-label="References"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="10" height="14" rx="2.2"/><path d="M16 8h5v11h-9"/></svg></span>
-            <span class="opt" data-f="loras">+ LoRA</span>
+            <span class="opt ib dash" title="First frame" aria-label="First frame"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2.5"/><path d="M10 6v12"/></svg></span>
+            <span class="opt ib dash" title="Last frame" aria-label="Last frame"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2.5"/><path d="M14 6v12"/></svg></span>
+            <button class="opt lora" type="button">+ LoRA</button>
             <span class="actions">
-              <span class="note" id="ccNote">Two experts · silent</span>
+              <span class="note">Two experts · silent</span>
               <span class="opt ib on" title="Advanced"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>
               <span class="gen">Generate</span>
             </span>
           </div>
-          <div class="adv">
-            <div class="neg" data-f="negative">Negative prompt</div>
+          <div class="adv" id="ccAdv">
+            <div class="neg">Negative prompt</div>
             <div class="opts">
-              <span class="opt"><span id="ccSampler">euler</span><svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
-              <span class="opt">simple<svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
-              <span class="opt gh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h4v-5h5v-5h5V5h4"/></svg><span id="ccSteps">20</span></span>
-              <span class="opt gh" data-f="cfg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 3v2M12 19v2M4.2 7.5l1.7 1M18.1 15.5l1.7 1M4.2 16.5l1.7-1M18.1 8.5l1.7-1"/><circle cx="12" cy="12" r="4"/></svg><span id="ccCfg">3.5</span></span>
-              <span class="opt gh" data-f="cfg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 16c4 0 5-8 9-8s5 8 9 8"/></svg><span id="ccShift">shift 8.0</span></span>
-              <span class="vr" data-f="experts"></span>
-              <span class="opt" data-f="experts">high noise → low noise</span>
+              <span class="opt n"><span class="lead">Sampler</span>euler<svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
+              <span class="opt n"><span class="lead">Scheduler</span>simple<svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
+              <span class="opt n"><span class="lead">Steps</span>20</span>
+              <span class="opt n"><span class="lead">CFG</span>3.5</span>
+              <span class="opt n"><span class="lead">Shift</span>8.0</span>
+              <span class="vr"></span>
+              <span class="opt n"><span class="lead">Expert switch</span><span class="ph">auto</span></span>
             </div>
           </div>
         </div>
         <p class="conswhy" id="ccWhy"></p>
-        <p class="vznote">A control that is present but ignored is worse than one that is absent — it is the interface making a promise the model will not keep. Below, the real bar in the deployed app.</p>
-        <button class="shot cite" data-cap="<b>The composer, in the running app.</b> Wan 2.2 TI2V 5B — 24 fps, silent, so there is no audio control to disable." aria-label="Open the composer screenshot">
-          <img src="assets/visionary/video-bar.webp" alt="The deployed app's composer bar set to Wan 2.2 TI2V 5B: prompt, Image and Video chips, then model, aspect, resolution, length, seed, GPU, LoRA and a Generate button" loading="lazy" width="2000" height="490">
+        <p class="vznote">A control that is present but ignored is worse than one that is absent — it is the interface making a promise the model will not keep.</p>
+
+        <!-- The correction. The rule survives; its scope was wrong, and the bar
+             that was wrong stays in the case as the before. -->
+        <div class="beat-eyebrow" style="margin-top:58px">The rule that was wrong</div>
+        <div class="beat-title">A number is not a value a control can show.</div>
+        <p class="beat-pov">&ldquo;Copy is a last resort&rdquo; had been running this strip: design first, then an icon, then words, and anything that shows its own value gets no label. <b>Krea 2 Turbo</b>, <b>16:9</b>, <b>720p</b>, <b>5s</b> — those name themselves. The hyperparameters are where it broke. <b>32</b> is a rank, an alpha, an epoch count or a seed with equal plausibility, and an icon is a rebus for a word you already know — it cannot tell you <i>which</i> one you are looking at.</p>
+        <p class="vzcap">The test it failed: someone who had trained these models for five years still had to hover every numeric field to find out what it was. So every number carries its name now, and the tooltip is promoted from repeating that name to saying what the number does. The rule was not dropped, it was scoped — a control that shows its own value gets no label, <b>and a bare number is not a value</b>.</p>
+        <button class="shot cite" data-cap="<b>Before — the same bar under the old rule.</b> Steps, CFG and shift as icons beside bare digits, and a LoRA stack that cost a row apiece. Both are corrected in the composer above." aria-label="Open the previous composer bar">
+          <img src="assets/visionary/video-bar.webp" alt="The previous composer bar: prompt, Image and Video chips, then model, aspect, resolution, length, seed and GPU, with steps, CFG and shift shown as small icons beside bare numbers" loading="lazy" width="2000" height="490">
         </button>
+        <p class="vzcap">The other half of the same pass: four LoRAs cost <b>380px of canvas</b> — a row each, a select that wrapped, two number boxes apiece — and still could not say the thing that matters most, which is where in the sentence a LoRA applies. Written in as <b>&lt;lora:name:0.8&gt;</b> — Automatic1111&rsquo;s notation, because it is what anyone who has trained these models already types — a fifth costs the canvas nothing. <b>+ LoRA</b> survives as a picker that writes a token at the caret, since you cannot type a syntax you have never seen.</p>
       </div>
 
       <!-- DATASETS — the part that decides whether training works at all -->
@@ -760,7 +785,10 @@
         <p class="vznote">Captions are written by a vision model as prose, not tags, because the text encoders these models use parse grammar.</p>
       </div>
 
-      <!-- THE WORKSPACE -->
+      <!-- THE WORKSPACE, AND WHERE IT GOES. One thesis — take the chrome away —
+           argued twice: once in what shipped, once in what it becomes when the
+           latency stops being the reason the chrome is there. They were two
+           beats making the same case, so they are one. -->
       <div class="beat reveal">
         <div class="beat-eyebrow">The decision nobody sees</div>
         <div class="beat-title">Image and video were never two places.</div>
@@ -769,17 +797,12 @@
           <img src="assets/visionary/gallery.webp" alt="The gallery view: a grid of generated stills and video clips with relative timestamps" loading="lazy" width="2000" height="1250">
         </button>
         <p class="vzcap">What differs between image and video is only the options. <b>The canvas holds the screen</b> either way — options sit in a bar under the picture, never a rail beside it, since a settings column costs the image 384 pixels of the one dimension it cannot get back.</p>
-      </div>
 
-      <!-- THE ENDSTATE — clearly labelled as concept, and governed by a veto list -->
-      <div class="beat reveal">
-        <div class="beat-eyebrow">Concept · not built</div>
-        <div class="beat-title">When the latency goes, the panel should go with it.</div>
-        <p class="beat-pov">Where this goes once the models are fast enough: a gesture-driven canvas for iPad. Nothing is labelled and everything is live — you touch her face to change her. What the machine invented is marked differently from what you actually said, and rerolling it costs nothing.</p>
+        <p class="beat-pov" style="margin-top:52px">The same argument, run forward. Everything above takes chrome away where the model already allows it; the panel that remains is there because generation still takes long enough to need a staging area. <b>When the latency goes, the panel should go with it</b> — a gesture-driven canvas where nothing is labelled and everything is live, and you touch her face to change her. What the machine invented is marked differently from what you actually said, and rerolling it costs nothing.</p>
         <button class="shot" data-cap="<b>Dream Engine — concept.</b> The endstate for this work: still frames by default, motion as a feature rather than a path." aria-label="Open the Dream Engine concept">
           <img src="assets/visionary/dream-engine.webp" alt="Three App Store style panels for a concept iPad app called Dream Engine: a typed fragment with some words underlined as the user's own, a figure on a canvas with no visible panel, and a drawer of saved characters, places and looks" loading="lazy" width="2200" height="1187">
         </button>
-        <p class="vzcap">Speculative, and deliberately labelled as such. What makes it a design rather than a mood board is the list underneath it.</p>
+        <p class="vzcap"><b>Speculative, and deliberately labelled as such.</b> What makes it a design rather than a mood board is the list underneath it.</p>
       </div>
 
       <!-- THE VETO LIST — the judgment artifact, on the .autopsy component -->
@@ -1770,63 +1793,127 @@
 <script>
 (function(){
   /* THE COMPOSER.
-     Ground truth is VIDEO_MODELS in the application — what each model actually
-     reads. This facsimile hides exactly what the running app hides, so the
-     interesting part, which is how much disappears, is not an illustration of
-     the behaviour. It is the behaviour, on the same table.
-     The prompt is deliberately never touched by a switch: losing the sentence
-     to a mode change is the fastest way to make two things that should feel
-     like one feel like two. */
+     Ground truth is the model table in the application — what each model
+     actually reads. The strip is built from that table rather than drawn once
+     and hidden field by field, because building is what the app does: the
+     composer is assembled from the chosen model's row, so the interesting
+     part — how much simply is not there — is the behaviour and not a drawing
+     of it. The prompt is never touched by a switch: losing the sentence to a
+     mode change is the fastest way to make two things that should feel like
+     one feel like two. */
+  const CV='<svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg>';
+  const ICON={
+    first:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2.5"/><path d="M10 6v12"/></svg>',
+    last:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2.5"/><path d="M14 6v12"/></svg>',
+    ref:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="10" height="14" rx="2.2"/><path d="M16 8h5v11h-9"/></svg>',
+    adv:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>'
+  };
+  /* A control that shows its own value gets no label; a bare number is not a
+     value. That correction is the whole reason sel() and num() are different
+     helpers — the first names itself, the second cannot. */
+  const sel=v=>'<span class="opt">'+v+CV+'</span>';
+  const num=(lb,v,ph)=>'<span class="opt n"><span class="lead">'+lb+'</span>'+
+    (ph?'<span class="ph">'+v+'</span>':v)+'</span>';
+  const pick=(lb,v)=>'<span class="opt n"><span class="lead">'+lb+'</span>'+v+CV+'</span>';
+  const ib=(k,t)=>'<span class="opt ib dash" title="'+t+'" aria-label="'+t+'">'+ICON[k]+'</span>';
+
   const MODELS={
     krea:{ label:'Krea 2 Turbo', kind:'image', note:'8 steps · CFG 1.0',
-      tier:'1344×768', len:'', sampler:'euler', steps:'8', cfg:'1.0', shift:'shift 1.15',
-      has:{len:0,last:0,refs:0,loras:1,negative:1,cfg:1,experts:0},
-      why:'<b>Krea 2 Turbo</b> makes still frames, so duration and the keyframe tiles have nothing to attach to. Eight steps at CFG 1.0.' },
+      aspect:'16:9', w:'1344', h:'768',
+      sampler:'euler', scheduler:'simple', steps:'8', cfg:'1.0', shift:'1.15',
+      loras:1, negative:1, regional:1,
+      why:'<b>Krea 2 Turbo</b> makes still frames, so duration and the keyframe tiles have nothing to attach to. What appears instead is the pair the ratios were always shorthand for — Width and Height — and Regional, which is this model only.' },
     h3:{ label:'MiniMax-H3', kind:'video', note:'Sound and picture in one pass',
-      tier:'768p', len:'5s', sampler:'res_multistep', steps:'20', cfg:'', shift:'',
-      has:{len:1,last:1,refs:1,loras:0,negative:0,cfg:0,experts:0},
-      why:'<b>MiniMax-H3</b> carries a soundtrack in the same latent as the picture. It is guidance-distilled, so CFG, shift and the negative prompt are gone — and there is no LoRA ecosystem for the repackage, so that goes too. What it gains is references.' },
+      aspect:'16:9', tier:'768p', len:'5s',
+      sampler:'res_multistep', scheduler:'simple', steps:'20',
+      last:1, refs:1,
+      why:'<b>MiniMax-H3</b> carries a soundtrack in the same latent as the picture. It is guidance-distilled, so CFG, shift and the negative prompt are gone — and there is no LoRA ecosystem for the int8 repackage, so the picker goes too. What it gains is references.' },
     wan14b:{ label:'Wan 2.2 A14B', kind:'video', note:'Two experts · silent',
-      tier:'720p', len:'5s', sampler:'euler', steps:'20', cfg:'3.5', shift:'shift 8.0',
-      has:{len:1,last:1,refs:0,loras:1,negative:1,cfg:1,experts:1},
-      why:'<b>Wan 2.2 A14B</b> is two checkpoints split by noise level, sampled in sequence — so a LoRA row has to say which expert it patches. Takes CFG, a negative prompt and LoRA stacking. Silent.' },
+      aspect:'16:9', tier:'720p', len:'5s',
+      sampler:'euler', scheduler:'simple', steps:'20', cfg:'3.5', shift:'8.0',
+      last:1, loras:1, negative:1, experts:1,
+      why:'<b>Wan 2.2 A14B</b> is two checkpoints split by noise level, sampled in sequence — so it is the only model with a handover to place, and the only one that reads a third field in a LoRA token saying which expert it patches. Silent.' },
     wan5b:{ label:'Wan 2.2 TI2V 5B', kind:'video', note:'24 fps · silent',
-      tier:'704p', len:'5s', sampler:'euler', steps:'30', cfg:'5.0', shift:'shift 8.0',
-      has:{len:1,last:0,refs:0,loras:1,negative:1,cfg:1,experts:0},
+      aspect:'16:9', tier:'704p', len:'5s',
+      sampler:'euler', scheduler:'simple', steps:'30', cfg:'5.0', shift:'8.0',
+      loras:1, negative:1,
       why:'<b>Wan 2.2 TI2V 5B</b> is one expert at 24 fps. The same controls as the A14B minus the expert switch — and it cannot take a last frame, so that tile goes with it.' }
   };
-  /* The chip and the picker are two views of one state, so both go through
-     select(). The line underneath differs by which one you used: changing model
-     is a question about controls, changing medium is a question about whether
-     you just lost your sentence. */
   const KIND_WHY={
-    image:'<b>Same sentence, a different medium.</b> Duration and the keyframe tiles have nothing to attach to a still, so they leave — and your words are exactly where you left them. There was never a video mode to enter or a project type to pick.',
+    image:'<b>Same sentence, a different medium.</b> Duration and the keyframe tiles have nothing to attach to a still, so they leave and the pixel boxes arrive — and your words are exactly where you left them. There was never a video mode to enter or a project type to pick.',
     video:'<b>Same sentence, a different medium.</b> The options came back and the prompt never moved. Most people will never notice this decision was made, which is the whole of it.'
   };
+  const LORA_TOKEN=' <lora:k3nan:0.8>';
   const picker=document.getElementById('ccPicker'), cons=document.getElementById('cons');
   if(picker&&cons){
-    const why=document.getElementById('ccWhy');
-    const kindI=document.getElementById('ccKindI'), kindV=document.getElementById('ccKindV');
-    let lastVideo='wan14b';
-    const put=(id,v)=>{const el=document.getElementById(id); if(el)el.textContent=v;};
-    const show=(f,on)=>cons.querySelectorAll('[data-f="'+f+'"]').forEach(el=>{el.hidden=!on;});
+    const why=document.getElementById('ccWhy'),
+          promptEl=document.getElementById('ccPrompt'),
+          optsEl=document.getElementById('ccOpts'),
+          advEl=document.getElementById('ccAdv'),
+          loraNote=document.getElementById('ccLoraNote'),
+          kindI=document.getElementById('ccKindI'), kindV=document.getElementById('ccKindV');
+    const BASE='a red paper boat drifting across rain-flooded pavement, slow push in, overcast daylight';
+    let cur='wan14b', lastVideo='wan14b', prompt=BASE;
     const say=html=>{ if(!why) return; why.style.opacity=0; setTimeout(()=>{why.innerHTML=html;why.style.opacity=1;},150); };
+
+    function render(){
+      const m=MODELS[cur], img=m.kind==='image', o=[];
+      o.push(sel(m.label), sel(m.aspect));
+      if(img) o.push(num('Images','1'));
+      else o.push(sel(m.tier), sel(m.len));
+      o.push(num('Seed','random',1), sel('H100'), '<span class="vr"></span>');
+      /* Keyframes are what make this image-to-video, so they only exist where
+         there is a clip for a frame to sit at either end of. */
+      if(!img){ o.push(ib('first','First frame')); if(m.last) o.push(ib('last','Last frame')); }
+      if(m.refs) o.push(ib('ref','References'));
+      /* A picker, not a row — it writes a token into the sentence above. */
+      if(m.loras) o.push('<button class="opt lora" type="button">+ LoRA</button>');
+      o.push('<span class="actions"><span class="note">'+m.note+'</span>'+
+        '<span class="opt ib on" title="Advanced">'+ICON.adv+'</span>'+
+        '<span class="gen">Generate</span></span>');
+      optsEl.innerHTML=o.join('');
+
+      const a=[];
+      if(m.negative) a.push('<div class="neg">Negative prompt</div>');
+      const row=[pick('Sampler',m.sampler), pick('Scheduler',m.scheduler), num('Steps',m.steps)];
+      if(m.cfg) row.push(num('CFG',m.cfg));
+      if(m.shift) row.push(num('Shift',m.shift));
+      /* The ratio picker and the pixel boxes are one control: the ratios were
+         only ever shortcuts to a width and a height. */
+      if(img) row.push('<span class="vr"></span>', num('Width',m.w), num('Height',m.h));
+      if(m.experts) row.push('<span class="vr"></span>', num('Expert switch','auto',1));
+      if(m.regional) row.push('<span class="vr"></span>','<span class="opt gh">Regional</span>');
+      a.push('<div class="opts">'+row.join('')+'</div>');
+      advEl.innerHTML=a.join('');
+
+      promptEl.textContent=prompt;
+      /* The note says only what the prompt cannot: a model that reads no LoRAs
+         while a token is sitting in the sentence. */
+      const hasLora=prompt.indexOf('<lora:')>=0;
+      loraNote.textContent = hasLora && !m.loras
+        ? m.label+' reads no LoRAs — the token is ignored.' : '';
+      kindI.classList.toggle('on',img);
+      kindV.classList.toggle('on',!img);
+      picker.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.m===cur));
+    }
     function select(key,note){
-      const m=MODELS[key]; if(!m) return;
-      if(m.kind==='video') lastVideo=key;
-      put('ccModel',m.label); put('ccNote',m.note); put('ccTier',m.tier); put('ccLen',m.len);
-      put('ccSampler',m.sampler); put('ccSteps',m.steps); put('ccCfg',m.cfg); put('ccShift',m.shift);
-      Object.keys(m.has).forEach(f=>show(f,m.has[f]));
-      kindI.classList.toggle('on',m.kind==='image');
-      kindV.classList.toggle('on',m.kind==='video');
-      picker.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.m===key));
-      say(note||m.why);
+      if(!MODELS[key]) return;
+      cur=key; if(MODELS[key].kind==='video') lastVideo=key;
+      render(); say(note||MODELS[key].why);
     }
     picker.addEventListener('click',e=>{
       const b=e.target.closest('button'); if(b) select(b.dataset.m);
     });
     kindI.addEventListener('click',()=>select('krea',KIND_WHY.image));
     kindV.addEventListener('click',()=>select(lastVideo,KIND_WHY.video));
+    /* The one control here that edits the sentence rather than the strip. */
+    optsEl.addEventListener('click',e=>{
+      if(!e.target.closest('.lora')) return;
+      if(prompt.indexOf('<lora:')>=0){ prompt=BASE; }
+      else { prompt=BASE+LORA_TOKEN; }
+      render();
+      say('<b>The stack is the prompt.</b> A row per LoRA cost 56px and a wrapped select — 380px of canvas for four filenames — and still could not say the one thing that matters, which is where in the sentence it applies. Written in, a fifth costs the canvas nothing. Switch to MiniMax-H3 with the token in place and the note under the field tells you what the sentence cannot.');
+    });
     /* Opens on the fullest state on purpose. Every switch from here subtracts,
        which is the argument; starting lean would make it look like a feature
        list growing. */
