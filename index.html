@@ -437,6 +437,26 @@
     margin-top:24px;background:#000;border:1px solid var(--line);border-radius:14px;padding:20px 18px 18px;
     font-family:-apple-system,system-ui,"Segoe UI",Inter,sans-serif;color:var(--c-fg);
     box-shadow:0 40px 90px -40px rgba(0,0,0,.9);overflow:hidden}
+  /* ===== The rail that was cut, drawn as its cost =====
+     Both frames are the same width and hold the same photograph, so the 256px
+     is subtracted from the picture in front of you rather than described. The
+     rail is a reconstruction — schematic on purpose, because a faithful redraw
+     would invite you to admire it, and the point is what it took. */
+  .railcut{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .rc-h{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:11px}
+  .rc-frame{display:flex;aspect-ratio:16/9;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#000}
+  .rc-rail{flex:0 0 22%;display:flex;flex-direction:column;gap:6px;padding:10px 9px;
+    border-right:1px solid var(--line);background:rgba(255,255,255,.03)}
+  .rc-mark{width:14px;height:14px;border-radius:4px;background:linear-gradient(135deg,#8b5cf6,#3b82f6);flex:none}
+  .rc-lb{font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-top:3px}
+  .rc-row{font-size:8.5px;color:var(--ink-soft);background:rgba(255,255,255,.05);border-radius:4px;padding:4px 6px;white-space:nowrap;overflow:hidden}
+  .rc-row.on{background:rgba(255,255,255,.1);color:var(--ink)}
+  .rc-row.dim{color:var(--ink-faint);background:none;padding-left:0}
+  .rc-grow{flex:1}
+  .rc-canvas{flex:1;min-width:0;display:grid;place-items:center;overflow:hidden}
+  .rc-canvas img{width:100%;height:100%;object-fit:cover;display:block}
+  @media(max-width:700px){.railcut{grid-template-columns:1fr;gap:18px}}
+
   /* The canvas takes the room the app gives it. The console below is sized by
      its content and stays a bar; if the two ever look like peers here, the
      facsimile is lying about the product. */
@@ -811,6 +831,33 @@
           <img src="assets/visionary/gallery.webp" alt="The gallery view: a grid of generated stills and video clips with relative timestamps" loading="lazy" width="2000" height="1250">
         </button>
         <p class="vzcap">What differs between image and video is only the options. <b>The canvas holds the screen</b> either way — options sit in a bar under the picture, never a rail beside it, since a settings column costs the image 384 pixels of the one dimension it cannot get back.</p>
+
+        <!-- The rail that was built and cut, drawn as what it costs rather than
+             as a screen to look at. Reconstructed from the archived Next shell,
+             which is in the repo's history and not in the product. -->
+        <div class="railcut">
+          <div class="rc">
+            <div class="rc-h">Cut &mdash; 256px, following the reference</div>
+            <div class="rc-frame">
+              <div class="rc-rail">
+                <span class="rc-mark"></span>
+                <span class="rc-lb">Tools</span>
+                <span class="rc-row on">Train</span>
+                <span class="rc-row">Generate</span>
+                <span class="rc-grow"></span>
+                <span class="rc-row dim">Settings</span>
+              </div>
+              <div class="rc-canvas"><img src="assets/visionary/canvas.webp" alt="" loading="lazy"></div>
+            </div>
+          </div>
+          <div class="rc">
+            <div class="rc-h">Shipped &mdash; the picture takes it back</div>
+            <div class="rc-frame">
+              <div class="rc-canvas"><img src="assets/visionary/canvas.webp" alt="The same frame without the rail, filling the width" loading="lazy"></div>
+            </div>
+          </div>
+        </div>
+        <p class="vzcap">The same photograph, drawn to scale. The rail was built &mdash; a fixed sidebar with <b>Train and Generate as peer rows</b> and Settings at the bottom &mdash; and then cut, because they are not peers: one is where the machine is used, the other is where it is changed, and a 50/50 list asserts a balance that does not exist. Generate has no nav item because it is not a place you go. Train became a door on the right, labelled with where it leads, carrying the training run&rsquo;s progress on the control that takes you to it.</p>
 
         <p class="beat-pov" style="margin-top:52px">The same argument, run forward. Everything above takes chrome away where the model already allows it; the panel that remains is there because generation still takes long enough to need a staging area. <b>When the latency goes, the panel should go with it</b> — a gesture-driven canvas where nothing is labelled and everything is live, and you touch her face to change her. What the machine invented is marked differently from what you actually said, and rerolling it costs nothing.</p>
         <button class="shot" data-cap="<b>Dream Engine — concept.</b> The endstate for this work: still frames by default, motion as a feature rather than a path." aria-label="Open the Dream Engine concept">
