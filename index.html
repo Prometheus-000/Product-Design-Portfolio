@@ -142,14 +142,6 @@
   .pline .pt{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:.03em;white-space:pre}
   .caret{display:inline-block;width:8px;height:15px;background:var(--accent);translate:0 2px;flex:0 0 8px;animation:blink 1.1s steps(1,end) infinite}
   @keyframes blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
-  /* One hint button, two prompts. Scoping this to .pline left the docked twin
-     wearing the browser's native button — a white box on the one element that
-     is on screen for the whole visit. */
-  .hint{font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);background:none;border:0;font-family:inherit;cursor:pointer;padding:4px 0;transition:color .2s}
-  .hint:hover{color:var(--ink-soft)}
-  .pline .hint{margin-left:auto}
-  /* in the dock it sits among the jump links, so it hovers the way they do */
-  .dockjump .hint:hover{color:var(--ink)}
   .pline.handed-off{opacity:0;transition:opacity .2s var(--ease);pointer-events:none}
   .cin{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
   /* it prints, once — a terminal doing what terminals do, then stillness */
@@ -551,7 +543,7 @@
           </nav>
         </div>
       </div>
-      <p class="pline" id="pline"><span class="pr">&rsaquo;</span><span class="pt" id="ptext"></span><span class="caret"></span><button class="hint" id="hint" type="button">help</button></p>
+      <p class="pline" id="pline"><span class="pr">&rsaquo;</span><span class="pt" id="ptext"></span><span class="caret"></span></p>
       <input class="cin" id="cin" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Console — type a command">
     </div>
   </header>
@@ -1141,7 +1133,6 @@
       <span class="pr">&rsaquo;</span><span class="pt" id="ptext2"></span><span class="caret"></span>
       <nav class="dockjump">
         <a href="#visionary">visionary</a><a href="#cloudzero">cloudzero</a><a href="#cummins">cummins</a><a href="#concept">concept</a>
-        <button class="hint" id="hint2" type="button">help</button>
       </nav>
     </div>
   </div>
@@ -1174,7 +1165,7 @@
   (function(){
     const cmdline=document.getElementById("cmdline"), swap=document.getElementById("swap"),
           ptext=document.getElementById("ptext"), cin=document.getElementById("cin"),
-          pline=document.getElementById("pline"), hint=document.getElementById("hint");
+          pline=document.getElementById("pline"), lbox=document.getElementById("lbox");
     if(!cmdline||!cin||!swap) return;
     const INDEX_EL=document.getElementById("index");
     const ROWS=[...INDEX_EL.querySelectorAll("a")];
@@ -1265,20 +1256,27 @@
     }
 
     const ptext2=document.getElementById("ptext2"),
-          hint2=document.getElementById("hint2"),
           dockbar=document.querySelector(".dockbar");
     const sync=()=>{ptext.textContent=ptext2.textContent=cin.value;};
+
+    /* Escape puts everything back: the typed text, the filter, and the index
+       when output has replaced it. Whether there was anything to undo decides
+       if it also hands focus back to the page. */
+    function reset(){
+      const dirty=!!cin.value||dockout.classList.contains("on")||!swap.contains(INDEX_EL);
+      dockout.classList.remove("on");
+      cin.value="";sync();filter("");
+      if(!dirty) cin.blur();
+      return dirty;
+    }
 
     cin.addEventListener("input",()=>{sync();filter(cin.value);});
     cin.addEventListener("keydown",e=>{
       if(e.key==="ArrowDown"){e.preventDefault();return move(1);}
       if(e.key==="ArrowUp"){e.preventDefault();return move(-1);}
       if(e.key==="Enter"){e.preventDefault();return activate(current());}
-      if(e.key==="Escape"){
-        e.preventDefault();
-        dockout.classList.remove("on");
-        if(cin.value){cin.value="";sync();filter("");} else cin.blur();
-      }
+      /* Escape is handled on the document, below — the console is drivable by
+         mouse, so its way out cannot depend on this input holding focus. */
     });
 
     // Clicking a row is the whole interaction on touch — no keyboard required.
@@ -1290,7 +1288,18 @@
     const focusInput=e=>{if(e.target.tagName!=="A"&&e.target.tagName!=="BUTTON"){e.preventDefault();cin.focus();}};
     pline.addEventListener("mousedown",focusInput);
     dockbar.addEventListener("mousedown",focusInput);
-    [hint,hint2].forEach(el=>el&&el.addEventListener("click",()=>{cin.focus();cin.value="";sync();filter("");}));
+
+    /* Escape gets its own listener, in the capture phase, so the decision is
+       made before any other handler sees the key and does not depend on which
+       script registered first. It works from anywhere — after a click, a Tab, a
+       scroll, or with the input focused: clicking "stack" with a mouse used to
+       leave the output up with no key that could dismiss it. While the lightbox
+       is open it is modal and keeps Escape; we let its own handler have it. */
+    document.addEventListener("keydown",e=>{
+      if(e.key!=="Escape"||e.metaKey||e.ctrlKey||e.altKey)return;
+      if(lbox&&lbox.classList.contains("open"))return;
+      e.preventDefault();reset();
+    },true);
 
     // Type or arrow anywhere on the page and the index responds. Digits are
     // not special-cased: "7" filters to row 7 the same way "con" filters to
