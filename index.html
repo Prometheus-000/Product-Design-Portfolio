@@ -437,6 +437,12 @@
     margin-top:24px;background:#000;border:1px solid var(--line);border-radius:14px;padding:20px 18px 18px;
     font-family:-apple-system,system-ui,"Segoe UI",Inter,sans-serif;color:var(--c-fg);
     box-shadow:0 40px 90px -40px rgba(0,0,0,.9);overflow:hidden}
+  /* The canvas takes the room the app gives it. The console below is sized by
+     its content and stays a bar; if the two ever look like peers here, the
+     facsimile is lying about the product. */
+  .cons .ccanvas{display:grid;place-items:center;background:#000;border-radius:10px;overflow:hidden}
+  .cons .ccanvas img{display:block;width:100%;height:auto;border-radius:10px}
+  .cons .cmeta{margin:11px 2px 16px;font-size:11.5px;color:var(--c-dim)}
   .cons .field{background:var(--c-panel);border:1px solid var(--c-line);border-radius:14px;padding:13px 14px 10px}
   .cons .ptxt{font-size:14px;line-height:1.45;color:var(--c-fg);font-weight:400}
   .cons .kinds{display:inline-flex;gap:2px;margin-top:11px;background:rgba(255,255,255,.05);border-radius:99px;padding:3px}
@@ -703,8 +709,8 @@
       <!-- THE CONSOLE — the one operable artifact in the case -->
       <div class="beat reveal">
         <div class="beat-eyebrow">The console · try it</div>
-        <div class="beat-title">The controls rebuild themselves.</div>
-        <p class="beat-pov">Four models across two media that genuinely differ. Rather than one panel with half its controls quietly inert, the composer is assembled from what the chosen model says it reads. Change the model, or change the medium on the chip inside the field, and the strip rebuilds around a sentence that never moves. <b>Add a LoRA</b> and it is written into that sentence rather than stacked under it.</p>
+        <div class="beat-title">The picture holds the screen. The bar rebuilds under it.</div>
+        <p class="beat-pov">Options live in a bar under the picture, never a rail beside it &mdash; a settings column costs the image 384 pixels of the one dimension it cannot get back, and vertical is the cheap axis. So the only question the strip is ever allowed to ask is how little of it can be true at once. Four models across two media genuinely differ; rather than one panel with half its controls quietly inert, the bar is assembled from what the chosen model says it reads. <b>Change anything below and watch what does not move.</b></p>
         <div class="vzbar">
           <span class="lead">Model</span>
           <div class="picker" id="ccPicker" role="tablist" aria-label="Choose a model">
@@ -719,6 +725,14 @@
              from what the chosen model says it reads. The markup below is the
              opening state, so this is a working composer with scripting off. -->
         <div class="cons" id="cons">
+          <!-- The canvas, because the canvas is the point. In the app it holds
+               roughly four fifths of the screen and the console is a bar under
+               it; a demo of the bar alone is the settings rail this product
+               refuses to build. Everything below changes. This does not. -->
+          <div class="ccanvas">
+            <img src="assets/visionary/canvas.webp" alt="The canvas: a wide cinematic frame of a lone figure walking a rain-slicked street at dusk, neon reflected in the puddles" loading="lazy" width="1150" height="658">
+          </div>
+          <p class="cmeta">1344&times;768 &middot; seed 1336158666 &middot; 8 steps &middot; Krea 2 Turbo</p>
           <div class="field">
             <p class="ptxt" id="ccPrompt">a red paper boat drifting across rain-flooded pavement, slow push in, overcast daylight</p>
             <!-- The kind switch is a control here too, not a readout. It is the
@@ -761,16 +775,16 @@
         <p class="conswhy" id="ccWhy"></p>
         <p class="vznote">A control that is present but ignored is worse than one that is absent — it is the interface making a promise the model will not keep.</p>
 
-        <!-- The correction. The rule survives; its scope was wrong, and the bar
-             that was wrong stays in the case as the before. -->
-        <div class="beat-eyebrow" style="margin-top:58px">The rule that was wrong</div>
-        <div class="beat-title">A number is not a value a control can show.</div>
-        <p class="beat-pov">&ldquo;Copy is a last resort&rdquo; had been running this strip: design first, then an icon, then words, and anything that shows its own value gets no label. <b>Krea 2 Turbo</b>, <b>16:9</b>, <b>720p</b>, <b>5s</b> — those name themselves. The hyperparameters are where it broke. <b>32</b> is a rank, an alpha, an epoch count or a seed with equal plausibility, and an icon is a rebus for a word you already know — it cannot tell you <i>which</i> one you are looking at.</p>
-        <p class="vzcap">The test it failed: someone who had trained these models for five years still had to hover every numeric field to find out what it was. So every number carries its name now, and the tooltip is promoted from repeating that name to saying what the number does. The rule was not dropped, it was scoped — a control that shows its own value gets no label, <b>and a bare number is not a value</b>.</p>
-        <button class="shot cite" data-cap="<b>Before — the same bar under the old rule.</b> Steps, CFG and shift as icons beside bare digits, and a LoRA stack that cost a row apiece. Both are corrected in the composer above." aria-label="Open the previous composer bar">
+        <!-- The correction, framed by what it was for: canvas. Both halves of
+             that pass were real-estate decisions — one gave 380px back, the
+             other spent a few pixels to stop the strip being a puzzle. -->
+        <div class="beat-eyebrow" style="margin-top:58px">The pass that bought the canvas back</div>
+        <div class="beat-title">380 pixels, returned to the picture.</div>
+        <p class="beat-pov">Four LoRAs used to cost a row each &mdash; a select that wrapped, two number boxes apiece, <b>380 pixels of canvas</b> for four filenames. They are written into the prompt now, <b>&lt;lora:name:0.8&gt;</b>, Automatic1111&rsquo;s notation because it is what anyone who has trained these models already types. A fifth costs the picture nothing, and the sentence can finally say the thing a row never could: where in it the LoRA applies.</p>
+        <p class="vzcap">The same pass spent pixels in the other direction, and that is the part worth admitting. &ldquo;Copy is a last resort&rdquo; had been running the strip &mdash; design, then an icon, then words &mdash; and the hyperparameters are where I pushed it past what it can carry. <b>32</b> is a rank, an alpha, an epoch count or a seed with equal plausibility; an icon is a rebus for a word you already know, so it cannot tell you <i>which</i> number you are looking at. Someone who had trained these models for five years still had to hover every field. The rule was not dropped, it was scoped: a control that shows its own value gets no label, <b>and a bare number is not a value</b>.</p>
+        <button class="shot cite" data-cap="<b>Before.</b> Steps, CFG and shift as icons beside bare digits, and a LoRA stack that cost a row apiece &mdash; both corrected in the composer above." aria-label="Open the previous composer bar">
           <img src="assets/visionary/video-bar.webp" alt="The previous composer bar: prompt, Image and Video chips, then model, aspect, resolution, length, seed and GPU, with steps, CFG and shift shown as small icons beside bare numbers" loading="lazy" width="2000" height="490">
         </button>
-        <p class="vzcap">The other half of the same pass: four LoRAs cost <b>380px of canvas</b> — a row each, a select that wrapped, two number boxes apiece — and still could not say the thing that matters most, which is where in the sentence a LoRA applies. Written in as <b>&lt;lora:name:0.8&gt;</b> — Automatic1111&rsquo;s notation, because it is what anyone who has trained these models already types — a fifth costs the canvas nothing. <b>+ LoRA</b> survives as a picker that writes a token at the caret, since you cannot type a syntax you have never seen.</p>
       </div>
 
       <!-- DATASETS — the part that decides whether training works at all -->
