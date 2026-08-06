@@ -442,7 +442,7 @@
      is subtracted from the picture in front of you rather than described. The
      rail is a reconstruction — schematic on purpose, because a faithful redraw
      would invite you to admire it, and the point is what it took. */
-  .railcut{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .railcut{margin-top:30px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
   .rc-h{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:11px}
   .rc-frame{display:flex;aspect-ratio:16/9;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#000}
   .rc-rail{flex:0 0 22%;display:flex;flex-direction:column;gap:6px;padding:10px 9px;
@@ -455,7 +455,13 @@
   .rc-grow{flex:1}
   .rc-canvas{flex:1;min-width:0;display:grid;place-items:center;overflow:hidden}
   .rc-canvas img{width:100%;height:100%;object-fit:cover;display:block}
-  @media(max-width:700px){.railcut{grid-template-columns:1fr;gap:18px}}
+  /* the settings rail: fields, not nav rows — it is a different mistake */
+  .rc-rail.set{gap:5px;justify-content:flex-start}
+  .rc-fld{height:11px;border-radius:3px;background:rgba(255,255,255,.07);border:1px solid var(--line);flex:none}
+  .rc-fld.sm{width:60%}
+  .rc-btn{height:13px;border-radius:3px;background:rgba(246,245,242,.75);flex:none}
+  .rc-c{margin-top:10px;font-size:12.5px;line-height:1.5;color:var(--ink-faint);font-weight:500}
+  @media(max-width:860px){.railcut{grid-template-columns:1fr;gap:20px}}
 
   /* The canvas takes the room the app gives it. The console below is sized by
      its content and stays a bar; if the two ever look like peers here, the
@@ -832,32 +838,53 @@
         </button>
         <p class="vzcap">What differs between image and video is only the options. <b>The canvas holds the screen</b> either way — options sit in a bar under the picture, never a rail beside it, since a settings column costs the image 384 pixels of the one dimension it cannot get back.</p>
 
-        <!-- The rail that was built and cut, drawn as what it costs rather than
-             as a screen to look at. Reconstructed from the archived Next shell,
-             which is in the repo's history and not in the product. -->
+        <!-- Both rails, drawn as what they cost. The nav rail is in the
+             history; the settings rail was a working state that never got
+             committed, so it is reconstructed from the width its own rebuttal
+             names. The order is the order it happened, and the middle step is
+             the one that made it worse. -->
         <div class="railcut">
           <div class="rc">
-            <div class="rc-h">Cut &mdash; 256px, following the reference</div>
+            <div class="rc-h">01 &middot; Nav rail &mdash; 232px</div>
             <div class="rc-frame">
-              <div class="rc-rail">
+              <div class="rc-rail" style="flex-basis:15%">
                 <span class="rc-mark"></span>
                 <span class="rc-lb">Tools</span>
-                <span class="rc-row on">Train</span>
-                <span class="rc-row">Generate</span>
-                <span class="rc-grow"></span>
-                <span class="rc-row dim">Settings</span>
+                <span class="rc-row on">Models</span>
+                <span class="rc-row">Datasets</span>
+                <span class="rc-row">Train</span>
+                <span class="rc-row">Image</span>
+                <span class="rc-row">Video</span>
+                <span class="rc-row">Gallery</span>
               </div>
               <div class="rc-canvas"><img src="assets/visionary/canvas.webp" alt="" loading="lazy"></div>
             </div>
+            <p class="rc-c">Six items: the backend&rsquo;s own organisation wearing a UI.</p>
           </div>
           <div class="rc">
-            <div class="rc-h">Shipped &mdash; the picture takes it back</div>
+            <div class="rc-h">02 &middot; Settings rail &mdash; 384px</div>
             <div class="rc-frame">
-              <div class="rc-canvas"><img src="assets/visionary/canvas.webp" alt="The same frame without the rail, filling the width" loading="lazy"></div>
+              <div class="rc-rail set" style="flex-basis:24%">
+                <span class="rc-lb">Generate</span>
+                <span class="rc-fld"></span><span class="rc-fld"></span>
+                <span class="rc-fld sm"></span><span class="rc-fld sm"></span>
+                <span class="rc-fld sm"></span><span class="rc-fld sm"></span>
+                <span class="rc-grow"></span>
+                <span class="rc-btn"></span>
+              </div>
+              <div class="rc-canvas"><img src="assets/visionary/canvas.webp" alt="" loading="lazy"></div>
             </div>
+            <p class="rc-c">Wider, and permanent: options parked beside a picture you only sometimes change.</p>
+          </div>
+          <div class="rc">
+            <div class="rc-h">03 &middot; Shipped &mdash; a bar underneath</div>
+            <div class="rc-frame">
+              <div class="rc-canvas"><img src="assets/visionary/canvas.webp" alt="The same frame with no rail at all, filling the width" loading="lazy"></div>
+            </div>
+            <p class="rc-c">Vertical is the cheap axis. The picture takes it all back.</p>
           </div>
         </div>
-        <p class="vzcap">The same photograph, drawn to scale. The rail was built &mdash; a fixed sidebar with <b>Train and Generate as peer rows</b> and Settings at the bottom &mdash; and then cut, because they are not peers: one is where the machine is used, the other is where it is changed, and a 50/50 list asserts a balance that does not exist. Generate has no nav item because it is not a place you go. Train became a door on the right, labelled with where it leads, carrying the training run&rsquo;s progress on the control that takes you to it.</p>
+        <p class="vzcap">The same photograph in all three, drawn to scale. A rail beside the canvas cannot be paid for out of anything but the picture, and the middle frame is the version that argued the options deserved it &mdash; it lasted until I killed it. The nav rail is in the repository&rsquo;s history; the settings rail is reconstructed, because it never survived long enough to be committed. What replaced both: <b>Generate is the page</b>, with no nav item because it is not a place you go, and Train is one door on the right that doubles as the readout on the run, since a run lasts hours and you are meant to leave and keep working.</p>
 
         <p class="beat-pov" style="margin-top:52px">The same argument, run forward. Everything above takes chrome away where the model already allows it; the panel that remains is there because generation still takes long enough to need a staging area. <b>When the latency goes, the panel should go with it</b> — a gesture-driven canvas where nothing is labelled and everything is live, and you touch her face to change her. What the machine invented is marked differently from what you actually said, and rerolling it costs nothing.</p>
         <button class="shot" data-cap="<b>Dream Engine — concept.</b> The endstate for this work: still frames by default, motion as a feature rather than a path." aria-label="Open the Dream Engine concept">
