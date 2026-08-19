@@ -348,6 +348,81 @@
   .shots2{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
   .shots2 .shot{margin-top:0}
   @media(max-width:820px){.shots2{grid-template-columns:1fr}}
+
+  /* One command, then what it returns. The two are a single exhibit, so the gap
+     between them closes — the whole argument is that nothing sits in between.
+     The prompt glyph is ink-faint, matching the hero: red stays surgical. */
+  .term{margin-top:26px;border:1px solid var(--line);border-radius:14px;background:#000;
+    padding:26px 28px 24px;box-shadow:0 40px 90px -40px rgba(0,0,0,.9);overflow-x:auto}
+  .term p{font-size:clamp(12.5px,1.45vw,14.5px);line-height:1.95;white-space:nowrap}
+  .term .tp{color:var(--ink-faint);font-weight:700;margin-right:14px}
+  .term .tc{color:var(--ink);font-weight:600;letter-spacing:.01em}
+  .term .to{color:var(--ink-faint);font-weight:500}
+  .term .to b{color:var(--ink-soft);font-weight:500}
+  .term .tk{color:var(--ink-faint);margin-right:10px}
+  .term .tu{margin-top:16px;color:var(--ink-soft);font-weight:600}
+  .term+.shot{margin-top:12px}
+  @media(max-width:640px){.term{padding:20px 18px 18px}}
+
+  /* The Zero-UI demo. Light, like the mockup above it, so the two read as the
+     same speculative object rather than two exhibits.
+     Nothing inside the frame is labelled — that is the whole claim. What names
+     the scope is the outline, and the sentence underneath, which is the case
+     study talking rather than the product. */
+  .dream{margin-top:24px;position:relative;width:100%;aspect-ratio:1000/430;border:1px solid var(--line);
+    border-radius:14px;overflow:hidden;background:#F2F0EC;box-shadow:0 40px 90px -40px rgba(0,0,0,.9)}
+  .dream svg{display:block;width:100%;height:100%;touch-action:manipulation}
+  /* On a phone the 1000/430 box collapses to ~140px and the figure is too small
+     to aim at — which would break the one thing this is demonstrating. Give it a
+     fixed height and let the frame crop the outer buildings instead of shrinking
+     the subject. (On desktop the box and the viewBox match, so slice == meet.) */
+  @media(max-width:640px){.dream{aspect-ratio:auto;height:280px}}
+  .dream [data-s]{cursor:pointer}
+  .dream [data-s]:focus-visible{outline:none}
+  .dream [data-s] *{transition:fill .45s var(--ease)}
+  /* One ring, moved to whatever you would be acting on. It is not a control and
+     it never persists — it is the cursor saying what a click will reach. */
+  .dering{fill:none;stroke:#271C12;stroke-width:2.5;opacity:0;pointer-events:none;
+    transition:opacity .16s var(--ease),x .16s var(--ease),y .16s var(--ease),width .16s var(--ease),height .16s var(--ease)}
+  .dering.on{opacity:.8}
+  .dream.touch [data-s]{cursor:default}
+  /* The simulated finger. A laptop has no contact point, so the demo draws one —
+     it is the thing a screen recording of an iPad would show, and without it
+     "touch mode" is just a click with the feedback removed. */
+  .detouch{fill:#271C12;opacity:0;pointer-events:none;transform-box:fill-box;transform-origin:center}
+  .detouch.on{animation:detap .62s var(--ease) forwards}
+  @keyframes detap{0%{opacity:.26;transform:scale(.28)}62%{opacity:.13}100%{opacity:0;transform:scale(1.55)}}
+  .decap{margin-top:16px;font-size:13.5px;line-height:1.6;color:var(--ink-soft);font-weight:500;max-width:74ch;min-height:44px;transition:opacity .22s}
+  .decap b{color:var(--ink);font-weight:600}
+
+  /* An aside the reader opens or doesn't. Closed by default and quiet at the
+     weight of a footnote: the films are personal, and putting them in front of
+     everyone frames the case on feeling rather than on the work. Native
+     <details>, so keyboard and screen readers get it for free. */
+  .aside{margin-top:38px;border-top:1px solid var(--line);padding-top:20px}
+  .aside>summary{list-style:none;cursor:pointer;display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;
+    font-size:13px;line-height:1.6;color:var(--ink-faint);font-weight:500;transition:color .2s var(--ease)}
+  .aside>summary::-webkit-details-marker{display:none}
+  .aside>summary:hover{color:var(--ink-soft)}
+  .aside>summary .op{font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--ink-faint);border-bottom:1px solid var(--line);padding-bottom:2px;white-space:nowrap;transition:.2s var(--ease)}
+  .aside>summary .op::after{content:"Open"}
+  .aside[open]>summary .op::after{content:"Close"}
+  .aside>summary:hover .op{color:var(--ink);border-bottom-color:var(--ink-soft)}
+  .aside .projector{margin-top:28px}
+  .aside:focus-within>summary .op{color:var(--ink)}
+  @media(prefers-reduced-motion:reduce){.dering{transition:opacity .01ms}.dream [data-s] *{transition:none}}
+
+  /* The one call to action in the case. A link, drawn as a link — the site has
+     no filled buttons and this is not the place to introduce one. */
+  .cta{display:inline-flex;align-items:center;gap:12px;margin-top:34px;padding:14px 24px;
+    border:1px solid var(--line);border-radius:100px;text-decoration:none;color:var(--ink-soft);
+    font-size:13px;font-weight:600;letter-spacing:.02em;
+    transition:border-color .25s var(--ease),color .25s var(--ease),background .25s var(--ease)}
+  .cta:hover{border-color:rgba(255,255,255,.28);color:var(--ink);background:rgba(246,245,242,.04)}
+  .cta svg{width:15px;height:15px;flex:none}
+  .cta .arw{width:13px;height:13px;transition:transform .25s var(--ease)}
+  .cta:hover .arw{transform:translateX(3px)}
   .vzbar{margin-top:24px;display:flex;align-items:center;gap:14px 18px;flex-wrap:wrap}
   .vzbar .lead{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
   .vzcap{margin-top:18px;font-size:14.5px;color:var(--ink-soft);font-weight:500;line-height:1.55;max-width:66ch}
@@ -356,55 +431,35 @@
   .vznote a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line);transition:color .2s}
   .vznote a:hover{color:var(--ink);text-decoration-color:var(--ink-soft)}
 
-  /* The console, rebuilt per model — the one operable thing in this case.
-     It carries the product's own tokens, not the page's, because a facsimile
-     that adopts the surrounding style stops being evidence and becomes a
-     diagram. Values lifted from the deployment: --panel, --line, --mut, --dim. */
-  .cons{--c-line:rgba(255,255,255,.10);--c-panel:rgba(255,255,255,.04);--c-fg:#f5f5f5;--c-mut:#8a8a8a;--c-dim:#5a5a5a;
-    margin-top:24px;background:#000;border:1px solid var(--line);border-radius:14px;padding:20px 18px 18px;
-    font-family:-apple-system,system-ui,"Segoe UI",Inter,sans-serif;color:var(--c-fg);
-    box-shadow:0 40px 90px -40px rgba(0,0,0,.9);overflow:hidden}
-  .cons .field{background:var(--c-panel);border:1px solid var(--c-line);border-radius:14px;padding:13px 14px 10px}
-  .cons .ptxt{font-size:14px;line-height:1.45;color:var(--c-fg);font-weight:400}
-  .cons .kinds{display:inline-flex;gap:2px;margin-top:11px;background:rgba(255,255,255,.05);border-radius:99px;padding:3px}
-  .cons .kinds button{font-family:inherit;font-size:12.5px;font-weight:500;color:var(--c-mut);padding:5px 12px;
-    border:0;background:none;border-radius:99px;cursor:pointer;transition:.2s}
-  .cons .kinds button:hover{color:var(--c-fg)}
-  .cons .kinds button.on{background:rgba(255,255,255,.12);color:var(--c-fg)}
-  .cons .opts{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:9px}
-  .cons .opt{display:inline-flex;align-items:center;gap:5px;height:36px;padding:0 11px;border:1px solid var(--c-line);
-    border-radius:11px;background:var(--c-panel);font-size:12.5px;font-weight:400;color:var(--c-fg);white-space:nowrap}
-  .cons .opt.gh{color:var(--c-dim)}
-  .cons .opt.ib{width:36px;padding:0;justify-content:center;color:var(--c-mut)}
-  /* the advanced row is shown open here, so the control that opens it is drawn
-     open too — a toggle that lies about its own state is worse than no toggle */
-  .cons .opt.ib.on{background:rgba(255,255,255,.14);color:var(--c-fg);border-color:rgba(255,255,255,.24)}
-  .cons .opt.ib.on svg{color:var(--c-fg)}
-  .cons .opt.ib.dash{background:none;border-style:dashed}
-  .cons .opt svg{width:13px;height:13px;flex:none;color:var(--c-dim)}
-  .cons .cv{width:9px;height:9px;flex:none;opacity:.55;margin-left:1px}
-  .cons .vr{width:1px;height:22px;background:var(--c-line);margin:0 3px;flex:none}
-  .cons .actions{display:flex;align-items:center;gap:7px;margin-left:auto}
-  .cons .note{font-size:11.5px;color:var(--c-dim);white-space:nowrap}
-  .cons .gen{height:36px;padding:0 20px;border-radius:11px;background:#fff;color:#000;font-size:13px;font-weight:600;
-    display:inline-flex;align-items:center}
-  .cons .adv{margin-top:12px;padding-top:14px;border-top:1px solid var(--c-line)}
-  .cons .neg{background:var(--c-panel);border:1px solid var(--c-line);border-radius:12px;padding:12px 13px;
-    font-size:13px;color:var(--c-dim)}
-  .cons .neg+.opts{margin-top:9px}
-  /* Nothing here reflows when a control leaves — the row is already wrapped and
-     the bar is measured at its fullest state, so switching models never moves
-     the Generate button out from under the cursor. */
-  .cons [hidden]{display:none!important}
-  @media(max-width:720px){
-    .cons{padding:16px 13px 14px}
-    .cons .actions{margin-left:0;width:100%;justify-content:flex-end}
-    .cons .note{display:none}
-  }
-  /* What the switch just did, said in one line. The controls vanishing is the
-     demonstration; this is the sentence that makes it legible on first click. */
-  .conswhy{margin-top:16px;font-size:13.5px;line-height:1.6;color:var(--ink-soft);font-weight:500;max-width:74ch;min-height:44px;transition:opacity .28s}
-  .conswhy b{color:var(--ink);font-weight:600}
+  /* ===== CASE 1 — the spine: nine beats read as four movements. A contents map
+     up front (the whole argument in one view), quiet act dividers as you descend,
+     and a number on every eyebrow tying the two together. All at eyebrow weight —
+     wayfinding, never chrome. The map borrows the hero index's hover language:
+     the number goes red, the line goes bright, so it reads as the same nav. ===== */
+  .casemap{margin-top:40px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.02);padding:28px 30px 30px}
+  .casemap .cm-h{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:24px}
+  .cm-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px 48px}
+  .cm-al{font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--ink);margin-bottom:12px;display:flex;align-items:baseline;gap:11px}
+  .cm-rn{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--ink-faint);font-variant-numeric:tabular-nums;flex:none}
+  .cm-beats{list-style:none;display:flex;flex-direction:column;gap:1px}
+  .cm-beats a{display:grid;grid-template-columns:2.4ch 1fr;gap:13px;align-items:baseline;text-decoration:none;padding:7px 10px 7px 8px;margin-left:-8px;border-radius:6px;transition:background .15s var(--ease)}
+  .cm-beats a:hover{background:rgba(246,245,242,.04)}
+  .cm-n{font-size:12px;font-weight:600;color:var(--ink-faint);font-variant-numeric:tabular-nums;transition:color .15s var(--ease)}
+  .cm-t{font-size:13.5px;font-weight:500;color:var(--ink-soft);line-height:1.45;transition:color .15s var(--ease)}
+  .cm-beats a:hover .cm-n{color:var(--accent)}
+  .cm-beats a:hover .cm-t{color:var(--ink)}
+  @media(max-width:760px){.casemap{padding:24px 22px 26px}.cm-grid{grid-template-columns:1fr;gap:24px}}
+
+  /* Act divider — a hairline, a numeral, a name, and one line of what the movement
+     does. It replaces the big top-of-beat gap, so the following beat tucks under it. */
+  .act{margin-top:104px;padding-top:24px;border-top:1px solid var(--line);display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+  .act-n{font-size:11px;font-weight:700;letter-spacing:.18em;color:var(--ink-faint);font-variant-numeric:tabular-nums;flex:none}
+  .act-t{font-size:clamp(15px,1.9vw,18px);font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+  .act-d{margin-left:auto;font-size:12.5px;color:var(--ink-faint);font-weight:500;max-width:38ch;line-height:1.5}
+  .act+.beat{margin-top:40px}
+  .beat{scroll-margin-top:70px}
+  .beat-eyebrow .bn{color:var(--ink);font-variant-numeric:tabular-nums}
+  @media(max-width:640px){.act{gap:12px}.act-d{margin-left:0;flex-basis:100%;max-width:none}}
 
   /* Packaging — the hand-off to training */
   .ship{margin-top:32px;display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch}
@@ -474,6 +529,38 @@
   .creed .ct{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:11px;letter-spacing:-.01em;line-height:1.25}
   .creed .c p{font-size:14px;line-height:1.62;color:var(--ink-soft);font-weight:500}
   @media(max-width:760px){.creed{grid-template-columns:1fr;gap:24px}}
+  /* A principle stated plainly — the doc's blockquotes brought into the page.
+     A quiet left rule and an eyebrow; the sentence at reading size. No red here:
+     the accent stays surgical, reserved for the one live caret. */
+  .pull{margin-top:32px;border-left:2px solid var(--ink-faint);padding:2px 0 3px 22px;max-width:60ch;
+    font-size:clamp(16px,2vw,19px);line-height:1.5;color:var(--ink);font-weight:600;letter-spacing:-.01em}
+  .pull .pl{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-faint);margin-bottom:10px}
+
+  /* A plain table for the facts that are genuinely tabular — the middle path and
+     the four container images. Hairlines only; the row label is the one bold
+     thing, and long cells wrap while the frame scrolls on a narrow screen. */
+  .dtable{margin-top:26px;border:1px solid var(--line);border-radius:12px;overflow-x:auto}
+  .dtable table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+  .dtable th,.dtable td{text-align:left;padding:15px 18px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.55}
+  .dtable thead th{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+  .dtable tbody th{font-weight:700;color:var(--ink);white-space:nowrap}
+  .dtable tbody td{color:var(--ink-soft);font-weight:500}
+  .dtable tbody td b,.dtable tbody th b{color:var(--ink)}
+  .dtable tbody td i,.dtable tbody th i{color:var(--ink-soft)}
+  .dtable tr:last-child th,.dtable tr:last-child td{border-bottom:0}
+  @media(max-width:640px){.dtable th,.dtable td{padding:12px 13px}}
+
+  /* The live deployment, embedded — not a screenshot. Framed exactly like the
+     .shot exhibits (same border, radius, shadow, black ground) so the real app
+     reads as one more exhibit rather than a widget bolted on. It fills its own
+     canvas the moment a visitor generates, which is the argument the empty
+     screenshots could never make. The app is a fixed-viewport studio with no
+     inner scroll on desktop, so the tall frame doesn't trap the page wheel. */
+  .liveapp{margin-top:26px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#000;
+    box-shadow:0 40px 90px -40px rgba(0,0,0,.9)}
+  .liveapp iframe{display:block;width:100%;height:min(76vh,780px);border:0;background:#000}
+  @media(max-width:640px){.liveapp iframe{height:78vh}}
 </style>
 </head>
 <body>
@@ -528,200 +615,224 @@
     </div>
   </header>
 
-  <!-- CASE 1 — VISIONARY. It opens the site because it is the only case that was
-       designed, engineered and deployed by one person, and because the hero has
-       just claimed exactly that. The reel sits second: a claim followed by its
-       motive reads better than a claim followed by an architecture. -->
+  <!-- CASE 1 — VISIONARY. Rebuilt from docs/case-study-visionary.md: the
+       semantic layer, spatial regions, the image/video continuum, and the
+       serverless posture where the engineering decisions are the UX decisions.
+       The interactive mockups are gone — the app is live and screenshots stand
+       in until it is embedded. It opens the site because it is the only case
+       designed, engineered and deployed by one person, which the hero just claimed. -->
   <section class="case alt" id="visionary">
     <div class="wrap">
       <!-- INTRO -->
       <div class="reveal">
         <div class="ov">01 · Visionary · Generative studio</div>
         <h2 class="bighead">One file is the whole studio.</h2>
-        <p class="sublead">Training, images, video and datasets in a single application that installs with one command and runs on your own GPUs. I designed it, engineered it and deployed it.</p>
+        <p class="sublead">A studio for training models and making stills and video. It installs with one command and runs on your own GPUs. I designed it, engineered it and deployed it.</p>
         <div class="plate">
           <div class="cell"><div class="k">Role</div><div class="v">Design engineer &mdash; sole designer &amp; builder</div></div>
           <div class="cell"><div class="k">Scope</div><div class="v">Product · UX · Python · written with an AI pair</div></div>
-          <div class="cell"><div class="k">Stack</div><div class="v">Modal · ComfyUI · PyTorch · serverless GPU</div></div>
+          <div class="cell"><div class="k">Stack</div><div class="v">Modal · ComfyUI · vLLM · PyTorch · serverless GPU</div></div>
           <div class="cell"><div class="k">Status</div><div class="v">Deployed and running · open source</div></div>
         </div>
-        <p class="vznote" style="margin-top:22px">Four phases shipped: LoRA training, image inference, datasets and captioning, and video across two model families. The source is on <a href="https://github.com/Prometheus-000/visionary-platform" target="_blank" rel="noopener">GitHub</a>.</p>
+        <p class="pull"><span class="pl">Built for dreamers</span>The person here is a filmmaker, not a prompt engineer. Their job is to describe a picture they already see. The tool&rsquo;s job is to speak whatever dialect each model needs.</p>
+        <p class="vznote" style="margin-top:26px">The recent work moves in one direction &mdash; toward the canvas. The source is on <a href="https://github.com/Prometheus-000/visionary-platform" target="_blank" rel="noopener">GitHub</a>.</p>
+        <!-- The live deployment, embedded — not a mockup and not a screenshot.
+             The canvas fills the moment a visitor generates. -->
+        <div class="liveapp">
+          <iframe src="https://adam8623-work--visionary-web.modal.run/" title="Visionary — the deployed studio, running live on Modal" loading="lazy" allow="clipboard-read; clipboard-write; fullscreen"></iframe>
+        </div>
+        <p class="vzcap"><b>This is the deployed app, not a screenshot.</b> Type a prompt and press Generate &mdash; every control is live, running on real GPUs. The canvas is the largest thing on screen because the picture is the reason the page exists. A settings column would cost it 384 pixels of the one dimension it can&rsquo;t get back, so the options sit in a bar underneath.</p>
+        <p class="vznote">Runs on Modal and scales to zero between sessions, so the first visit pays a cold start. <a href="https://adam8623-work--visionary-web.modal.run/" target="_blank" rel="noopener">Open it full screen &rarr;</a></p>
       </div>
 
-      <!-- THE ORIGIN — the films. No autoplay: the visitor runs the projector. -->
-      <div class="beat reveal">
-        <div class="beat-eyebrow">Why it exists</div>
-        <div class="beat-title">Old photographs in motion.</div>
-        <p class="beat-pov">Two years of diffusion research. The first thing it made was a gift for my father.</p>
-        <div class="projector">
-          <div class="screenv" id="screenv">
-            <span class="takebadge" id="takebadge">Take 01 / 05</span>
-            <span class="playhint" id="playhint">Play</span>
-            <video id="reelv" preload="metadata" playsinline></video>
+      <!-- CONTENTS MAP — the whole argument in one view, so the density below has
+           a shape before the reader hits it. Eight beats, grouped into four acts;
+           each line is a beat's own title, so nothing new is claimed here. -->
+      <nav class="casemap reveal" aria-label="What this case covers">
+        <div class="cm-h">What this case covers</div>
+        <div class="cm-grid">
+          <div class="cm-act">
+            <div class="cm-al"><span class="cm-rn">I</span> The stance</div>
+            <ol class="cm-beats">
+              <li><a href="#vz-stance"><span class="cm-n">01</span><span class="cm-t">Two ways to make these pictures &mdash; both cost the user</span></a></li>
+            </ol>
           </div>
-          <p class="direction" id="direction"><b>Direction</b></p>
-          <div class="picker" id="reel" role="tablist" aria-label="Select take">
-            <button class="on">01</button>
-            <button>02</button>
-            <button>03</button>
-            <button>04</button>
-            <button>05</button>
+          <div class="cm-act">
+            <div class="cm-al"><span class="cm-rn">II</span> The interface</div>
+            <ol class="cm-beats">
+              <li><a href="#vz-enhance"><span class="cm-n">02</span><span class="cm-t">Enhancement is usually distrust</span></a></li>
+              <li><a href="#vz-turn"><span class="cm-n">03</span><span class="cm-t">Judged by arithmetic, the feature never fired</span></a></li>
+              <li><a href="#vz-regions"><span class="cm-n">04</span><span class="cm-t">A box on the canvas is a character</span></a></li>
+              <li><a href="#vz-continuum"><span class="cm-n">05</span><span class="cm-t">Image and video are the same place</span></a></li>
+            </ol>
+          </div>
+          <div class="cm-act">
+            <div class="cm-al"><span class="cm-rn">III</span> The engine</div>
+            <ol class="cm-beats">
+              <li><a href="#vz-engine"><span class="cm-n">06</span><span class="cm-t">The engineering is why the interface can be this</span></a></li>
+            </ol>
+          </div>
+          <div class="cm-act">
+            <div class="cm-al"><span class="cm-rn">IV</span> The bet</div>
+            <ol class="cm-beats">
+              <li><a href="#vz-next"><span class="cm-n">07</span><span class="cm-t">The canvas is where the work is done</span></a></li>
+              <li><a href="#vz-why"><span class="cm-n">08</span><span class="cm-t">Built for dreamers is not a tagline</span></a></li>
+            </ol>
           </div>
         </div>
+      </nav>
+
+      <!-- ACT I -->
+      <div class="act reveal"><span class="act-n">I</span><span class="act-t">The stance</span><span class="act-d">Why it refuses both the prompt box and the node graph.</span></div>
+
+      <!-- THE MIDDLE PATH -->
+      <div class="beat reveal" id="vz-stance">
+        <div class="beat-eyebrow"><span class="bn">01</span> &middot; The middle path</div>
+        <div class="beat-title">Two ways to make these pictures. Both cost the user.</div>
+        <p class="beat-pov">The interface landscape has settled into two failure modes. Visionary is a refusal of both &mdash; you argue with the picture, and the system owns the prompt.</p>
+        <div class="dtable">
+          <table>
+            <thead><tr><th>Approach</th><th>Optimizes for</th><th>What it costs you</th></tr></thead>
+            <tbody>
+              <tr><th>The prompt box</th><td>Approachability</td><td>The prompt <i>is</i> the state. Nothing accumulates and nothing is addressable. A small edit means rewriting the sentence and rerolling the whole picture.</td></tr>
+              <tr><th>The node graph</th><td>Total control</td><td>Engineering wearing an artist&rsquo;s clothes. The graph is the medium and the picture is an afterthought two hundred nodes away.</td></tr>
+              <tr><th><b>Visionary</b></th><td><b>Direct manipulation</b></td><td>Intent is expressed on the canvas, not in a settings column.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="pull"><span class="pl">The one standing rule</span>If a gesture cannot say what it means without a label, the answer is a better gesture. Never a control panel.</p>
       </div>
 
-      <!-- THE PROBLEM -->
-      <div class="beat reveal">
-        <div class="beat-eyebrow">The problem</div>
-        <div class="beat-title">Three subscriptions and a terminal window to make one video.</div>
-        <p class="beat-pov">Weights in one service, the interface in another, datasets in a third. Each one a login, a bill and a format. Making the thing is the smallest part of the day.</p>
+      <!-- ACT II -->
+      <div class="act reveal"><span class="act-n">II</span><span class="act-t">The interface</span><span class="act-d">Four moves, each made on the canvas itself.</span></div>
+
+      <!-- THE SEMANTIC LAYER — the new prompt enhance -->
+      <div class="beat reveal" id="vz-enhance">
+        <div class="beat-eyebrow"><span class="bn">02</span> &middot; The new prompt enhance</div>
+        <div class="beat-title">Enhancement is usually distrust.</div>
+        <p class="beat-pov">Most enhance features take your sentence, run it through a model and send the result on. The interpretation replaces your intent silently. A small correction forces a full reroll. And a bare fragment is read as keywords &mdash; type <i>the kitchen after the party</i> and you get the party in progress.</p>
+        <p class="vzcap">Type <b>empty diner, 3am</b> into the app above and press Enhance: the sixteen-character fragment grows into the prompt the model was trained to read, written into the box you type in. You can edit it as plain text, accept it, or drop it with ⌘Z. Nothing reaches the model that wasn&rsquo;t on screen first.</p>
         <div class="ship">
           <div class="stage">
-            <div class="se">Install</div>
-            <div class="st">Nothing to configure.</div>
-            <p>No secrets, no CLI setup, no account. The one token it needs is pasted into the UI and stored where the app can reach it.</p>
+            <div class="se">Interpret</div>
+            <div class="st">A text-only Qwen reads the sentence.</div>
+            <p>Served on its own GPU by vLLM and <b>warmed by a page-load ping</b>, so the first fragment lands warm while you are still typing. Text-only on purpose &mdash; the parse reads a sentence, never a picture.</p>
           </div>
           <div class="arrow" aria-hidden="true">→</div>
           <div class="stage">
-            <div class="se">Deploy</div>
-            <div class="st">One command, one URL.</div>
-            <p><b>modal deploy app.py</b> builds the images and returns an address that is the entire application — interface, API and GPU jobs.</p>
+            <div class="se">Validate</div>
+            <div class="st">Interpretation is untrusted input.</div>
+            <p>Deterministic checks, and <b>structural only</b>: is this document even about this prose? An untrustworthy read is dropped and the run proceeds plain &mdash; no error, no toast, byte-for-byte the app as it was before.</p>
           </div>
           <div class="arrow" aria-hidden="true">→</div>
           <div class="stage">
-            <div class="se">Run</div>
-            <div class="st">Your compute, your storage.</div>
-            <p>Weights land on your own volume, chosen explicitly. Nothing downloads on its own, and the folder layout is the contract — datasets are images with text beside them.</p>
+            <div class="se">Compile</div>
+            <div class="st">Prose, handed back.</div>
+            <p>The people who trained the encoder wrote the prompt for talking to it, so the output is <b>prose, not a document</b> &mdash; the shape that lets the model write instead of chop.</p>
           </div>
         </div>
+        <p class="pull"><span class="pl">The hardest-won invariant</span>Your prose is the source of truth. Everything the model adds is a disposable interpretation of it. Dropping it costs nothing.</p>
+        <p class="vzcap">The marks are the whole trust surface. A dotted underline is a thing the system can act on. The model&rsquo;s own words are laid over the top in grey, one ⌘Z from gone. Derived or invented, always visible &mdash; and it needs no chat panel, because every clarifying question is a small failure.</p>
       </div>
 
-      <!-- THE CONSOLE — the one operable artifact in the case -->
-      <div class="beat reveal">
-        <div class="beat-eyebrow">The console · try it</div>
-        <div class="beat-title">The controls rebuild themselves.</div>
-        <p class="beat-pov">Two families of video model that genuinely differ. Rather than one panel with half its controls quietly inert, the composer is rebuilt from what the chosen model says it reads. Change the model, or change the medium on the chip inside the field — the prompt survives both.</p>
-        <div class="vzbar">
-          <span class="lead">Model</span>
-          <div class="picker" id="ccPicker" role="tablist" aria-label="Choose a model">
-            <button data-m="krea">Krea 2 Turbo</button>
-            <button data-m="h3">MiniMax-H3</button>
-            <button class="on" data-m="wan14b">Wan 2.2 A14B</button>
-            <button data-m="wan5b">Wan 2.2 TI2V 5B</button>
-          </div>
+      <!-- THE TURN — what measurement retired -->
+      <div class="beat reveal" id="vz-turn">
+        <div class="beat-eyebrow"><span class="bn">03</span> &middot; What measurement retired</div>
+        <div class="beat-title">Judged by arithmetic, the feature never fired.</div>
+        <p class="beat-pov">The first version scored the model before trusting it &mdash; a coverage floor, an invention ceiling, a trust number. Measured against the deployed interpreter, that apparatus reached 0% of renders. It refused the model at exactly the moment the model did the right thing.</p>
+        <div class="perf">
+          <div class="cell"><div class="n">0<span class="u">%</span></div><div class="l">of renders the scored apparatus ever reached</div></div>
+          <div class="cell"><div class="n">0<span class="u">/ 30</span></div><div class="l">comparisons the document won, blind, both orders</div></div>
+          <div class="cell"><div class="n">21<span class="u">×</span></div><div class="l">growth of the prompts that actually win</div></div>
         </div>
-        <div class="cons" id="cons">
-          <div class="field">
-            <p class="ptxt">a red paper boat drifting across rain-flooded pavement, slow push in, overcast daylight</p>
-            <!-- The kind switch is a control here too, not a readout. It is the
-                 coarse version of the model picker above, and the only thing on
-                 this bar that never changes when you use it is the sentence. -->
-            <div class="kinds"><button type="button" id="ccKindI">Image</button><button type="button" class="on" id="ccKindV">Video</button></div>
-          </div>
-          <div class="opts">
-            <span class="opt"><span id="ccModel">Wan 2.2 A14B</span><svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
-            <span class="opt">16:9<svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
-            <span class="opt" data-f="tier"><span id="ccTier">720p</span><svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
-            <span class="opt" data-f="len"><span id="ccLen">5s</span><svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
-            <span class="opt gh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>random</span>
-            <span class="opt">H100<svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
-            <span class="vr"></span>
-            <span class="opt ib dash" data-f="last" title="Last frame" aria-label="Last frame"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2.5"/><path d="M14 6v12"/></svg></span>
-            <span class="opt ib dash" data-f="refs" title="References" aria-label="References"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="10" height="14" rx="2.2"/><path d="M16 8h5v11h-9"/></svg></span>
-            <span class="opt" data-f="loras">+ LoRA</span>
-            <span class="actions">
-              <span class="note" id="ccNote">Two experts · silent</span>
-              <span class="opt ib on" title="Advanced"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>
-              <span class="gen">Generate</span>
-            </span>
-          </div>
-          <div class="adv">
-            <div class="neg" data-f="negative">Negative prompt</div>
-            <div class="opts">
-              <span class="opt"><span id="ccSampler">euler</span><svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
-              <span class="opt">simple<svg class="cv" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5L6 7.5L9 4.5"/></svg></span>
-              <span class="opt gh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h4v-5h5v-5h5V5h4"/></svg><span id="ccSteps">20</span></span>
-              <span class="opt gh" data-f="cfg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 3v2M12 19v2M4.2 7.5l1.7 1M18.1 15.5l1.7 1M4.2 16.5l1.7-1M18.1 8.5l1.7-1"/><circle cx="12" cy="12" r="4"/></svg><span id="ccCfg">3.5</span></span>
-              <span class="opt gh" data-f="cfg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 16c4 0 5-8 9-8s5 8 9 8"/></svg><span id="ccShift">shift 8.0</span></span>
-              <span class="vr" data-f="experts"></span>
-              <span class="opt" data-f="experts">high noise → low noise</span>
+        <div class="apba" style="margin-top:34px">
+          <div class="apcol before"><div class="h"><span class="mk">✕</span>Judged by arithmetic</div><p>Fourteen checks, all text-to-text &mdash; preserved, covered, round-tripped. A good enrichment scored 94% invention and an evasive one 93%, so the metric rewarded the wrong document. Not one check looked at a picture.</p></div>
+          <div class="apcol after"><div class="h"><span class="mk">✓</span>Judged by looking</div><p>Render the pair, hide the prompts, let a vision model read the output against the description. The version that writes real prose &mdash; Krea&rsquo;s own instruction, verbatim &mdash; wins 3, loses 1, ties 6. The first thing in the project to beat doing nothing.</p></div>
+        </div>
+        <p class="pull"><span class="pl">The lesson</span>You cannot measure intent with a diff.</p>
+        <p class="vznote">So the thresholds were deleted. A visible replacement beats any score &mdash; you are a better judge of your own picture than a coverage floor.</p>
+      </div>
+
+      <!-- SPATIAL REGIONS -->
+      <div class="beat reveal" id="vz-regions">
+        <div class="beat-eyebrow"><span class="bn">04</span> &middot; Regions</div>
+        <div class="beat-title">A box on the canvas is a character.</div>
+        <p class="beat-pov">Draw a box on the frame. It masks a LoRA to its own rectangle, so two characters hold one frame without their faces bleeding into each other. Drop a photograph on the box and it pulls that rectangle toward that face &mdash; a character with no training run behind it, on a platform whose other half is a trainer.</p>
+        <button class="shot" data-cap="<b>Selection is the open state.</b> A box holds its sentence, its strength, its reference photo and its four coordinates &mdash; rooted in the box&rsquo;s own edge, with no sidebar to dismiss." aria-label="Open the regions screenshot">
+          <img src="assets/visionary/regional.webp" alt="Two figures generated in one frame; a bounding box is drawn over the left figure, and its card shows a prompt, a photo slot, a strength value and four coordinates X, Y, W, H" loading="lazy" width="2200" height="1375">
+        </button>
+        <p class="vzcap">Touch a box and it opens where it sits. The four coordinates were the right parameter and the wrong primary &mdash; a rectangle is not something you rebuild in your head, so dragging teaches the numbers and the numbers never taught the dragging.</p>
+        <p class="pull"><span class="pl">Chrome discipline</span>Nothing sits on top of a render. The boxes are reachable at all times and drawn at none.</p>
+        <p class="vznote">Shot, angle and light work the same way &mdash; a palette of tiles rather than a text field, where a tile that shows a dolly-out teaches what no word can. The vocabulary stays on the server and the page sends a key, so a run is reproducible from its record rather than from whatever text was in a field at the time.</p>
+      </div>
+
+      <!-- THE IMAGE ↔ VIDEO CONTINUUM -->
+      <div class="beat reveal" id="vz-continuum">
+        <div class="beat-eyebrow"><span class="bn">05</span> &middot; One workspace</div>
+        <div class="beat-title">Image and video are the same place.</div>
+        <p class="beat-pov">There is no mode switch. Duration is the control &mdash; a still runs Krea 2, any length routes to a video model. Measured, the two strips differed by one thing: a seconds picker. Half the application had been sitting behind a toggle that gated a single field.</p>
+        <p class="pull"><span class="pl">Duration starts at zero</span>A still is the default and time is something you add. Someone who wants one image should finish and leave without ever learning that motion exists.</p>
+        <button class="shot" data-cap="<b>Only the controls the model reads.</b> MiniMax-H3 carries its own soundtrack, so there is no audio toggle to disable." aria-label="Open the video screenshot">
+          <img src="assets/visionary/video.webp" alt="The workspace on a video model: a wide cinematic frame of two ships at sea, shot pills compiled beneath the prompt, and a results rail of clips on the right" loading="lazy" width="2200" height="1219">
+        </button>
+        <p class="vzcap">A control that is present but ignored is worse than one that is absent &mdash; it is the interface making a promise the model won&rsquo;t keep. The console shows only what each model reads.</p>
+        <p class="vzcap">Stills and clips land in one gallery, in the order they were made, with nothing sorting them by kind &mdash; because to the person who made them they are the same work.</p>
+        <p class="vznote">Generate never blanks the picture you&rsquo;re judging. The render on screen and the job being polled are two ids, so the old frame holds until the new one lands &mdash; which matters most when a video take is three minutes.</p>
+
+        <!-- Optional, and closed. The reel loads nothing until it is opened. -->
+        <details class="aside" id="reelAside">
+          <summary>Among the first things it made were five clips from photographs of my father.<span class="op"></span></summary>
+          <div class="projector">
+            <div class="screenv" id="screenv">
+              <span class="takebadge" id="takebadge">Take 01 / 05</span>
+              <span class="playhint" id="playhint">Play</span>
+              <video id="reelv" preload="metadata" playsinline></video>
+            </div>
+            <p class="direction" id="direction"><b>Direction</b></p>
+            <div class="picker" id="reel" role="tablist" aria-label="Select take">
+              <button class="on">01</button>
+              <button>02</button>
+              <button>03</button>
+              <button>04</button>
+              <button>05</button>
             </div>
           </div>
+        </details>
+      </div>
+
+      <!-- ACT III -->
+      <div class="act reveal"><span class="act-n">III</span><span class="act-t">The engine</span><span class="act-d">Why the interface is free to be this.</span></div>
+
+      <!-- SERVERLESS AS A DESIGN CHOICE -->
+      <div class="beat reveal" id="vz-engine">
+        <div class="beat-eyebrow"><span class="bn">06</span> &middot; Serverless as a design choice</div>
+        <div class="beat-title">The engineering is why the interface can be this.</div>
+        <p class="beat-pov">Scale here isn&rsquo;t requests per second. It&rsquo;s model size and cost per job. The whole app scales to zero on Modal &mdash; no keep-alive, no idle bill, no lifecycle to manage. One command installs the interface, the API and the GPU jobs at a single address on your own account.</p>
+        <!-- Placeholder host, not the real deployment: the point is that the URL
+             returned is yours, not that you can reach mine. -->
+        <div class="term">
+          <p><span class="tp">&rsaquo;</span><span class="tc">modal deploy app.py</span></p>
+          <p class="to"><span class="tk">&check;</span>four images built &mdash; <b>comfy</b>, <b>trainer</b>, <b>captioner</b>, <b>parse</b></p>
+          <p class="to"><span class="tk">&check;</span>web endpoint, API and GPU classes registered</p>
+          <p class="to"><span class="tk">&check;</span>volume mounted at <b>/workspace</b></p>
+          <p class="tu">https://&lt;you&gt;--visionary-web.modal.run</p>
         </div>
-        <p class="conswhy" id="ccWhy"></p>
-        <p class="vznote">A control that is present but ignored is worse than one that is absent — it is the interface making a promise the model will not keep. Below, the real bar in the deployed app.</p>
-        <button class="shot cite" data-cap="<b>The composer, in the running app.</b> Wan 2.2 TI2V 5B — 24 fps, silent, so there is no audio control to disable." aria-label="Open the composer screenshot">
-          <img src="assets/visionary/video-bar.webp" alt="The deployed app's composer bar set to Wan 2.2 TI2V 5B: prompt, Image and Video chips, then model, aspect, resolution, length, seed, GPU, LoRA and a Generate button" loading="lazy" width="2000" height="490">
-        </button>
-      </div>
-
-      <!-- DATASETS — the part that decides whether training works at all -->
-      <div class="beat reveal">
-        <div class="beat-eyebrow">Before the GPU hours</div>
-        <div class="beat-title">Most training runs fail in the dataset.</div>
-        <p class="beat-pov">Not in the trainer. A caption set that repeats itself teaches the repetition, and you find that out eight hours and a GPU bill later. So the dataset screen counts what the trainer is actually going to read.</p>
-        <button class="shot" data-cap="<b>The dataset screen.</b> Coverage, caption length and every repeated clause — read from the same .txt sidecars the trainer opens." aria-label="Open the dataset screenshot">
-          <img src="assets/visionary/dataset.webp" alt="Visionary's dataset view: a grid of 80 captioned runway photographs, with a panel showing the trigger word, coverage bars reading 80 of 80, a median caption length of 70 words, and a ranked list of repeated clauses" loading="lazy" width="2000" height="1250">
-        </button>
-        <p class="vzcap"><b>80 of 80</b> carry the trigger word, <b>80 of 80</b> are captioned, median seventy words. The list on the right is every clause appearing more than once — <i>even lighting</i> five times, <i>with soft</i> five times. That is the overfitting warning, delivered before the run instead of after it.</p>
-        <p class="vznote">Captions are written by a vision model as prose, not tags, because the text encoders these models use parse grammar.</p>
-      </div>
-
-      <!-- THE WORKSPACE -->
-      <div class="beat reveal">
-        <div class="beat-eyebrow">The decision nobody sees</div>
-        <div class="beat-title">Image and video were never two places.</div>
-        <p class="beat-pov">The decisions that matter most leave no trace. There is no video mode to enter, no project type to choose at the start, and nothing announcing that two systems were joined — one canvas, one prompt, one gallery. Done properly it is unremarkable, which is why it has to be claimed here and nowhere in the product.</p>
-        <div class="shots2">
-          <button class="shot" data-cap="<b>Generate.</b> One prompt for both image and video — the switch is a chip inside the field, and the prompt survives it." aria-label="Open the generate screenshot">
-            <img src="assets/visionary/generate.webp" alt="The generate view: a wide cinematic image of a figure on a rain-slicked street fills the canvas, with the prompt field and a single row of controls beneath it and a results rail on the right" loading="lazy" width="2000" height="1250">
-          </button>
-          <button class="shot" data-cap="<b>The gallery.</b> Stills and clips in one place — because a still that becomes a clip should never leave the application to do it." aria-label="Open the gallery screenshot">
-            <img src="assets/visionary/gallery.webp" alt="The gallery view: a grid of generated stills and video clips with relative timestamps" loading="lazy" width="2000" height="1250">
-          </button>
-        </div>
-        <p class="vzcap">The switch lives inside the prompt field rather than in the chrome, because which one you get is a property of what you're making, not an address you navigate to. What differs between them is only the options. <b>The canvas holds the screen</b> either way — options sit in a bar under the picture, never a rail beside it, since a settings column costs the image 384 pixels of the one dimension it cannot get back.</p>
-      </div>
-
-      <!-- THE ENDSTATE — clearly labelled as concept, and governed by a veto list -->
-      <div class="beat reveal">
-        <div class="beat-eyebrow">Concept · not built</div>
-        <div class="beat-title">When the latency goes, the panel should go with it.</div>
-        <p class="beat-pov">Where this goes once the models are fast enough: a gesture-driven canvas for iPad. Nothing is labelled and everything is live — you touch her face to change her. What the machine invented is marked differently from what you actually said, and rerolling it costs nothing.</p>
-        <button class="shot" data-cap="<b>Dream Engine — concept.</b> The endstate for this work: still frames by default, motion as a feature rather than a path." aria-label="Open the Dream Engine concept">
-          <img src="assets/visionary/dream-engine.webp" alt="Three App Store style panels for a concept iPad app called Dream Engine: a typed fragment with some words underlined as the user's own, a figure on a canvas with no visible panel, and a drawer of saved characters, places and looks" loading="lazy" width="2200" height="1187">
-        </button>
-        <p class="vzcap">Speculative, and deliberately labelled as such. What makes it a design rather than a mood board is the list underneath it.</p>
-      </div>
-
-      <!-- THE VETO LIST — the judgment artifact, on the .autopsy component -->
-      <div class="beat reveal">
-        <div class="beat-eyebrow">How it stays empty</div>
-        <div class="beat-title">A veto list, not a manifesto.</div>
-        <p class="beat-pov">Eleven sentences, each written to kill a specific thing when the cheap fix gets proposed. If a sentence has never vetoed anything, it isn't earning its place — cut it.</p>
-        <div class="autopsy">
-          <div class="aplist" id="apList" role="tablist" aria-label="The veto list"></div>
-          <div class="apdetail" id="apDetail"></div>
-        </div>
-        <p class="vznote">The failure to guard against isn't the model, or latency, or scope. It's month four, when something doesn't fit cleanly and the cheapest fix is a panel.</p>
-      </div>
-
-      <!-- UNDER THE SURFACE -->
-      <div class="beat reveal">
-        <div class="beat-eyebrow">Under the surface</div>
-        <div class="beat-title">Never rent a GPU to do CPU work.</div>
-        <p class="beat-pov">Scale here isn't requests per second. It's dataset size, model size and cost per job — so the decisions that matter are about what runs where.</p>
-        <div class="perf">
-          <div class="cell"><div class="n">1<span class="u">file</span></div><div class="l">interface, API and GPU jobs</div></div>
-          <div class="cell"><div class="n">50<span class="u">%</span></div><div class="l">less weight memory, quantized to FP8</div></div>
-          <div class="cell"><div class="n">0</div><div class="l">accounts, secrets or CLI setup</div></div>
+        <p class="pull"><span class="pl">Zero-idle is a UX property</span>Cold starts are paid where you aren&rsquo;t looking. The interpreter warms while you type, and weights download on cheap CPU containers &mdash; never on a rented GPU idling next to a 26 GB pull.</p>
+        <p class="vzcap" style="margin-top:30px">One file, four container images. They stay separate for one reason &mdash; the CUDA pins genuinely conflict, and a conflict resolved by compromise is one you pay for forever.</p>
+        <div class="dtable">
+          <table>
+            <thead><tr><th>Image</th><th>Base</th><th>Why it&rsquo;s separate</th></tr></thead>
+            <tbody>
+              <tr><th>comfy</th><td>CUDA 13</td><td>Images <b>and</b> video share it. The quant backend needs CUDA 13, and SageAttention is compiled from source for one GPU architecture.</td></tr>
+              <tr><th>trainer</th><td>CUDA 12.4</td><td>A different <i>transformers</i> era. Merging its pins would make every captioner bump re-litigate training.</td></tr>
+              <tr><th>caption · parse</th><td>CUDA 12.8</td><td>vLLM shells out to <i>nvcc</i>, so its CUDA pin is non-negotiable.</td></tr>
+              <tr><th>weights cache</th><td>volume</td><td>Split by <b>write pattern</b>, not tidiness &mdash; committing weights next to captions was the whole cost below.</td></tr>
+            </tbody>
+          </table>
         </div>
         <div class="membar">
           <div class="mhead">One captioning job, before the storage was split: <b>23 minutes</b>.</div>
           <div class="track" role="img" aria-label="A 23 minute job, of which 8 minutes was the work and 15 minutes was committing unchanged model weights to the volume">
-            <!-- No label inside the track: the second segment now fills the rest
-                 of it, so an in-bar caption sits on grey and cannot be read. The
-                 legend below already names both parts. -->
             <div class="seg a" style="width:34.8%"></div>
             <div class="seg b" style="left:34.8%;width:65.2%"></div>
           </div>
@@ -730,32 +841,52 @@
             <span><i class="a"></i>8&nbsp;min · writing 80 captions</span>
             <span><i class="b"></i>15&nbsp;min · committing 17&nbsp;GB of unchanged weights</span>
           </div>
-          <p class="cap">The model cache moved onto its own volume and the job went back to eight minutes. Storage boundaries follow write patterns, not tidiness. The same logic puts downloads, thumbnails and validation on cheap CPU containers — pulling 26&nbsp;GB while an A100 sits idle is money burned, and a bad file path should be a form error in milliseconds rather than a cold start and 35&nbsp;GB of loading before it fails.</p>
+          <p class="cap">The model cache moved onto its own volume and the job went back to eight minutes. The same logic puts thumbnails and validation on cheap CPU containers &mdash; a bad file path should fail as a form error in milliseconds, not a cold start and 35&nbsp;GB of loading.</p>
+        </div>
+        <div class="creed">
+          <div class="c">
+            <div class="ce">Named, not drifted</div>
+            <div class="ct">Six surface steps, four radii.</div>
+            <p>Six steps replaced 34 white alphas that were transcription drift &mdash; invisible in review because each is locally reasonable. You can&rsquo;t subtract consistently from 34 alphas; named, it&rsquo;s one line.</p>
+          </div>
+          <div class="c">
+            <div class="ce">Copy is a last resort</div>
+            <div class="ct">Design first, then an icon, then words.</div>
+            <p>Corrected by measurement &mdash; a bare number is not a value an icon can show, so every hyperparameter field carries its name and the tooltip says what the number does.</p>
+          </div>
+          <div class="c">
+            <div class="ce">The canvas gets the room</div>
+            <div class="ct">The console is capped at 30%.</div>
+            <p>Enforced in JS, where the prompt field is the only thing allowed to yield. The picture is height-bound at every aspect ratio, so the bar always comes out of slack the picture wasn&rsquo;t using.</p>
+          </div>
         </div>
       </div>
 
-      <!-- PHILOSOPHY -->
-      <div class="beat reveal">
-        <div class="beat-eyebrow">Design philosophy</div>
-        <div class="beat-title">The best design leaves no trace.</div>
-        <p class="beat-pov">The work I&rsquo;m proudest of here is the work nobody will notice &mdash; two systems joined so completely that no one thinks to ask when they were separate. Good design is unobtrusive <span class="qcite">&mdash; Dieter Rams</span>. Underneath sit three words that settle the arguments, in priority order when they conflict.</p>
-        <div class="creed">
-          <div class="c">
-            <div class="ce">Antifragile</div>
-            <div class="ct">Errors diagnose themselves.</div>
-            <p>A missing model prints the volume, the exact path it wanted and what is actually there — the three facts that separate a wrong profile from a typo. Any error you can hit twice should have explained itself the first time.</p>
-          </div>
-          <div class="c">
-            <div class="ce">Scalable</div>
-            <div class="ct">Keep the polled thing small.</div>
-            <p>Job records carry filenames; bytes are served off the volume by their own route. A dictionary polled every two seconds must never grow with the size of the result.</p>
-          </div>
-          <div class="c">
-            <div class="ce">Future-proof</div>
-            <div class="ct">Don't build a second way to do the first thing.</div>
-            <p>Adding a second family of video model added no backend — it reuses the container, the warm process and the same job contract. What is per-family is a graph builder and a row in a table.</p>
-          </div>
+      <!-- ACT IV -->
+      <div class="act reveal"><span class="act-n">IV</span><span class="act-t">The bet</span><span class="act-d">Where it&rsquo;s going, and the wager underneath.</span></div>
+
+      <!-- WHERE THIS IS GOING — the veto list, then the authorship bet -->
+      <div class="beat reveal" id="vz-next">
+        <div class="beat-eyebrow"><span class="bn">07</span> &middot; Where this is going</div>
+        <div class="beat-title">The canvas is where the work is done.</div>
+        <p class="beat-pov">Not where the result appears. Region prompts, LoRAs and every attachment become one gesture in one place. A photo on a box is that character; a photo on the frame is the scene. What you touch decides the mode. Nothing asks for confirmation, because undo is total.</p>
+        <div class="autopsy">
+          <div class="aplist" id="apList" role="tablist" aria-label="The veto list"></div>
+          <div class="apdetail" id="apDetail"></div>
         </div>
+        <p class="vznote">A veto list, not a manifesto. Each sentence is written to kill one specific fix &mdash; the one proposed in month four, when something doesn&rsquo;t fit cleanly and the cheapest answer is a panel.</p>
+      </div>
+
+      <!-- THE AUTHORSHIP BET — the close -->
+      <div class="beat reveal" id="vz-why">
+        <div class="beat-eyebrow"><span class="bn">08</span> &middot; Why it&rsquo;s built this way</div>
+        <div class="beat-title">Built for dreamers is not a tagline.</div>
+        <p class="beat-pov">A prompt is copy-pasteable, so a method transfers whole and a platform converges on a house style nobody chose &mdash; the reason every image on the big model-sharing sites looks the same. A conversation with a picture doesn&rsquo;t transfer that way. A model trained on your own photographs transfers even less: it learns what <i>you</i> meant. That is why training is Phase 1 here, not a bolt-on, and why the prompt is the machine&rsquo;s business while the intent stays yours.</p>
+        <a class="cta" href="https://github.com/Prometheus-000/visionary-platform" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+          Read the source on GitHub
+          <svg class="arw" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"/></svg>
+        </a>
       </div>
     </div>
   </section>
@@ -1506,79 +1637,25 @@
     scr.setAttribute('role','button');scr.setAttribute('tabindex','0');scr.setAttribute('aria-label','Play or pause the selected take');
     scr.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();toggle();}});
     reel.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;load([...reel.children].indexOf(b));});
-    load(0);
+    /* The aside is closed by default and nothing is fetched until it opens — a
+       collapsed disclosure that still pulls a video is not optional, it is just
+       hidden. Closing it pauses, so nothing keeps playing out of sight. */
+    const aside=document.getElementById('reelAside');
+    if(aside){
+      let booted=false;
+      aside.addEventListener('toggle',()=>{
+        if(aside.open){ if(!booted){booted=true;load(0);} }
+        else v.pause();
+      });
+    } else load(0);
   })();
 
 
 </script>
 
-<!-- ===== CASE 1 — Visionary: the composer that rebuilds itself, and the veto list ===== -->
+<!-- ===== CASE 1 — Visionary: the veto list that keeps the canvas empty ===== -->
 <script>
 (function(){
-  /* THE COMPOSER.
-     Ground truth is VIDEO_MODELS in the application — what each model actually
-     reads. This facsimile hides exactly what the running app hides, so the
-     interesting part, which is how much disappears, is not an illustration of
-     the behaviour. It is the behaviour, on the same table.
-     The prompt is deliberately never touched by a switch: losing the sentence
-     to a mode change is the fastest way to make two things that should feel
-     like one feel like two. */
-  const MODELS={
-    krea:{ label:'Krea 2 Turbo', kind:'image', note:'8 steps · CFG 1.0',
-      tier:'1344×768', len:'', sampler:'euler', steps:'8', cfg:'1.0', shift:'shift 1.15',
-      has:{len:0,last:0,refs:0,loras:1,negative:1,cfg:1,experts:0},
-      why:'<b>Krea 2 Turbo</b> makes still frames, so duration and the keyframe tiles have nothing to attach to. Eight steps at CFG 1.0.' },
-    h3:{ label:'MiniMax-H3', kind:'video', note:'Sound and picture in one pass',
-      tier:'768p', len:'5s', sampler:'res_multistep', steps:'20', cfg:'', shift:'',
-      has:{len:1,last:1,refs:1,loras:0,negative:0,cfg:0,experts:0},
-      why:'<b>MiniMax-H3</b> carries a soundtrack in the same latent as the picture. It is guidance-distilled, so CFG, shift and the negative prompt are gone — and there is no LoRA ecosystem for the repackage, so that goes too. What it gains is references.' },
-    wan14b:{ label:'Wan 2.2 A14B', kind:'video', note:'Two experts · silent',
-      tier:'720p', len:'5s', sampler:'euler', steps:'20', cfg:'3.5', shift:'shift 8.0',
-      has:{len:1,last:1,refs:0,loras:1,negative:1,cfg:1,experts:1},
-      why:'<b>Wan 2.2 A14B</b> is two checkpoints split by noise level, sampled in sequence — so a LoRA row has to say which expert it patches. Takes CFG, a negative prompt and LoRA stacking. Silent.' },
-    wan5b:{ label:'Wan 2.2 TI2V 5B', kind:'video', note:'24 fps · silent',
-      tier:'704p', len:'5s', sampler:'euler', steps:'30', cfg:'5.0', shift:'shift 8.0',
-      has:{len:1,last:0,refs:0,loras:1,negative:1,cfg:1,experts:0},
-      why:'<b>Wan 2.2 TI2V 5B</b> is one expert at 24 fps. The same controls as the A14B minus the expert switch — and it cannot take a last frame, so that tile goes with it.' }
-  };
-  /* The chip and the picker are two views of one state, so both go through
-     select(). The line underneath differs by which one you used: changing model
-     is a question about controls, changing medium is a question about whether
-     you just lost your sentence. */
-  const KIND_WHY={
-    image:'<b>Same sentence, a different medium.</b> Duration and the keyframe tiles have nothing to attach to a still, so they leave — and your words are exactly where you left them. There was never a video mode to enter or a project type to pick.',
-    video:'<b>Same sentence, a different medium.</b> The options came back and the prompt never moved. Most people will never notice this decision was made, which is the whole of it.'
-  };
-  const picker=document.getElementById('ccPicker'), cons=document.getElementById('cons');
-  if(picker&&cons){
-    const why=document.getElementById('ccWhy');
-    const kindI=document.getElementById('ccKindI'), kindV=document.getElementById('ccKindV');
-    let lastVideo='wan14b';
-    const put=(id,v)=>{const el=document.getElementById(id); if(el)el.textContent=v;};
-    const show=(f,on)=>cons.querySelectorAll('[data-f="'+f+'"]').forEach(el=>{el.hidden=!on;});
-    const say=html=>{ if(!why) return; why.style.opacity=0; setTimeout(()=>{why.innerHTML=html;why.style.opacity=1;},150); };
-    function select(key,note){
-      const m=MODELS[key]; if(!m) return;
-      if(m.kind==='video') lastVideo=key;
-      put('ccModel',m.label); put('ccNote',m.note); put('ccTier',m.tier); put('ccLen',m.len);
-      put('ccSampler',m.sampler); put('ccSteps',m.steps); put('ccCfg',m.cfg); put('ccShift',m.shift);
-      Object.keys(m.has).forEach(f=>show(f,m.has[f]));
-      kindI.classList.toggle('on',m.kind==='image');
-      kindV.classList.toggle('on',m.kind==='video');
-      picker.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.m===key));
-      say(note||m.why);
-    }
-    picker.addEventListener('click',e=>{
-      const b=e.target.closest('button'); if(b) select(b.dataset.m);
-    });
-    kindI.addEventListener('click',()=>select('krea',KIND_WHY.image));
-    kindV.addEventListener('click',()=>select(lastVideo,KIND_WHY.video));
-    /* Opens on the fullest state on purpose. Every switch from here subtracts,
-       which is the argument; starting lean would make it look like a feature
-       list growing. */
-    select('wan14b');
-  }
-
   /* THE VETO LIST.
      Six of the eleven, on the same component the old case used for its autopsy —
      a list and a detail pane was already the right shape for a sentence, what it
