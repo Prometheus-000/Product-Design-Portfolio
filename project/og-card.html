@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+  :root{--bg:#08080A;--ink:#F6F5F2;--ink-soft:#A4A19B;--ink-faint:#62605B;--line:#262630;--accent:#E5482D}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1200px;height:630px;background:var(--bg);color:var(--ink);overflow:hidden;
+    font-family:ui-monospace,"DejaVu Sans Mono",Menlo,monospace;letter-spacing:-.01em;
+    display:flex;flex-direction:column;position:relative}
+  .glow{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:130%;height:90%;
+    background:radial-gradient(ellipse at center,rgba(120,130,160,.11),transparent 62%);pointer-events:none;z-index:0}
+  .bar{display:flex;justify-content:space-between;align-items:center;flex:0 0 auto;
+    padding:24px 56px 22px;border-bottom:1px solid var(--line);z-index:2}
+  .bar span{font-size:14px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-faint)}
+  main{flex:1;display:flex;flex-direction:column;justify-content:center;gap:44px;padding:0 56px;z-index:2}
+  .cmd{font-size:18px;font-weight:600;letter-spacing:.03em;color:var(--ink-soft);display:flex;gap:17px;align-items:baseline}
+  .cmd .pr{color:var(--ink-faint);font-weight:700}
+  h1{margin-top:22px;font-size:32px;font-weight:700;line-height:1.4;letter-spacing:-.005em}
+  .sub{margin-top:18px;font-size:21px;font-weight:500;color:var(--ink-soft);line-height:1.6;max-width:58ch}
+  .rows{display:flex;flex-direction:column;gap:3px;margin-top:16px}
+  .row{display:grid;grid-template-columns:32px 152px 384px minmax(0,1fr);gap:0 18px;align-items:baseline;
+    padding:8px 12px;margin-left:-12px;border-radius:4px;white-space:nowrap}
+  .row.on{background:rgba(246,245,242,.05)}
+  .k{font-size:16px;font-weight:600;color:var(--ink-faint)}
+  .row.on .k{color:var(--accent)}
+  .n{font-size:20px;font-weight:600;color:var(--ink-soft)}
+  .row.on .n{color:var(--ink)}
+  .c,.o{font-size:18px;font-weight:500;color:var(--ink-faint)}
+  .row.on .c,.row.on .o{color:var(--ink-soft)}
+  .caret{display:inline-block;width:10px;height:20px;background:var(--accent);translate:0 3px}
+</style></head><body>
+  <span class="glow"></span>
+  <div class="bar"><span>~/kenanalsarabi</span><span>Boston</span></div>
+  <main>
+    <section>
+      <p class="cmd"><span class="pr">&rsaquo;</span><span>whoami</span></p>
+      <h1>Hi, I&rsquo;m Kenan.</h1>
+      <p class="sub">Staff product designer and AI engineer. Ten years designing AI products, sole design ownership from zero to one.</p>
+    </section>
+    <section>
+      <p class="cmd"><span class="pr">&rsaquo;</span><span>ls work</span></p>
+      <div class="rows">
+        <div class="row on"><span class="k">1</span><span class="n">visionary</span><span class="c">generative studio &middot; open source</span><span class="o">one file &rarr; a whole GPU platform</span></div>
+        <div class="row"><span class="k">2</span><span class="n">cloudzero</span><span class="c">enterprise SaaS &middot; cloud cost</span><span class="o">one user &rarr; 30+ enterprise customers</span></div>
+        <div class="row"><span class="k">3</span><span class="n">cummins</span><span class="c">industrial &middot; Fortune 500</span><span class="o">design-to-ship 3 months &rarr; 2 weeks</span></div>
+        <div class="row"><span class="k">4</span><span class="n">concept</span><span class="c">consumer audio</span><span class="o">working prototype, playable</span></div>
+      </div>
+      <p class="cmd" style="margin-top:16px"><span class="pr">&rsaquo;</span><span class="caret"></span></p>
+    </section>
+  </main>
+</body></html>
