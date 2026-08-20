@@ -411,6 +411,19 @@
   .aside>summary:hover .op{color:var(--ink);border-bottom-color:var(--ink-soft)}
   .aside .projector{margin-top:28px}
   .aside:focus-within>summary .op{color:var(--ink)}
+  /* Acts II–IV collapse: a closed beat is its eyebrow, its title and one line of
+     its own copy. The markup inside is exactly the beat as it stood open. */
+  .beatfold>summary{list-style:none;cursor:pointer}
+  .beatfold>summary::-webkit-details-marker{display:none}
+  .beatfold>summary .beat-eyebrow{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
+  .beatfold>summary .op{font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);border-bottom:1px solid var(--line);padding-bottom:1px;transition:color .2s,border-color .2s}
+  .beatfold>summary .op::after{content:"Open"}
+  .beatfold[open]>summary .op::after{content:"Close"}
+  .beatfold>summary:hover .op,.beatfold:focus-within>summary .op{color:var(--ink);border-bottom-color:var(--ink-soft)}
+  .beatfold>summary .beat-title{margin-bottom:0}
+  .beatfold[open]>summary .beat-title{margin-bottom:14px}
+  .beatfold>summary .fold-dek{margin-top:12px;font-size:13.5px;font-weight:500;color:var(--ink-soft);max-width:52ch;line-height:1.5}
+  .beatfold[open]>summary .fold-dek{display:none}
   @media(prefers-reduced-motion:reduce){.dering{transition:opacity .01ms}.dream [data-s] *{transition:none}}
 
   /* The one call to action in the case. A link, drawn as a link — the site has
@@ -687,19 +700,25 @@
       <!-- THE SEMANTIC LAYER — the prompt enhance, with what measurement retired
            compressed into its close. The pipeline diagram, the score table and the
            before/after columns are gone; the invariant and the lesson carry it. -->
-      <div class="beat reveal" id="vz-enhance">
-        <div class="beat-eyebrow"><span class="bn">02</span> &middot; The prompt enhance</div>
-        <h3 class="beat-title">Enhancement is usually distrust.</h3>
+      <details class="beat beatfold reveal" id="vz-enhance">
+        <summary>
+          <div class="beat-eyebrow"><span><span class="bn">02</span> &middot; The prompt enhance</span><span class="op"></span></div>
+          <h3 class="beat-title">Enhancement is usually distrust.</h3>
+          <p class="fold-dek">Your prose is the source of truth; everything the model adds is disposable.</p>
+        </summary>
         <p class="beat-pov">Most enhance features take your sentence, run it through a model and send the result on. The interpretation replaces your intent silently. A small correction forces a full reroll. And a bare fragment is read as keywords &mdash; type <i>the kitchen after the party</i> and you get the party in progress.</p>
         <p class="vzcap">Press Enhance on <b>empty diner, 3am</b> in the studio and the sixteen-character fragment grows into the prompt the model was trained to read &mdash; written into the same box you type in, editable as plain text, one &#8984;Z from gone. A dotted underline marks what the system can act on; the model&rsquo;s own words sit over the top in grey. Derived or invented, always visible &mdash; and no chat panel, because every clarifying question is a small failure.</p>
         <p class="pull"><span class="pl">The hardest-won invariant</span>Your prose is the source of truth. Everything the model adds is a disposable interpretation of it. Dropping it costs nothing.</p>
         <p class="vznote">The first version scored the interpreter before trusting it &mdash; fourteen text-to-text checks that reached 0% of renders and rewarded an evasive document over a good one. Judged by rendering the pair and letting a vision model look at the result, real prose wins. The thresholds were deleted: you cannot measure intent with a diff.</p>
-      </div>
+      </details>
 
       <!-- SPATIAL REGIONS -->
-      <div class="beat reveal" id="vz-regions">
-        <div class="beat-eyebrow"><span class="bn">03</span> &middot; Regions</div>
-        <h3 class="beat-title">A box on the canvas is a character.</h3>
+      <details class="beat beatfold reveal" id="vz-regions">
+        <summary>
+          <div class="beat-eyebrow"><span><span class="bn">03</span> &middot; Regions</span><span class="op"></span></div>
+          <h3 class="beat-title">A box on the canvas is a character.</h3>
+          <p class="fold-dek">A box masks a LoRA to its own rectangle; nothing sits on top of a render.</p>
+        </summary>
         <p class="beat-pov">Draw a box on the frame. It masks a LoRA to its own rectangle, so two characters hold one frame without their faces bleeding into each other. Drop a photograph on the box and it pulls that rectangle toward that face &mdash; a character with no training run behind it, on a platform whose other half is a trainer.</p>
         <button class="shot" data-cap="<b>Selection is the open state.</b> A box holds its sentence, its strength, its reference photo and its four coordinates &mdash; rooted in the box&rsquo;s own edge, with no sidebar to dismiss." aria-label="Open the regions screenshot">
           <img src="assets/visionary/regional.webp" alt="Two figures generated in one frame; a bounding box is drawn over the left figure, and its card shows a prompt, a photo slot, a strength value and four coordinates X, Y, W, H" loading="lazy" width="2200" height="1375">
@@ -707,12 +726,15 @@
         <p class="vzcap">Touch a box and it opens where it sits. The four coordinates were the right parameter and the wrong primary &mdash; a rectangle is not something you rebuild in your head, so dragging teaches the numbers and the numbers never taught the dragging.</p>
         <p class="pull"><span class="pl">Chrome discipline</span>Nothing sits on top of a render. The boxes are reachable at all times and drawn at none.</p>
         <p class="vznote">Shot, angle and light work the same way &mdash; a palette of tiles rather than a text field, where a tile that shows a dolly-out teaches what no word can. The vocabulary stays on the server and the page sends a key, so a run is reproducible from its record rather than from whatever text was in a field at the time.</p>
-      </div>
+      </details>
 
       <!-- THE IMAGE ↔ VIDEO CONTINUUM -->
-      <div class="beat reveal" id="vz-continuum">
-        <div class="beat-eyebrow"><span class="bn">04</span> &middot; One workspace</div>
-        <h3 class="beat-title">Image and video are the same place.</h3>
+      <details class="beat beatfold reveal" id="vz-continuum">
+        <summary>
+          <div class="beat-eyebrow"><span><span class="bn">04</span> &middot; One workspace</span><span class="op"></span></div>
+          <h3 class="beat-title">Image and video are the same place.</h3>
+          <p class="fold-dek">No mode switch &mdash; a still is the default and time is something you add.</p>
+        </summary>
         <p class="beat-pov">There is no mode switch. Duration is the control &mdash; a still runs Krea 2, any length routes to a video model. Measured, the two strips differed by one thing: a seconds picker. Half the application had been sitting behind a toggle that gated a single field.</p>
         <p class="pull"><span class="pl">Duration starts at zero</span>A still is the default and time is something you add. Someone who wants one image should finish and leave without ever learning that motion exists.</p>
         <button class="shot" data-cap="<b>Only the controls the model reads.</b> MiniMax-H3 carries its own soundtrack, so there is no audio toggle to disable." aria-label="Open the video screenshot">
@@ -739,15 +761,18 @@
             </div>
           </div>
         </details>
-      </div>
+      </details>
 
       <!-- ACT III -->
       <div class="act reveal"><span class="act-n">III</span><span class="act-t">The engine</span><span class="act-d">Why the interface is free to be this.</span></div>
 
       <!-- SERVERLESS AS A DESIGN CHOICE -->
-      <div class="beat reveal" id="vz-engine">
-        <div class="beat-eyebrow"><span class="bn">05</span> &middot; Serverless as a design choice</div>
-        <h3 class="beat-title">The engineering is why the interface can be this.</h3>
+      <details class="beat beatfold reveal" id="vz-engine">
+        <summary>
+          <div class="beat-eyebrow"><span><span class="bn">05</span> &middot; Serverless as a design choice</span><span class="op"></span></div>
+          <h3 class="beat-title">The engineering is why the interface can be this.</h3>
+          <p class="fold-dek">Scales to zero on Modal. Cold starts are paid where you aren&rsquo;t looking.</p>
+        </summary>
         <p class="beat-pov">Scale here isn&rsquo;t requests per second. It&rsquo;s model size and cost per job. The whole app scales to zero on Modal &mdash; no keep-alive, no idle bill, no lifecycle to manage. One command installs the interface, the API and the GPU jobs at a single address on your own account.</p>
         <!-- Placeholder host, not the real deployment: the point is that the URL
              returned is yours, not that you can reach mine. -->
@@ -804,15 +829,18 @@
             <p>Enforced in JS, where the prompt field is the only thing allowed to yield. The picture is height-bound at every aspect ratio, so the bar always comes out of slack the picture wasn&rsquo;t using.</p>
           </div>
         </div>
-      </div>
+      </details>
 
       <!-- ACT IV -->
       <div class="act reveal"><span class="act-n">IV</span><span class="act-t">The bet</span><span class="act-d">Where it&rsquo;s going, and the wager underneath.</span></div>
 
       <!-- THE BET — the canvas, the veto list, and the authorship close in one beat -->
-      <div class="beat reveal" id="vz-next">
-        <div class="beat-eyebrow"><span class="bn">06</span> &middot; The bet</div>
-        <h3 class="beat-title">The canvas is where the work is done.</h3>
+      <details class="beat beatfold reveal" id="vz-next">
+        <summary>
+          <div class="beat-eyebrow"><span><span class="bn">06</span> &middot; The bet</span><span class="op"></span></div>
+          <h3 class="beat-title">The canvas is where the work is done.</h3>
+          <p class="fold-dek">What you touch decides the mode. Undo is total.</p>
+        </summary>
         <p class="beat-pov">Not where the result appears. Region prompts, LoRAs and every attachment become one gesture in one place. A photo on a box is that character; a photo on the frame is the scene. What you touch decides the mode. Nothing asks for confirmation, because undo is total.</p>
         <div class="autopsy">
           <div class="aplist" id="apList" role="tablist" aria-label="The veto list"></div>
@@ -825,7 +853,7 @@
           Read the source on GitHub
           <svg class="arw" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"/></svg>
         </a>
-      </div>
+      </details>
     </div>
   </section>
 
@@ -1432,6 +1460,11 @@
   chromeSync();
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.style.transition="opacity .8s var(--ease),transform .8s cubic-bezier(.22,.61,.36,1)";e.target.style.opacity="1";e.target.style.transform="none";io.unobserve(e.target);}}),{threshold:.15});
   document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+    /* Collapsed beats: a map link or deep link opens its beat before the jump */
+  const openFold=id=>{const t=document.getElementById(id);if(t&&t.tagName==="DETAILS")t.open=true;};
+  document.querySelectorAll(".casemap a").forEach(a=>a.addEventListener("click",()=>openFold(a.getAttribute("href").slice(1))));
+  if(location.hash)openFold(location.hash.slice(1));
+
   window.addEventListener("load",()=>{const m=document.getElementById("mark");m.style.transition="opacity 1s var(--ease)";m.style.opacity="1";});
 
   /* ===== CloudZero flow beat — the Slack page, then the resource. Both live.
