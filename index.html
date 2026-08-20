@@ -21,7 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#08080A;--bg-2:#0E0E11;--ink:#F6F5F2;--ink-soft:#A4A19B;--ink-faint:#62605B;
+    --bg:#08080A;--bg-2:#0E0E11;--ink:#F6F5F2;--ink-soft:#A4A19B;--ink-faint:#807D77;
     --line:#262630;--accent:#E5482D;--ease:cubic-bezier(.22,.61,.36,1);
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -462,14 +462,6 @@
   @media(max-width:640px){.act{gap:12px}.act-d{margin-left:0;flex-basis:100%;max-width:none}}
 
   /* Packaging — the hand-off to training */
-  .ship{margin-top:32px;display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch}
-  .ship .stage{border:1px solid var(--line);border-radius:12px;padding:20px 20px 22px;background:rgba(255,255,255,.02)}
-  .ship .arrow{display:flex;align-items:center;justify-content:center;padding:0 14px;color:var(--ink-faint);font-size:15px}
-  .ship .se{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:10px}
-  .ship .st{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:9px;letter-spacing:-.01em;line-height:1.3}
-  .ship .stage p{font-size:13.5px;line-height:1.58;color:var(--ink-soft);font-weight:500}
-  .ship .stage p b{color:var(--ink);font-weight:600}
-  @media(max-width:760px){.ship{grid-template-columns:1fr;gap:14px}.ship .arrow{display:none}}
 
   /* Autopsy — pivots that shipped, met a user, and lost */
   .autopsy{margin-top:36px;display:grid;grid-template-columns:270px 1fr;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#0A0A0F}
@@ -498,12 +490,6 @@
   @media(max-width:820px){.autopsy{grid-template-columns:1fr}.aplist{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);scrollbar-width:none}.aplist::-webkit-scrollbar{display:none}.apitem{border-bottom:0;border-right:1px solid var(--line);min-width:210px}.apba{grid-template-columns:1fr;gap:20px}.apdetail{min-height:0;padding:26px 22px}}
 
   /* Performance — the part users never see */
-  .perf{margin-top:30px;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-  .perf .cell{background:var(--bg);padding:26px 22px 24px}
-  .perf .n{font-weight:700;font-size:clamp(28px,3.8vw,42px);letter-spacing:-.02em;line-height:1;color:var(--ink)}
-  .perf .n .u{font-size:.46em;color:var(--ink-soft);font-weight:600;margin-left:4px;letter-spacing:0}
-  .perf .l{margin-top:13px;font-size:12.5px;color:var(--ink-soft);font-weight:500;line-height:1.5}
-  @media(max-width:640px){.perf{grid-template-columns:1fr}}
   .membar{margin-top:30px;border-top:1px solid var(--line);padding-top:26px}
   .membar .mhead{font-size:13px;color:var(--ink-soft);font-weight:600;margin-bottom:18px}
   .membar .mhead b{color:var(--ink);font-weight:700}
@@ -551,17 +537,8 @@
   .dtable tr:last-child th,.dtable tr:last-child td{border-bottom:0}
   @media(max-width:640px){.dtable th,.dtable td{padding:12px 13px}}
 
-  /* The live deployment, embedded — not a screenshot. Framed exactly like the
-     .shot exhibits (same border, radius, shadow, black ground) so the real app
-     reads as one more exhibit rather than a widget bolted on. It fills its own
-     canvas the moment a visitor generates, which is the argument the empty
-     screenshots could never make. The app is a fixed-viewport studio with no
-     inner scroll on desktop, so the tall frame doesn't trap the page wheel. */
-  .liveapp{margin-top:26px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#000;
-    box-shadow:0 40px 90px -40px rgba(0,0,0,.9)}
-  .liveapp iframe{display:block;width:100%;height:min(76vh,780px);border:0;background:#000}
-  @media(max-width:640px){.liveapp iframe{height:78vh}}
 </style>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
 
@@ -636,17 +613,18 @@
         </div>
         <p class="pull"><span class="pl">Built for dreamers</span>The person here is a filmmaker, not a prompt engineer. Their job is to describe a picture they already see. The tool&rsquo;s job is to speak whatever dialect each model needs.</p>
         <p class="vznote" style="margin-top:26px">The recent work moves in one direction &mdash; toward the canvas. The source is on <a href="https://github.com/Prometheus-000/visionary-platform" target="_blank" rel="noopener">GitHub</a>.</p>
-        <!-- The live deployment, embedded — not a mockup and not a screenshot.
-             The canvas fills the moment a visitor generates. -->
-        <div class="liveapp">
-          <iframe src="https://adam8623-work--visionary-web.modal.run/" title="Visionary — the deployed studio, running live on Modal" loading="lazy" allow="clipboard-read; clipboard-write; fullscreen"></iframe>
-        </div>
-        <p class="vzcap"><b>This is the deployed app, not a screenshot.</b> Type a prompt and press Generate &mdash; every control is live, running on real GPUs. The canvas is the largest thing on screen because the picture is the reason the page exists. A settings column would cost it 384 pixels of the one dimension it can&rsquo;t get back, so the options sit in a bar underneath.</p>
-        <p class="vznote">Runs on Modal and scales to zero between sessions, so the first visit pays a cold start. <a href="https://adam8623-work--visionary-web.modal.run/" target="_blank" rel="noopener">Open it full screen &rarr;</a></p>
+        <!-- A screenshot stands in here until the video demo is ready; the live app
+             stays one click away below. Rule: never use a shot whose canvas is empty
+             (black) — the picture is the argument. -->
+        <button class="shot" data-cap="<b>The shipped strip.</b> Model, ratio, seed, hardware, LoRA &mdash; one bar, assembled from what the chosen model reads." aria-label="Open the studio screenshot">
+          <img src="assets/visionary/generate.webp" alt="The studio on a still: a rendered figure in a chrome and crimson gown fills the canvas, with the prompt and every control in a single bar underneath" width="2200" height="1375">
+        </button>
+        <p class="vzcap"><b>The canvas is the largest thing on screen</b> because the picture is the reason the page exists. A settings column would cost it 384 pixels of the one dimension it can&rsquo;t get back, so the options sit in a bar underneath.</p>
+        <p class="vznote">The app is deployed and live &mdash; it runs on Modal and scales to zero between sessions, so the first visit pays a cold start. <a href="https://adam8623-work--visionary-web.modal.run/" target="_blank" rel="noopener">Open the studio &rarr;</a></p>
       </div>
 
       <!-- CONTENTS MAP — the whole argument in one view, so the density below has
-           a shape before the reader hits it. Eight beats, grouped into four acts;
+           a shape before the reader hits it. Six beats, grouped into four acts;
            each line is a beat's own title, so nothing new is claimed here. -->
       <nav class="casemap reveal" aria-label="What this case covers">
         <div class="cm-h">What this case covers</div>
@@ -661,25 +639,22 @@
             <div class="cm-al"><span class="cm-rn">II</span> The interface</div>
             <ol class="cm-beats">
               <li><a href="#vz-enhance"><span class="cm-n">02</span><span class="cm-t">Enhancement is usually distrust</span></a></li>
-              <li><a href="#vz-turn"><span class="cm-n">03</span><span class="cm-t">Judged by arithmetic, the feature never fired</span></a></li>
-              <li><a href="#vz-regions"><span class="cm-n">04</span><span class="cm-t">A box on the canvas is a character</span></a></li>
-              <li><a href="#vz-continuum"><span class="cm-n">05</span><span class="cm-t">Image and video are the same place</span></a></li>
+              <li><a href="#vz-regions"><span class="cm-n">03</span><span class="cm-t">A box on the canvas is a character</span></a></li>
+              <li><a href="#vz-continuum"><span class="cm-n">04</span><span class="cm-t">Image and video are the same place</span></a></li>
             </ol>
           </div>
           <div class="cm-act">
             <div class="cm-al"><span class="cm-rn">III</span> The engine</div>
             <ol class="cm-beats">
-              <li><a href="#vz-engine"><span class="cm-n">06</span><span class="cm-t">The engineering is why the interface can be this</span></a></li>
+              <li><a href="#vz-engine"><span class="cm-n">05</span><span class="cm-t">The engineering is why the interface can be this</span></a></li>
             </ol>
           </div>
           <div class="cm-act">
             <div class="cm-al"><span class="cm-rn">IV</span> The bet</div>
             <ol class="cm-beats">
-              <li><a href="#vz-next"><span class="cm-n">07</span><span class="cm-t">The canvas is where the work is done</span></a></li>
-              <li><a href="#vz-why"><span class="cm-n">08</span><span class="cm-t">Built for dreamers is not a tagline</span></a></li>
+              <li><a href="#vz-next"><span class="cm-n">06</span><span class="cm-t">The canvas is where the work is done</span></a></li>
             </ol>
           </div>
-        </div>
       </nav>
 
       <!-- ACT I -->
@@ -688,7 +663,7 @@
       <!-- THE MIDDLE PATH -->
       <div class="beat reveal" id="vz-stance">
         <div class="beat-eyebrow"><span class="bn">01</span> &middot; The middle path</div>
-        <div class="beat-title">Two ways to make these pictures. Both cost the user.</div>
+        <h3 class="beat-title">Two ways to make these pictures. Both cost the user.</h3>
         <p class="beat-pov">The interface landscape has settled into two failure modes. Visionary is a refusal of both &mdash; you argue with the picture, and the system owns the prompt.</p>
         <div class="dtable">
           <table>
@@ -704,59 +679,24 @@
       </div>
 
       <!-- ACT II -->
-      <div class="act reveal"><span class="act-n">II</span><span class="act-t">The interface</span><span class="act-d">Four moves, each made on the canvas itself.</span></div>
+      <div class="act reveal"><span class="act-n">II</span><span class="act-t">The interface</span><span class="act-d">Three moves, each made on the canvas itself.</span></div>
 
-      <!-- THE SEMANTIC LAYER — the new prompt enhance -->
+      <!-- THE SEMANTIC LAYER — the prompt enhance, with what measurement retired
+           compressed into its close. The pipeline diagram, the score table and the
+           before/after columns are gone; the invariant and the lesson carry it. -->
       <div class="beat reveal" id="vz-enhance">
-        <div class="beat-eyebrow"><span class="bn">02</span> &middot; The new prompt enhance</div>
-        <div class="beat-title">Enhancement is usually distrust.</div>
+        <div class="beat-eyebrow"><span class="bn">02</span> &middot; The prompt enhance</div>
+        <h3 class="beat-title">Enhancement is usually distrust.</h3>
         <p class="beat-pov">Most enhance features take your sentence, run it through a model and send the result on. The interpretation replaces your intent silently. A small correction forces a full reroll. And a bare fragment is read as keywords &mdash; type <i>the kitchen after the party</i> and you get the party in progress.</p>
-        <p class="vzcap">Type <b>empty diner, 3am</b> into the app above and press Enhance: the sixteen-character fragment grows into the prompt the model was trained to read, written into the box you type in. You can edit it as plain text, accept it, or drop it with ⌘Z. Nothing reaches the model that wasn&rsquo;t on screen first.</p>
-        <div class="ship">
-          <div class="stage">
-            <div class="se">Interpret</div>
-            <div class="st">A text-only Qwen reads the sentence.</div>
-            <p>Served on its own GPU by vLLM and <b>warmed by a page-load ping</b>, so the first fragment lands warm while you are still typing. Text-only on purpose &mdash; the parse reads a sentence, never a picture.</p>
-          </div>
-          <div class="arrow" aria-hidden="true">→</div>
-          <div class="stage">
-            <div class="se">Validate</div>
-            <div class="st">Interpretation is untrusted input.</div>
-            <p>Deterministic checks, and <b>structural only</b>: is this document even about this prose? An untrustworthy read is dropped and the run proceeds plain &mdash; no error, no toast, byte-for-byte the app as it was before.</p>
-          </div>
-          <div class="arrow" aria-hidden="true">→</div>
-          <div class="stage">
-            <div class="se">Compile</div>
-            <div class="st">Prose, handed back.</div>
-            <p>The people who trained the encoder wrote the prompt for talking to it, so the output is <b>prose, not a document</b> &mdash; the shape that lets the model write instead of chop.</p>
-          </div>
-        </div>
+        <p class="vzcap">Press Enhance on <b>empty diner, 3am</b> in the studio and the sixteen-character fragment grows into the prompt the model was trained to read &mdash; written into the same box you type in, editable as plain text, one &#8984;Z from gone. A dotted underline marks what the system can act on; the model&rsquo;s own words sit over the top in grey. Derived or invented, always visible &mdash; and no chat panel, because every clarifying question is a small failure.</p>
         <p class="pull"><span class="pl">The hardest-won invariant</span>Your prose is the source of truth. Everything the model adds is a disposable interpretation of it. Dropping it costs nothing.</p>
-        <p class="vzcap">The marks are the whole trust surface. A dotted underline is a thing the system can act on. The model&rsquo;s own words are laid over the top in grey, one ⌘Z from gone. Derived or invented, always visible &mdash; and it needs no chat panel, because every clarifying question is a small failure.</p>
-      </div>
-
-      <!-- THE TURN — what measurement retired -->
-      <div class="beat reveal" id="vz-turn">
-        <div class="beat-eyebrow"><span class="bn">03</span> &middot; What measurement retired</div>
-        <div class="beat-title">Judged by arithmetic, the feature never fired.</div>
-        <p class="beat-pov">The first version scored the model before trusting it &mdash; a coverage floor, an invention ceiling, a trust number. Measured against the deployed interpreter, that apparatus reached 0% of renders. It refused the model at exactly the moment the model did the right thing.</p>
-        <div class="perf">
-          <div class="cell"><div class="n">0<span class="u">%</span></div><div class="l">of renders the scored apparatus ever reached</div></div>
-          <div class="cell"><div class="n">0<span class="u">/ 30</span></div><div class="l">comparisons the document won, blind, both orders</div></div>
-          <div class="cell"><div class="n">21<span class="u">×</span></div><div class="l">growth of the prompts that actually win</div></div>
-        </div>
-        <div class="apba" style="margin-top:34px">
-          <div class="apcol before"><div class="h"><span class="mk">✕</span>Judged by arithmetic</div><p>Fourteen checks, all text-to-text &mdash; preserved, covered, round-tripped. A good enrichment scored 94% invention and an evasive one 93%, so the metric rewarded the wrong document. Not one check looked at a picture.</p></div>
-          <div class="apcol after"><div class="h"><span class="mk">✓</span>Judged by looking</div><p>Render the pair, hide the prompts, let a vision model read the output against the description. The version that writes real prose &mdash; Krea&rsquo;s own instruction, verbatim &mdash; wins 3, loses 1, ties 6. The first thing in the project to beat doing nothing.</p></div>
-        </div>
-        <p class="pull"><span class="pl">The lesson</span>You cannot measure intent with a diff.</p>
-        <p class="vznote">So the thresholds were deleted. A visible replacement beats any score &mdash; you are a better judge of your own picture than a coverage floor.</p>
+        <p class="vznote">The first version scored the interpreter before trusting it &mdash; fourteen text-to-text checks that reached 0% of renders and rewarded an evasive document over a good one. Judged by rendering the pair and letting a vision model look at the result, real prose wins. The thresholds were deleted: you cannot measure intent with a diff.</p>
       </div>
 
       <!-- SPATIAL REGIONS -->
       <div class="beat reveal" id="vz-regions">
-        <div class="beat-eyebrow"><span class="bn">04</span> &middot; Regions</div>
-        <div class="beat-title">A box on the canvas is a character.</div>
+        <div class="beat-eyebrow"><span class="bn">03</span> &middot; Regions</div>
+        <h3 class="beat-title">A box on the canvas is a character.</h3>
         <p class="beat-pov">Draw a box on the frame. It masks a LoRA to its own rectangle, so two characters hold one frame without their faces bleeding into each other. Drop a photograph on the box and it pulls that rectangle toward that face &mdash; a character with no training run behind it, on a platform whose other half is a trainer.</p>
         <button class="shot" data-cap="<b>Selection is the open state.</b> A box holds its sentence, its strength, its reference photo and its four coordinates &mdash; rooted in the box&rsquo;s own edge, with no sidebar to dismiss." aria-label="Open the regions screenshot">
           <img src="assets/visionary/regional.webp" alt="Two figures generated in one frame; a bounding box is drawn over the left figure, and its card shows a prompt, a photo slot, a strength value and four coordinates X, Y, W, H" loading="lazy" width="2200" height="1375">
@@ -768,16 +708,14 @@
 
       <!-- THE IMAGE ↔ VIDEO CONTINUUM -->
       <div class="beat reveal" id="vz-continuum">
-        <div class="beat-eyebrow"><span class="bn">05</span> &middot; One workspace</div>
-        <div class="beat-title">Image and video are the same place.</div>
+        <div class="beat-eyebrow"><span class="bn">04</span> &middot; One workspace</div>
+        <h3 class="beat-title">Image and video are the same place.</h3>
         <p class="beat-pov">There is no mode switch. Duration is the control &mdash; a still runs Krea 2, any length routes to a video model. Measured, the two strips differed by one thing: a seconds picker. Half the application had been sitting behind a toggle that gated a single field.</p>
         <p class="pull"><span class="pl">Duration starts at zero</span>A still is the default and time is something you add. Someone who wants one image should finish and leave without ever learning that motion exists.</p>
         <button class="shot" data-cap="<b>Only the controls the model reads.</b> MiniMax-H3 carries its own soundtrack, so there is no audio toggle to disable." aria-label="Open the video screenshot">
           <img src="assets/visionary/video.webp" alt="The workspace on a video model: a wide cinematic frame of two ships at sea, shot pills compiled beneath the prompt, and a results rail of clips on the right" loading="lazy" width="2200" height="1219">
         </button>
-        <p class="vzcap">A control that is present but ignored is worse than one that is absent &mdash; it is the interface making a promise the model won&rsquo;t keep. The console shows only what each model reads.</p>
         <p class="vzcap">Stills and clips land in one gallery, in the order they were made, with nothing sorting them by kind &mdash; because to the person who made them they are the same work.</p>
-        <p class="vznote">Generate never blanks the picture you&rsquo;re judging. The render on screen and the job being polled are two ids, so the old frame holds until the new one lands &mdash; which matters most when a video take is three minutes.</p>
 
         <!-- Optional, and closed. The reel loads nothing until it is opened. -->
         <details class="aside" id="reelAside">
@@ -805,8 +743,8 @@
 
       <!-- SERVERLESS AS A DESIGN CHOICE -->
       <div class="beat reveal" id="vz-engine">
-        <div class="beat-eyebrow"><span class="bn">06</span> &middot; Serverless as a design choice</div>
-        <div class="beat-title">The engineering is why the interface can be this.</div>
+        <div class="beat-eyebrow"><span class="bn">05</span> &middot; Serverless as a design choice</div>
+        <h3 class="beat-title">The engineering is why the interface can be this.</h3>
         <p class="beat-pov">Scale here isn&rsquo;t requests per second. It&rsquo;s model size and cost per job. The whole app scales to zero on Modal &mdash; no keep-alive, no idle bill, no lifecycle to manage. One command installs the interface, the API and the GPU jobs at a single address on your own account.</p>
         <!-- Placeholder host, not the real deployment: the point is that the URL
              returned is yours, not that you can reach mine. -->
@@ -818,7 +756,9 @@
           <p class="tu">https://&lt;you&gt;--visionary-web.modal.run</p>
         </div>
         <p class="pull"><span class="pl">Zero-idle is a UX property</span>Cold starts are paid where you aren&rsquo;t looking. The interpreter warms while you type, and weights download on cheap CPU containers &mdash; never on a rented GPU idling next to a 26 GB pull.</p>
-        <p class="vzcap" style="margin-top:30px">One file, four container images. They stay separate for one reason &mdash; the CUDA pins genuinely conflict, and a conflict resolved by compromise is one you pay for forever.</p>
+        <details class="aside">
+          <summary>Four container images and the 23 minutes that split the storage.<span class="op"></span></summary>
+          <p class="vzcap" style="margin-top:18px">One file, four container images. They stay separate for one reason &mdash; the CUDA pins genuinely conflict, and a conflict resolved by compromise is one you pay for forever.</p>
         <div class="dtable">
           <table>
             <thead><tr><th>Image</th><th>Base</th><th>Why it&rsquo;s separate</th></tr></thead>
@@ -843,6 +783,7 @@
           </div>
           <p class="cap">The model cache moved onto its own volume and the job went back to eight minutes. The same logic puts thumbnails and validation on cheap CPU containers &mdash; a bad file path should fail as a form error in milliseconds, not a cold start and 35&nbsp;GB of loading.</p>
         </div>
+        </details>
         <div class="creed">
           <div class="c">
             <div class="ce">Named, not drifted</div>
@@ -865,23 +806,17 @@
       <!-- ACT IV -->
       <div class="act reveal"><span class="act-n">IV</span><span class="act-t">The bet</span><span class="act-d">Where it&rsquo;s going, and the wager underneath.</span></div>
 
-      <!-- WHERE THIS IS GOING — the veto list, then the authorship bet -->
+      <!-- THE BET — the canvas, the veto list, and the authorship close in one beat -->
       <div class="beat reveal" id="vz-next">
-        <div class="beat-eyebrow"><span class="bn">07</span> &middot; Where this is going</div>
-        <div class="beat-title">The canvas is where the work is done.</div>
+        <div class="beat-eyebrow"><span class="bn">06</span> &middot; The bet</div>
+        <h3 class="beat-title">The canvas is where the work is done.</h3>
         <p class="beat-pov">Not where the result appears. Region prompts, LoRAs and every attachment become one gesture in one place. A photo on a box is that character; a photo on the frame is the scene. What you touch decides the mode. Nothing asks for confirmation, because undo is total.</p>
         <div class="autopsy">
           <div class="aplist" id="apList" role="tablist" aria-label="The veto list"></div>
           <div class="apdetail" id="apDetail"></div>
         </div>
         <p class="vznote">A veto list, not a manifesto. Each sentence is written to kill one specific fix &mdash; the one proposed in month four, when something doesn&rsquo;t fit cleanly and the cheapest answer is a panel.</p>
-      </div>
-
-      <!-- THE AUTHORSHIP BET — the close -->
-      <div class="beat reveal" id="vz-why">
-        <div class="beat-eyebrow"><span class="bn">08</span> &middot; Why it&rsquo;s built this way</div>
-        <div class="beat-title">Built for dreamers is not a tagline.</div>
-        <p class="beat-pov">A prompt is copy-pasteable, so a method transfers whole and a platform converges on a house style nobody chose &mdash; the reason every image on the big model-sharing sites looks the same. A conversation with a picture doesn&rsquo;t transfer that way. A model trained on your own photographs transfers even less: it learns what <i>you</i> meant. That is why training is Phase 1 here, not a bolt-on, and why the prompt is the machine&rsquo;s business while the intent stays yours.</p>
+        <p class="pull"><span class="pl">Built for dreamers is not a tagline</span>A prompt is copy-pasteable, so a method transfers whole and a platform converges on a house style nobody chose &mdash; the reason every image on the big model-sharing sites looks the same. A conversation with a picture doesn&rsquo;t transfer that way. A model trained on your own photographs transfers even less: it learns what <i>you</i> meant. That is why training is Phase&nbsp;1 here, not a bolt-on, and why the prompt is the machine&rsquo;s business while the intent stays yours.</p>
         <a class="cta" href="https://github.com/Prometheus-000/visionary-platform" target="_blank" rel="noopener">
           <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
           Read the source on GitHub
@@ -948,7 +883,7 @@
       <!-- ACT 1 — Accept the chaos: the tension, resolved in the data layer -->
       <div class="beat reveal">
         <div class="beat-eyebrow">The data layer</div>
-        <div class="beat-title">Structure over raw metadata.</div>
+        <h3 class="beat-title">Structure over raw metadata.</h3>
         <p class="beat-pov">Infrastructure tags carry no consistent owner or logic.</p>
         <div class="taxo reveal" role="img" aria-label="Raw AWS metadata resolves through a translation layer into owned business dimensions">
           <div class="taxo-col">
@@ -986,7 +921,7 @@
       <!-- BEAT — the model: a learned baseline -->
       <div class="beat reveal">
         <div class="beat-eyebrow">The model</div>
-        <div class="beat-title">Every resource against its own baseline.</div>
+        <h3 class="beat-title">Every resource against its own baseline.</h3>
         <p class="beat-pov">A learned ML baseline detects cost anomalies in your environment in real time.</p>
         <div class="scatter reveal">
           <svg id="mlscatter" viewBox="0 0 1000 380" role="img" aria-label="A field of gray cost readings clustered around a white learned baseline, with a single red outlier — resource i-0a3f9c2b at plus 122 percent — far above the normal range"></svg>
@@ -996,7 +931,7 @@
       <!-- BEAT — the instrument: the product demo -->
       <div class="beat drill reveal">
         <div class="beat-eyebrow">The instrument</div>
-        <div class="beat-title">Triage where engineers work.</div>
+        <h3 class="beat-title">Triage where engineers work.</h3>
         <p class="beat-pov">The platform sends cost anomalies in Slack, routed to the relevant team by design, reducing dependency on dashboards.</p>
         <nav class="drillpath" id="drillpath" aria-label="Flow path">
           <button class="crumb" data-v="slack" aria-current="false">#finops-alerts</button>
@@ -1025,7 +960,7 @@
       <!-- ACT 3 — the outcome: a point of view, and the scale it earned -->
       <div class="beat reveal">
         <div class="beat-eyebrow">The outcome</div>
-        <div class="beat-title">The first FinOps platform powered by ML.</div>
+        <h3 class="beat-title">The first FinOps platform powered by ML.</h3>
         <p class="beat-pov">Competitors monitor cloud cost for finance. The platform maps spend to the engineers who create it.</p>
         <p class="pullquote">I design systems, not screens.</p>
       </div>
@@ -1080,7 +1015,7 @@
     <div class="wrap">
       <div class="reveal">
         <div class="ov">03 · Cummins</div>
-        <div class="h2">Systemizing product design.</div>
+        <h3 class="h2">Systemizing product design.</h3>
         <p class="pov">Aligning software component architecture with industrial manufacturing cadences.</p>
       </div>
     </div>
@@ -1199,7 +1134,7 @@
     <div class="wrap" style="text-align:center">
       <div class="reveal">
         <div class="ov">04 · Concept · Sound landscape</div>
-        <div class="h2" style="margin-inline:auto">An audio landscape shaped by emotion.</div>
+        <h2 class="h2" style="margin-inline:auto">An audio landscape shaped by emotion.</h2>
         <p class="pov" style="margin-inline:auto">A minimalist audio terminal removing cognitive overload through responsive geometry.</p>
       </div>
       <div class="feelview reveal">
@@ -1211,7 +1146,7 @@
 
       <div class="beat reveal" style="text-align:center">
         <div class="beat-eyebrow">The interface</div>
-        <div class="beat-title">No titles. No queue. No settings.</div>
+        <h3 class="beat-title">No titles. No queue. No settings.</h3>
         <p class="beat-pov" style="margin-inline:auto">The geometry responds to you. There is nothing to operate.</p>
       </div>
     </div>
