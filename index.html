@@ -411,19 +411,12 @@
   .aside>summary:hover .op{color:var(--ink);border-bottom-color:var(--ink-soft)}
   .aside .projector{margin-top:28px}
   .aside:focus-within>summary .op{color:var(--ink)}
-  /* Acts II–IV collapse: a closed beat is its eyebrow, its title and one line of
-     its own copy. The markup inside is exactly the beat as it stood open. */
-  .beatfold>summary{list-style:none;cursor:pointer}
-  .beatfold>summary::-webkit-details-marker{display:none}
-  .beatfold>summary .beat-eyebrow{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
-  .beatfold>summary .op{font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);border-bottom:1px solid var(--line);padding-bottom:1px;transition:color .2s,border-color .2s}
-  .beatfold>summary .op::after{content:"Open"}
-  .beatfold[open]>summary .op::after{content:"Close"}
-  .beatfold>summary:hover .op,.beatfold:focus-within>summary .op{color:var(--ink);border-bottom-color:var(--ink-soft)}
-  .beatfold>summary .beat-title{margin-bottom:0}
-  .beatfold[open]>summary .beat-title{margin-bottom:14px}
-  .beatfold>summary .fold-dek{margin-top:12px;font-size:13.5px;font-weight:500;color:var(--ink-soft);max-width:52ch;line-height:1.5}
-  .beatfold[open]>summary .fold-dek{display:none}
+  /* Act II is a stage: the act holds, the beat swaps beneath the picker — the
+     same move the product makes when the bar rebuilds under the picture. */
+  .vzstage{margin-top:56px}
+  .vzstage .picker button{font-size:12.5px}
+  .vzstage .beat{margin-top:44px}
+  .js .vzstage .beat:not(.on){display:none}
   @media(prefers-reduced-motion:reduce){.dering{transition:opacity .01ms}.dream [data-s] *{transition:none}}
 
   /* The one call to action in the case. A link, drawn as a link — the site has
@@ -449,19 +442,6 @@
      and a number on every eyebrow tying the two together. All at eyebrow weight —
      wayfinding, never chrome. The map borrows the hero index's hover language:
      the number goes red, the line goes bright, so it reads as the same nav. ===== */
-  .casemap{margin-top:40px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.02);padding:28px 30px 30px}
-  .casemap .cm-h{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:24px}
-  .cm-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px 48px}
-  .cm-al{font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--ink);margin-bottom:12px;display:flex;align-items:baseline;gap:11px}
-  .cm-rn{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--ink-faint);font-variant-numeric:tabular-nums;flex:none}
-  .cm-beats{list-style:none;display:flex;flex-direction:column;gap:1px}
-  .cm-beats a{display:grid;grid-template-columns:2.4ch 1fr;gap:13px;align-items:baseline;text-decoration:none;padding:7px 10px 7px 8px;margin-left:-8px;border-radius:6px;transition:background .15s var(--ease)}
-  .cm-beats a:hover{background:rgba(246,245,242,.04)}
-  .cm-n{font-size:12px;font-weight:600;color:var(--ink-faint);font-variant-numeric:tabular-nums;transition:color .15s var(--ease)}
-  .cm-t{font-size:13.5px;font-weight:500;color:var(--ink-soft);line-height:1.45;transition:color .15s var(--ease)}
-  .cm-beats a:hover .cm-n{color:var(--accent)}
-  .cm-beats a:hover .cm-t{color:var(--ink)}
-  @media(max-width:760px){.casemap{padding:24px 22px 26px}.cm-grid{grid-template-columns:1fr;gap:24px}}
 
   /* Act divider — a hairline, a numeral, a name, and one line of what the movement
      does. It replaces the big top-of-beat gap, so the following beat tucks under it. */
@@ -552,6 +532,7 @@
 
 </style>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>document.documentElement.classList.add("js")</script>
 
 <!-- Vercel Web Analytics — Vercel serves this route once Analytics is enabled on the project; it 404s locally -->
 <script defer src="/_vercel/insights/script.js"></script>
@@ -639,39 +620,6 @@
         <p class="vznote">The app is deployed and live &mdash; it runs on Modal and scales to zero between sessions, so the first visit pays a cold start. <a href="https://adam8623-work--visionary-web.modal.run/" target="_blank" rel="noopener">Open the studio &rarr;</a></p>
       </div>
 
-      <!-- CONTENTS MAP — the whole argument in one view, so the density below has
-           a shape before the reader hits it. Six beats, grouped into four acts;
-           each line is a beat's own title, so nothing new is claimed here. -->
-      <nav class="casemap reveal" aria-label="What this case covers">
-        <div class="cm-h">What this case covers</div>
-        <div class="cm-grid">
-          <div class="cm-act">
-            <div class="cm-al"><span class="cm-rn">I</span> The stance</div>
-            <ol class="cm-beats">
-              <li><a href="#vz-stance"><span class="cm-n">01</span><span class="cm-t">Two ways to make these pictures &mdash; both cost the user</span></a></li>
-            </ol>
-          </div>
-          <div class="cm-act">
-            <div class="cm-al"><span class="cm-rn">II</span> The interface</div>
-            <ol class="cm-beats">
-              <li><a href="#vz-enhance"><span class="cm-n">02</span><span class="cm-t">Enhancement is usually distrust</span></a></li>
-              <li><a href="#vz-regions"><span class="cm-n">03</span><span class="cm-t">A box on the canvas is a character</span></a></li>
-              <li><a href="#vz-continuum"><span class="cm-n">04</span><span class="cm-t">Image and video are the same place</span></a></li>
-            </ol>
-          </div>
-          <div class="cm-act">
-            <div class="cm-al"><span class="cm-rn">III</span> The engine</div>
-            <ol class="cm-beats">
-              <li><a href="#vz-engine"><span class="cm-n">05</span><span class="cm-t">The engineering is why the interface can be this</span></a></li>
-            </ol>
-          </div>
-          <div class="cm-act">
-            <div class="cm-al"><span class="cm-rn">IV</span> The bet</div>
-            <ol class="cm-beats">
-              <li><a href="#vz-next"><span class="cm-n">06</span><span class="cm-t">The canvas is where the work is done</span></a></li>
-            </ol>
-          </div>
-      </nav>
 
       <!-- ACT I -->
       <div class="act reveal"><span class="act-n">I</span><span class="act-t">The stance</span><span class="act-d">Why it refuses both the prompt box and the node graph.</span></div>
@@ -697,50 +645,44 @@
       <!-- ACT II -->
       <div class="act reveal"><span class="act-n">II</span><span class="act-t">The interface</span><span class="act-d">Three moves, each made on the canvas itself.</span></div>
 
+      <div class="vzstage reveal">
+        <div class="picker" role="tablist" aria-label="The three moves">
+          <button class="on" id="vt-enhance" role="tab" aria-selected="true" aria-controls="vz-enhance">02 &middot; The prompt enhance</button>
+          <button id="vt-regions" role="tab" aria-selected="false" aria-controls="vz-regions">03 &middot; Regions</button>
+          <button id="vt-continuum" role="tab" aria-selected="false" aria-controls="vz-continuum">04 &middot; One workspace</button>
+        </div>
+
       <!-- THE SEMANTIC LAYER — the prompt enhance, with what measurement retired
            compressed into its close. The pipeline diagram, the score table and the
            before/after columns are gone; the invariant and the lesson carry it. -->
-      <details class="beat beatfold reveal" id="vz-enhance">
-        <summary>
-          <div class="beat-eyebrow"><span><span class="bn">02</span> &middot; The prompt enhance</span><span class="op"></span></div>
-          <h3 class="beat-title">Enhancement is usually distrust.</h3>
-          <p class="fold-dek">Your prose is the source of truth; everything the model adds is disposable.</p>
-        </summary>
-        <p class="beat-pov">Most enhance features take your sentence, run it through a model and send the result on. The interpretation replaces your intent silently. A small correction forces a full reroll. And a bare fragment is read as keywords &mdash; type <i>the kitchen after the party</i> and you get the party in progress.</p>
-        <p class="vzcap">Press Enhance on <b>empty diner, 3am</b> in the studio and the sixteen-character fragment grows into the prompt the model was trained to read &mdash; written into the same box you type in, editable as plain text, one &#8984;Z from gone. A dotted underline marks what the system can act on; the model&rsquo;s own words sit over the top in grey. Derived or invented, always visible &mdash; and no chat panel, because every clarifying question is a small failure.</p>
+      <div class="beat on reveal" id="vz-enhance" role="tabpanel" aria-labelledby="vt-enhance">
+        <h3 class="beat-title">Enhancement is usually distrust.</h3>
+        <p class="beat-pov">Most enhance features run your sentence through a model and send the result on. <b>The interpretation replaces your intent silently.</b> A bare fragment reads as keywords &mdash; type <i>the kitchen after the party</i> and you get the party in progress.</p>
+        <p class="vzcap">Here <b>empty diner, 3am</b> grows into the prompt the model was trained to read. Written into the box you type in. The model&rsquo;s own words sit over the top in grey &mdash; derived or invented, always visible. One &#8984;Z and it is gone.</p>
         <p class="pull"><span class="pl">The hardest-won invariant</span>Your prose is the source of truth. Everything the model adds is a disposable interpretation of it. Dropping it costs nothing.</p>
-        <p class="vznote">The first version scored the interpreter before trusting it &mdash; fourteen text-to-text checks that reached 0% of renders and rewarded an evasive document over a good one. Judged by rendering the pair and letting a vision model look at the result, real prose wins. The thresholds were deleted: you cannot measure intent with a diff.</p>
-      </details>
+        <p class="vznote">The scoring apparatus it replaced reached 0% of renders. Judged by looking &mdash; real prose wins. You cannot measure intent with a diff.</p>
+      </div>
 
       <!-- SPATIAL REGIONS -->
-      <details class="beat beatfold reveal" id="vz-regions">
-        <summary>
-          <div class="beat-eyebrow"><span><span class="bn">03</span> &middot; Regions</span><span class="op"></span></div>
-          <h3 class="beat-title">A box on the canvas is a character.</h3>
-          <p class="fold-dek">A box masks a LoRA to its own rectangle; nothing sits on top of a render.</p>
-        </summary>
-        <p class="beat-pov">Draw a box on the frame. It masks a LoRA to its own rectangle, so two characters hold one frame without their faces bleeding into each other. Drop a photograph on the box and it pulls that rectangle toward that face &mdash; a character with no training run behind it, on a platform whose other half is a trainer.</p>
+      <div class="beat reveal" id="vz-regions" role="tabpanel" aria-labelledby="vt-regions">
+        <h3 class="beat-title">A box on the canvas is a character.</h3>
+        <p class="beat-pov">Draw a box on the frame. It masks a LoRA to its own rectangle. <b>Two characters hold one frame</b> without bleeding into each other. Drop a photograph on the box and the rectangle pulls toward that face &mdash; <b>a character with no training run behind it</b>.</p>
         <button class="shot" data-cap="<b>Selection is the open state.</b> A box holds its sentence, its strength, its reference photo and its four coordinates &mdash; rooted in the box&rsquo;s own edge, with no sidebar to dismiss." aria-label="Open the regions screenshot">
           <img src="assets/visionary/regional.webp" alt="Two figures generated in one frame; a bounding box is drawn over the left figure, and its card shows a prompt, a photo slot, a strength value and four coordinates X, Y, W, H" loading="lazy" width="2200" height="1375">
         </button>
-        <p class="vzcap">Touch a box and it opens where it sits. The four coordinates were the right parameter and the wrong primary &mdash; a rectangle is not something you rebuild in your head, so dragging teaches the numbers and the numbers never taught the dragging.</p>
+        <p class="vzcap">Touch a box and it opens where it sits. <b>Dragging teaches the numbers.</b> The numbers never taught the dragging.</p>
         <p class="pull"><span class="pl">Chrome discipline</span>Nothing sits on top of a render. The boxes are reachable at all times and drawn at none.</p>
-        <p class="vznote">Shot, angle and light work the same way &mdash; a palette of tiles rather than a text field, where a tile that shows a dolly-out teaches what no word can. The vocabulary stays on the server and the page sends a key, so a run is reproducible from its record rather than from whatever text was in a field at the time.</p>
-      </details>
+      </div>
 
       <!-- THE IMAGE ↔ VIDEO CONTINUUM -->
-      <details class="beat beatfold reveal" id="vz-continuum">
-        <summary>
-          <div class="beat-eyebrow"><span><span class="bn">04</span> &middot; One workspace</span><span class="op"></span></div>
-          <h3 class="beat-title">Image and video are the same place.</h3>
-          <p class="fold-dek">No mode switch &mdash; a still is the default and time is something you add.</p>
-        </summary>
-        <p class="beat-pov">There is no mode switch. Duration is the control &mdash; a still runs Krea 2, any length routes to a video model. Measured, the two strips differed by one thing: a seconds picker. Half the application had been sitting behind a toggle that gated a single field.</p>
+      <div class="beat reveal" id="vz-continuum" role="tabpanel" aria-labelledby="vt-continuum">
+        <h3 class="beat-title">Image and video are the same place.</h3>
+        <p class="beat-pov">There is no mode switch. <b>Duration is the control.</b> A still runs Krea 2. Any length routes to a video model. The two strips differ by <b>a seconds picker</b> &mdash; half the application behind a toggle that gated one field.</p>
         <p class="pull"><span class="pl">Duration starts at zero</span>A still is the default and time is something you add. Someone who wants one image should finish and leave without ever learning that motion exists.</p>
         <button class="shot" data-cap="<b>Only the controls the model reads.</b> MiniMax-H3 carries its own soundtrack, so there is no audio toggle to disable." aria-label="Open the video screenshot">
           <img src="assets/visionary/video.webp" alt="The workspace on a video model: a wide cinematic frame of two ships at sea, shot pills compiled beneath the prompt, and a results rail of clips on the right" loading="lazy" width="2200" height="1219">
         </button>
-        <p class="vzcap">Stills and clips land in one gallery, in the order they were made, with nothing sorting them by kind &mdash; because to the person who made them they are the same work.</p>
+        <p class="vzcap">Stills and clips land in one gallery in the order they were made. <b>To the person who made them they are the same work.</b></p>
 
         <!-- Optional, and closed. The reel loads nothing until it is opened. -->
         <details class="aside" id="reelAside">
@@ -761,18 +703,16 @@
             </div>
           </div>
         </details>
-      </details>
+      </div>
+      </div>
 
       <!-- ACT III -->
       <div class="act reveal"><span class="act-n">III</span><span class="act-t">The engine</span><span class="act-d">Why the interface is free to be this.</span></div>
 
       <!-- SERVERLESS AS A DESIGN CHOICE -->
-      <details class="beat beatfold reveal" id="vz-engine">
-        <summary>
-          <div class="beat-eyebrow"><span><span class="bn">05</span> &middot; Serverless as a design choice</span><span class="op"></span></div>
-          <h3 class="beat-title">The engineering is why the interface can be this.</h3>
-          <p class="fold-dek">Scales to zero on Modal. Cold starts are paid where you aren&rsquo;t looking.</p>
-        </summary>
+      <div class="beat reveal" id="vz-engine">
+        <div class="beat-eyebrow"><span class="bn">05</span> &middot; Serverless as a design choice</div>
+        <h3 class="beat-title">The engineering is why the interface can be this.</h3>
         <p class="beat-pov">Scale here isn&rsquo;t requests per second. It&rsquo;s model size and cost per job. The whole app scales to zero on Modal &mdash; no keep-alive, no idle bill, no lifecycle to manage. One command installs the interface, the API and the GPU jobs at a single address on your own account.</p>
         <!-- Placeholder host, not the real deployment: the point is that the URL
              returned is yours, not that you can reach mine. -->
@@ -784,14 +724,12 @@
           <p class="tu">https://&lt;you&gt;--visionary-web.modal.run</p>
         </div>
         <p class="pull"><span class="pl">Zero-idle is a UX property</span>Cold starts are paid where you aren&rsquo;t looking. The interpreter warms while you type, and weights download on cheap CPU containers &mdash; never on a rented GPU idling next to a 26 GB pull.</p>
-        <details class="aside">
-          <summary>Four container images and the 23 minutes that split the storage.<span class="op"></span></summary>
-          <p class="vzcap" style="margin-top:18px">One file, four container images. They stay separate for one reason &mdash; the CUDA pins genuinely conflict, and a conflict resolved by compromise is one you pay for forever.</p>
+        <p class="vzcap" style="margin-top:30px">One file. Four container images. Separate because <b>the CUDA pins genuinely conflict</b> &mdash; a compromise is paid forever.</p>
         <div class="dtable">
           <table>
             <thead><tr><th>Image</th><th>Base</th><th>Why it&rsquo;s separate</th></tr></thead>
             <tbody>
-              <tr><th>comfy</th><td>CUDA 13</td><td>Images <b>and</b> video share it. The quant backend needs CUDA 13, and SageAttention is compiled from source for one GPU architecture.</td></tr>
+              <tr><th>comfy</th><td>CUDA 13</td><td>Images <b>and</b> video share it. SageAttention is compiled from source for one GPU architecture.</td></tr>
               <tr><th>trainer</th><td>CUDA 12.4</td><td>A different <i>transformers</i> era. Merging its pins would make every captioner bump re-litigate training.</td></tr>
               <tr><th>caption · parse</th><td>CUDA 12.8</td><td>vLLM shells out to <i>nvcc</i>, so its CUDA pin is non-negotiable.</td></tr>
               <tr><th>weights cache</th><td>volume</td><td>Split by <b>write pattern</b>, not tidiness &mdash; committing weights next to captions was the whole cost below.</td></tr>
@@ -809,51 +747,47 @@
             <span><i class="a"></i>8&nbsp;min · writing 80 captions</span>
             <span><i class="b"></i>15&nbsp;min · committing 17&nbsp;GB of unchanged weights</span>
           </div>
-          <p class="cap">The model cache moved onto its own volume and the job went back to eight minutes. The same logic puts thumbnails and validation on cheap CPU containers &mdash; a bad file path should fail as a form error in milliseconds, not a cold start and 35&nbsp;GB of loading.</p>
+          <p class="cap">The model cache moved to its own volume. The job went back to eight minutes. A bad file path fails as a form error in milliseconds &mdash; not a cold start and 35&nbsp;GB of loading.</p>
         </div>
-        </details>
         <div class="creed">
           <div class="c">
             <div class="ce">Named, not drifted</div>
             <div class="ct">Six surface steps, four radii.</div>
-            <p>Six steps replaced 34 white alphas that were transcription drift &mdash; invisible in review because each is locally reasonable. You can&rsquo;t subtract consistently from 34 alphas; named, it&rsquo;s one line.</p>
+            <p>Six steps replaced 34 white alphas of transcription drift. You can&rsquo;t subtract consistently from 34 alphas. Named &mdash; it&rsquo;s one line.</p>
           </div>
           <div class="c">
             <div class="ce">Copy is a last resort</div>
             <div class="ct">Design first, then an icon, then words.</div>
-            <p>Corrected by measurement &mdash; a bare number is not a value an icon can show, so every hyperparameter field carries its name and the tooltip says what the number does.</p>
+            <p>A bare number is not a value an icon can show. Every hyperparameter field carries its name.</p>
           </div>
           <div class="c">
             <div class="ce">The canvas gets the room</div>
             <div class="ct">The console is capped at 30%.</div>
-            <p>Enforced in JS, where the prompt field is the only thing allowed to yield. The picture is height-bound at every aspect ratio, so the bar always comes out of slack the picture wasn&rsquo;t using.</p>
+            <p>Enforced in JS. The bar comes out of slack the picture wasn&rsquo;t using. Only the prompt field yields.</p>
           </div>
         </div>
-      </details>
+      </div>
 
       <!-- ACT IV -->
       <div class="act reveal"><span class="act-n">IV</span><span class="act-t">The bet</span><span class="act-d">Where it&rsquo;s going, and the wager underneath.</span></div>
 
       <!-- THE BET — the canvas, the veto list, and the authorship close in one beat -->
-      <details class="beat beatfold reveal" id="vz-next">
-        <summary>
-          <div class="beat-eyebrow"><span><span class="bn">06</span> &middot; The bet</span><span class="op"></span></div>
-          <h3 class="beat-title">The canvas is where the work is done.</h3>
-          <p class="fold-dek">What you touch decides the mode. Undo is total.</p>
-        </summary>
+      <div class="beat reveal" id="vz-next">
+        <div class="beat-eyebrow"><span class="bn">06</span> &middot; The bet</div>
+        <h3 class="beat-title">The canvas is where the work is done.</h3>
         <p class="beat-pov">Not where the result appears. Region prompts, LoRAs and every attachment become one gesture in one place. A photo on a box is that character; a photo on the frame is the scene. What you touch decides the mode. Nothing asks for confirmation, because undo is total.</p>
         <div class="autopsy">
           <div class="aplist" id="apList" role="tablist" aria-label="The veto list"></div>
           <div class="apdetail" id="apDetail"></div>
         </div>
         <p class="vznote">A veto list, not a manifesto. Each sentence is written to kill one specific fix &mdash; the one proposed in month four, when something doesn&rsquo;t fit cleanly and the cheapest answer is a panel.</p>
-        <p class="pull"><span class="pl">Built for dreamers is not a tagline</span>A prompt is copy-pasteable, so a method transfers whole and a platform converges on a house style nobody chose &mdash; the reason every image on the big model-sharing sites looks the same. A conversation with a picture doesn&rsquo;t transfer that way. A model trained on your own photographs transfers even less: it learns what <i>you</i> meant. That is why training is Phase&nbsp;1 here, not a bolt-on, and why the prompt is the machine&rsquo;s business while the intent stays yours.</p>
+        <p class="pull"><span class="pl">Built for dreamers is not a tagline</span>A prompt is copy-pasteable. A platform converges on a house style nobody chose. A conversation with a picture doesn&rsquo;t transfer. A model trained on your own photographs learns what <i>you</i> meant. That is why training is Phase&nbsp;1 here &mdash; and the intent stays yours.</p>
         <a class="cta" href="https://github.com/Prometheus-000/visionary-platform" target="_blank" rel="noopener">
           <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
           Read the source on GitHub
           <svg class="arw" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"/></svg>
         </a>
-      </details>
+      </div>
     </div>
   </section>
 
@@ -1460,10 +1394,14 @@
   chromeSync();
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.style.transition="opacity .8s var(--ease),transform .8s cubic-bezier(.22,.61,.36,1)";e.target.style.opacity="1";e.target.style.transform="none";io.unobserve(e.target);}}),{threshold:.15});
   document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
-    /* Collapsed beats: a map link or deep link opens its beat before the jump */
-  const openFold=id=>{const t=document.getElementById(id);if(t&&t.tagName==="DETAILS")t.open=true;};
-  document.querySelectorAll(".casemap a").forEach(a=>a.addEventListener("click",()=>openFold(a.getAttribute("href").slice(1))));
-  if(location.hash)openFold(location.hash.slice(1));
+    /* Act II stage: the picker swaps the beat in place; deep links select their pane */
+  const stage=document.querySelector(".vzstage");
+  if(stage){
+    const tabs=[...stage.querySelectorAll("[role=tab]")],panes=[...stage.querySelectorAll("[role=tabpanel]")];
+    const sel=id=>{tabs.forEach(t=>{const on=t.getAttribute("aria-controls")===id;t.classList.toggle("on",on);t.setAttribute("aria-selected",String(on));});panes.forEach(p=>p.classList.toggle("on",p.id===id));};
+    tabs.forEach(t=>t.addEventListener("click",()=>sel(t.getAttribute("aria-controls"))));
+    if(location.hash&&panes.some(p=>p.id===location.hash.slice(1)))sel(location.hash.slice(1));
+  }
 
   window.addEventListener("load",()=>{const m=document.getElementById("mark");m.style.transition="opacity 1s var(--ease)";m.style.opacity="1";});
 
