@@ -121,6 +121,20 @@
      the hash column — the subject reads as one block, the way it does in a terminal. */
   .out.log>div{padding-left:9ch;text-indent:-9ch}
   .out.log b{color:var(--ink);font-weight:600}
+  /* git blame — the review record. Long enough to scroll on its own rather than
+     push the session off screen; the scroll is the point, the list is the depth. */
+  .out.blame{max-width:none;max-height:min(46vh,420px);overflow-y:auto;padding-right:14px;
+    scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+  .out.blame>div{padding:13px 0;border-top:1px solid var(--line);display:grid;
+    grid-template-columns:7ch 1fr;gap:0 14px;align-items:baseline}
+  .out.blame>div:first-child{border-top:0;padding-top:0}
+  .out.blame .who{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+  .out.blame .said{color:var(--ink);font-weight:500}
+  .out.blame .did{display:block;margin-top:6px;color:var(--ink-faint);font-weight:500}
+  .out.blame .did::before{content:"\2192";margin-right:8px;color:var(--ink-faint)}
+  .out.blame>div.coda{padding-bottom:4px}
+  .out.blame>div.coda+.coda{border-top:0;padding-top:0}
+  @media(max-width:640px){.out.blame>div{grid-template-columns:1fr;gap:5px}}
   .out b{color:var(--ink);font-weight:700}
   .out a{color:var(--ink);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--line)}
   .out a:hover{text-decoration-color:var(--ink-soft)}
@@ -593,6 +607,7 @@
             <a href="mailto:kenanalsarabi@proton.me" data-k="contact email mail reach reach out hello hi talk chat call connect hire hiring available availability open to work together freelance contract opportunity role job message get in touch boston remote remotely relocation location where based relocate salary rate compensation"><span class="pk">6</span><span class="pn">contact</span></a>
             <a href="#" data-cmd="stack" data-k="stack tech how built build building made make tools framework code coding engineering ai claude process workflow html css javascript static site website no framework build step"><span class="pk">7</span><span class="pn">stack</span></a>
             <a href="#" data-cmd="git log" data-k="git log commits history decisions reasoning why changelog process thinking rationale choices craft revisions"><span class="pk">8</span><span class="pn">git log</span></a>
+            <a href="#" data-cmd="git blame" data-k="git blame review feedback critique direction notes ai claude collaboration working with ai pair prompts taste judgement judgment quotes transcript exchanges how i work process criticism"><span class="pk">9</span><span class="pn">git blame</span></a>
           </nav>
         </div>
       </div>
@@ -1191,6 +1206,32 @@
         "f608db7  Whisper line: &ldquo;This is not the negative.&rdquo; &mdash; cut the two-beat"]
     };
 
+    // The review record. Every line is something actually said in a working
+    // session, paired with what changed because of it. Quotes are his unless
+    // marked CLAUDE; spelling normalised, wording untouched.
+    const BLAME=[
+      ["k","If you think there is a library and queue you&rsquo;re missing the point.","Killed the standard music-app scaffolding. It became a single-screen instrument."],
+      ["k","I&rsquo;ll be honest. Nothing about this is even remotely right. I asked for a minimal music app concept a senior designer would create. This looks like coffee smeared across paper with a sponge.","Ended an analog-texture direction. The real spectrogram replaced it."],
+      ["k","You realize this is supposed to be a minimal music app for mobile right?","&hellip;"],
+      ["c","You&rsquo;re right. I overcomplicated it and lost the plot.","The reply that followed."],
+      ["k","It&rsquo;s less about the waveform reacting to the music and more like the waveform reads the music.","A visualiser became an instrument."],
+      ["k","Think of it as another member of the band. It&rsquo;s there to compliment the music. It understands the vibe.","The geometry started performing instead of metering."],
+      ["k","Of course there was product direction. I was working with 2 co-founders. It implies I invented the thing.","Caught the copy inflating the story. Corrected to what was true."],
+      ["k","Those were not external user feedback btw, that was my feedback to Claude.","Caught a misattribution before it shipped."],
+      ["k","If you think this is ok &mdash; &ldquo;There was no product direction. My design decisions became it.&rdquo; &mdash; then you&rsquo;re missing the point entirely.","Verdicts out. State the situation and let the work argue."],
+      ["k","This sounds obnoxious. Like look at me, I&rsquo;m so proud of myself that I didn&rsquo;t argue.","Cut to a flat statement of fact."],
+      ["k","The accent color is being overused, which dilutes it. It sounds like &ldquo;I&rsquo;m not only the hair club president, I&rsquo;m also the client.&rdquo;","Diagnosed typography driving the copy. Red went back to live elements only."],
+      ["k","There are too many tabs. Utilize panels. Keep Dieter Rams principles in mind.","Five tabs became three."],
+      ["k","Speak like you&rsquo;re talking to a peer who already respects you, not someone you&rsquo;re desperate to win the approval of.","The rule every line on this site still runs on."],
+      ["k","You don&rsquo;t have to walk on eggshells here.","Unblocked a pipeline I had been tiptoeing around for an hour."],
+      ["c","I drifted. The brief says these are honest artifacts &mdash; reframe, not restyle. I talked us into running them as live apps anyway.","The machine calling its own foul."],
+      ["k","You&rsquo;re the best Claude.","&hellip;"],
+      ["c","You&rsquo;re the best.","&hellip;"]
+    ];
+    const blame=()=>'<div class="out blame">'+BLAME.map((r,i)=>
+      '<div'+(i>=BLAME.length-2?' class="coda"':'')+'><span class="who">'+(r[0]==="c"?"Claude":"Kenan")+'</span><span><span class="said">&ldquo;'+r[1]+'&rdquo;</span>'+
+      (r[2]==="&hellip;"?"":'<span class="did">'+r[2]+'</span>')+'</span></div>').join("")+"</div>";
+
     const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
     const dockout=document.getElementById("dockout");
     const out=(a,cls)=>'<div class="out'+(cls?" "+cls:"")+'">'+a.map(l=>"<div>"+l+"</div>").join("")+"</div>";
@@ -1244,6 +1285,7 @@
     function activate(a){
       if(!a) return;
       const cmd=a.dataset.cmd;
+      if(cmd==="git blame"){show(cmd,blame());cin.value="";sync();return;}
       if(cmd&&OUT[cmd]){show(cmd,out(OUT[cmd],cmd==="git log"?"log":""));cin.value="";sync();return;}
       // Everything else is a real link — let the browser do its job.
       if(a.getAttribute("href")==="#") return;
@@ -1280,7 +1322,7 @@
     // Clicking a row is the whole interaction on touch — no keyboard required.
     INDEX_EL.addEventListener("click",e=>{
       const a=e.target.closest("a"); if(!a) return;
-      if(a.dataset.cmd){e.preventDefault();show(a.dataset.cmd,out(OUT[a.dataset.cmd],a.dataset.cmd==="git log"?"log":""));}
+      if(a.dataset.cmd){e.preventDefault();show(a.dataset.cmd,a.dataset.cmd==="git blame"?blame():out(OUT[a.dataset.cmd],a.dataset.cmd==="git log"?"log":""));}
     });
 
     const focusInput=e=>{if(e.target.tagName!=="A"&&e.target.tagName!=="BUTTON"){e.preventDefault();cin.focus();}};
