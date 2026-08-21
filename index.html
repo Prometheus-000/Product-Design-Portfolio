@@ -117,6 +117,10 @@
 
   /* console output — replaces the index in place, so the hero never reflows */
   .out{font-size:13px;line-height:1.72;color:var(--ink-soft);font-weight:500;max-width:86ch}
+  /* git log wraps rather than truncating, so continuation lines are indented past
+     the hash column — the subject reads as one block, the way it does in a terminal. */
+  .out.log>div{padding-left:9ch;text-indent:-9ch}
+  .out.log b{color:var(--ink);font-weight:600}
   .out b{color:var(--ink);font-weight:700}
   .out a{color:var(--ink);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--line)}
   .out a:hover{text-decoration-color:var(--ink-soft)}
@@ -1176,17 +1180,20 @@
       stack:["Hand-built HTML, CSS and JavaScript. No framework, no build step.",
         "The case demos are live &mdash; Slack and dashboard simulations, a working radio, an offline dataset workspace.",
         "Written in code with Claude Code as a pair."],
-      "git log":["21c0e89  &ldquo;I design systems, not screens.&rdquo; &mdash; one exception, granted by its author",
-        "5458719  Less, but better: the slider retires &mdash; both cadences in plain view on one scale",
-        "9f039ee  The 60-second read: hero names the products, data plates carry role &middot; scope &middot; outcome",
-        "f608db7  Whisper line: &ldquo;This is not the negative.&rdquo; &mdash; cut the two-beat",
-        "2c4975c  Section 04 copy: strip the swagger, match the site&rsquo;s voice",
-        "1f81088  Copy pass: headline, CloudZero cards, Cummins &mdash; tighter, less commentary"]
+      // Not a changelog. The commits where somebody had to be talked out of
+      // something — usually me, occasionally the machine. Real hashes: every
+      // line resolves in the repo.
+      "git log":["21c0e89  &ldquo;I design systems, not screens.&rdquo; &mdash; Claude called it a slogan. I overruled Claude.",
+        "61c59fe  Stopped selling an eight-minute wait as a feature. Fixing the eight minutes next.",
+        "f2d55d9  An afternoon inside apple.com, then I deleted my own accordions.",
+        "7a4be51  Shipped accordions. Called them a terrible idea. Same day, gone.",
+        "80b1e28  &ldquo;Of course this machine has GitHub credentials.&rdquo; It did. Wrong key, right machine.",
+        "f608db7  Whisper line: &ldquo;This is not the negative.&rdquo; &mdash; cut the two-beat"]
     };
 
     const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
     const dockout=document.getElementById("dockout");
-    const out=a=>'<div class="out">'+a.map(l=>"<div>"+l+"</div>").join("")+"</div>";
+    const out=(a,cls)=>'<div class="out'+(cls?" "+cls:"")+'">'+a.map(l=>"<div>"+l+"</div>").join("")+"</div>";
     // Output mirrors into the docked panel so a command run from halfway down
     // the page answers where you are.
     function show(label,html){
@@ -1237,7 +1244,7 @@
     function activate(a){
       if(!a) return;
       const cmd=a.dataset.cmd;
-      if(cmd&&OUT[cmd]){show(cmd,out(OUT[cmd]));cin.value="";sync();return;}
+      if(cmd&&OUT[cmd]){show(cmd,out(OUT[cmd],cmd==="git log"?"log":""));cin.value="";sync();return;}
       // Everything else is a real link — let the browser do its job.
       if(a.getAttribute("href")==="#") return;
       a.click();
@@ -1273,7 +1280,7 @@
     // Clicking a row is the whole interaction on touch — no keyboard required.
     INDEX_EL.addEventListener("click",e=>{
       const a=e.target.closest("a"); if(!a) return;
-      if(a.dataset.cmd){e.preventDefault();show(a.dataset.cmd,out(OUT[a.dataset.cmd]));}
+      if(a.dataset.cmd){e.preventDefault();show(a.dataset.cmd,out(OUT[a.dataset.cmd],a.dataset.cmd==="git log"?"log":""));}
     });
 
     const focusInput=e=>{if(e.target.tagName!=="A"&&e.target.tagName!=="BUTTON"){e.preventDefault();cin.focus();}};
