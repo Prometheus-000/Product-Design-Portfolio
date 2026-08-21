@@ -764,7 +764,7 @@
           </table>
         </div>
         <div class="membar">
-          <div class="mhead">One captioning job. <b>Two thirds of it was overhead.</b></div>
+          <div class="mhead">One captioning job, before the split. <b>Two thirds of it was overhead.</b></div>
           <div class="track" role="img" aria-label="A 23 minute job, of which 8 minutes was the work and 15 minutes was committing unchanged model weights to the volume">
             <div class="seg a" style="width:34.8%"></div>
             <div class="seg b" style="left:34.8%;width:65.2%"></div>
@@ -774,7 +774,7 @@
             <span><i class="a"></i>8&nbsp;min · writing 80 captions</span>
             <span><i class="b"></i>15&nbsp;min · committing 17&nbsp;GB of unchanged weights</span>
           </div>
-          <p class="cap">Fifteen of those minutes wrote nothing new. The model cache moved to its own volume and the overhead went to zero &mdash; <b>storage boundaries follow write patterns, not tidiness</b>. The same logic sends a bad file path back as a form error in milliseconds, not a cold start and 35&nbsp;GB of loading.</p>
+          <p class="cap">Fifteen of those minutes wrote nothing new. The model cache moved to its own volume and the overhead went to zero &mdash; <b>storage boundaries follow write patterns, not tidiness</b>. The same logic sends a bad file path back as a form error in milliseconds. Captioning runs on Hopper now: <b>a hundred photos in under a minute</b>.</p>
         </div>
         <div class="creed">
           <div class="c">
