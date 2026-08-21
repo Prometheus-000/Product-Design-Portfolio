@@ -117,27 +117,20 @@
 
   /* console output — replaces the index in place, so the hero never reflows */
   .out{font-size:13px;line-height:1.72;color:var(--ink-soft);font-weight:500;max-width:86ch}
-  /* git log wraps rather than truncating, so continuation lines are indented past
-     the hash column — the subject reads as one block, the way it does in a terminal. */
-  .out.log>div{padding-left:9ch;text-indent:-9ch}
-  .out.log b{color:var(--ink);font-weight:600}
   /* git blame — the review record. Long enough to scroll on its own rather than
      push the session off screen; the scroll is the point, the list is the depth. */
   .out.blame{max-width:none;max-height:min(46vh,420px);overflow-y:auto;padding-right:14px;
     scrollbar-width:thin;scrollbar-color:var(--line) transparent}
   .out.blame>div{padding:13px 0;border-top:1px solid var(--line);display:grid;
-    grid-template-columns:9ch 1fr;gap:0 14px;align-items:baseline}
+    grid-template-columns:7ch 1fr;gap:0 14px;align-items:baseline}
   .out.blame>div:first-child{border-top:0;padding-top:0}
-  /* Real git blame prints 00000000 for a line that is not a commit yet. None of
-     this was ever a commit — it is the conversation the commits came out of. */
-  .out.blame .sha{color:var(--ink-faint);font-variant-numeric:tabular-nums}
-  .out.blame .who{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-right:10px}
+  .out.blame .who{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
   .out.blame .said{color:var(--ink);font-weight:500}
   .out.blame .did{display:block;margin-top:6px;color:var(--ink-faint);font-weight:500}
   .out.blame .did::before{content:"\2192";margin-right:8px;color:var(--ink-faint)}
   .out.blame>div.coda{padding-bottom:4px}
   .out.blame>div.coda+.coda{border-top:0;padding-top:0}
-  @media(max-width:640px){.out.blame>div{grid-template-columns:1fr;gap:5px}.out.blame .sha{font-size:11.5px}}
+  @media(max-width:640px){.out.blame>div{grid-template-columns:1fr;gap:5px}}
   .out b{color:var(--ink);font-weight:700}
   .out a{color:var(--ink);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--line)}
   .out a:hover{text-decoration-color:var(--ink-soft)}
@@ -609,8 +602,7 @@
             <a href="Kenan-Alsarabi-Resume.pdf" download data-k="cv resume pdf download experience background history years work history employment career hire hiring role job apply application recruiter credentials qualifications how long seniority level staff principal senior"><span class="pk">5</span><span class="pn">resume</span></a>
             <a href="mailto:kenanalsarabi@proton.me" data-k="contact email mail reach reach out hello hi talk chat call connect hire hiring available availability open to work together freelance contract opportunity role job message get in touch boston remote remotely relocation location where based relocate salary rate compensation"><span class="pk">6</span><span class="pn">contact</span></a>
             <a href="#" data-cmd="stack" data-k="stack tech how built build building made make tools framework code coding engineering ai claude process workflow html css javascript static site website no framework build step"><span class="pk">7</span><span class="pn">stack</span></a>
-            <a href="#" data-cmd="git log" data-k="git log commits history decisions reasoning why changelog process thinking rationale choices craft revisions"><span class="pk">8</span><span class="pn">git log</span></a>
-            <a href="#" data-cmd="git blame" data-k="git blame review feedback critique direction notes ai claude collaboration working with ai pair prompts taste judgement judgment quotes transcript exchanges how i work process criticism"><span class="pk">9</span><span class="pn">git blame</span></a>
+            <a href="#" data-cmd="git blame" data-k="git blame review feedback critique direction notes ai claude collaboration working with ai pair prompts taste judgement judgment quotes transcript exchanges how i work process criticism"><span class="pk">8</span><span class="pn">git blame</span></a>
           </nav>
         </div>
       </div>
@@ -1198,16 +1190,6 @@
       stack:["Hand-built HTML, CSS and JavaScript. No framework, no build step.",
         "The case demos are live &mdash; Slack and dashboard simulations, a working radio, an offline dataset workspace.",
         "Written in code with Claude Code as a pair."],
-      // Not a changelog. The commits where somebody had to be talked out of
-      // something — usually me, occasionally the machine. Real hashes: every
-      // line resolves in the repo.
-      "git log":["7864b7f  Fixed the eight minutes. A hundred photos now caption in under one.",
-        "21c0e89  &ldquo;I design systems, not screens.&rdquo; &mdash; Claude called it a slogan. I overruled Claude.",
-        "61c59fe  Stopped selling an eight-minute wait as a feature. Fixing the eight minutes next.",
-        "f2d55d9  An afternoon inside apple.com, then I deleted my own accordions.",
-        "7a4be51  Shipped accordions. Called them a terrible idea. Same day, gone.",
-        "80b1e28  &ldquo;Of course this machine has GitHub credentials.&rdquo; It did. Wrong key, right machine.",
-        "f608db7  Whisper line: &ldquo;This is not the negative.&rdquo; &mdash; cut the two-beat"]
     };
 
     // The review record. Every line is something actually said in a working
@@ -1237,20 +1219,21 @@
       ["k","By now you&rsquo;re probably overly familiar with the design thinking that I put into this. Is there a way to sprinkle a dash of case study underneath, without taking away from the beauty that exists on the first slide?","The approach had been anti-case-study &mdash; the work alone, nothing explaining it. This is where a measured dose came back, as one beat under the phone."],
       ["k","This code may break shit, so please don&rsquo;t use it as is. Just take a look to get the gist of the design tweaks.","Hand-written CSS as a sketch, not a patch. I took the intent and wrote it properly."],
       ["k","You don&rsquo;t have to walk on eggshells here.","Unblocked a pipeline I had been tiptoeing around for an hour."],
-      ["k","A section bragging about an eight-minute wait. That is not a feature, that is bullshit and I&rsquo;m going to fix it lol.","The copy stopped selling a wait as a feature. Then he went and made the wait go away.","61c59fe"],
+      ["k","Those open buttons are a terrible idea. This seems like a low effort afterthought instead of a pattern that belongs on a staff product design portfolio.","The accordions died that afternoon. Act II became a stage where the beat swaps under a picker &mdash; the move the product itself makes."],
+      ["k","A section bragging about an eight-minute wait. That is not a feature, that is bullshit and I&rsquo;m going to fix it lol.","The copy stopped selling a wait as a feature. Then he went and made the wait go away."],
       ["c","I drifted. The brief says these are honest artifacts &mdash; reframe, not restyle. I talked us into running them as live apps anyway.","The machine calling its own foul."],
       ["k","God this is sexy. &hellip; You have to admit it&rsquo;s sexy.","The visualiser that opens section 04. Weeks earlier the same screen was a beige fog."],
       ["k","You&rsquo;re the best Claude.","&hellip;"],
       ["c","You&rsquo;re the best.","&hellip;"]
     ];
     const blame=()=>'<div class="out blame">'+BLAME.map((r,i)=>
-      '<div'+(i>=BLAME.length-2?' class="coda"':'')+'><span class="sha">'+(r[3]||"00000000")+'</span><span>'+
-      '<span class="who">'+(r[0]==="c"?"Claude":"Kenan")+'</span><span class="said">&ldquo;'+r[1]+'&rdquo;</span>'+
+      '<div'+(i>=BLAME.length-2?' class="coda"':'')+'><span class="who">'+(r[0]==="c"?"Claude":"Kenan")+'</span>'+
+      '<span><span class="said">&ldquo;'+r[1]+'&rdquo;</span>'+
       (r[2]==="&hellip;"?"":'<span class="did">'+r[2]+'</span>')+'</span></div>').join("")+"</div>";
 
     const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
     const dockout=document.getElementById("dockout");
-    const out=(a,cls)=>'<div class="out'+(cls?" "+cls:"")+'">'+a.map(l=>"<div>"+l+"</div>").join("")+"</div>";
+    const out=a=>'<div class="out">'+a.map(l=>"<div>"+l+"</div>").join("")+"</div>";
     // Output mirrors into the docked panel so a command run from halfway down
     // the page answers where you are.
     function show(label,html){
@@ -1302,7 +1285,7 @@
       if(!a) return;
       const cmd=a.dataset.cmd;
       if(cmd==="git blame"){show(cmd,blame());cin.value="";sync();return;}
-      if(cmd&&OUT[cmd]){show(cmd,out(OUT[cmd],cmd==="git log"?"log":""));cin.value="";sync();return;}
+      if(cmd&&OUT[cmd]){show(cmd,out(OUT[cmd]));cin.value="";sync();return;}
       // Everything else is a real link — let the browser do its job.
       if(a.getAttribute("href")==="#") return;
       a.click();
@@ -1338,7 +1321,7 @@
     // Clicking a row is the whole interaction on touch — no keyboard required.
     INDEX_EL.addEventListener("click",e=>{
       const a=e.target.closest("a"); if(!a) return;
-      if(a.dataset.cmd){e.preventDefault();show(a.dataset.cmd,a.dataset.cmd==="git blame"?blame():out(OUT[a.dataset.cmd],a.dataset.cmd==="git log"?"log":""));}
+      if(a.dataset.cmd){e.preventDefault();show(a.dataset.cmd,a.dataset.cmd==="git blame"?blame():out(OUT[a.dataset.cmd]));}
     });
 
     const focusInput=e=>{if(e.target.tagName!=="A"&&e.target.tagName!=="BUTTON"){e.preventDefault();cin.focus();}};
