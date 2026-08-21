@@ -50,7 +50,8 @@
     transform:translateY(110%);transition:transform .32s var(--ease);pointer-events:none}
   .dock.on{transform:none;pointer-events:auto}
   .dockbar{display:flex;align-items:baseline;gap:13px;padding:14px max(24px,3vw);cursor:text}
-  .dockbar .pr{font-size:13px;font-weight:700;color:var(--ink-faint)}
+  .dockbar .pr{font-size:13px;font-weight:700;color:var(--ink-faint);font-family:inherit;background:none;border:0;padding:0;cursor:pointer;transition:color .2s}
+  .dockbar .pr:hover,.dockbar .pr:focus-visible{color:var(--ink)}
   .dockbar .pt{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:.03em;white-space:pre}
   .dockjump{margin-left:auto;display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;justify-content:flex-end}
   .dockjump a{font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);text-decoration:none;transition:color .2s}
@@ -1140,7 +1141,7 @@
   <div class="dock" id="dock" aria-hidden="true">
     <div class="dockout" id="dockout"></div>
     <div class="dockbar">
-      <span class="pr">&rsaquo;</span><span class="pt" id="ptext2"></span><span class="caret"></span>
+      <button class="pr" id="dockhome" type="button" aria-label="Clear the output">&rsaquo;</button><span class="pt" id="ptext2"></span><span class="caret"></span>
       <nav class="dockjump">
         <a href="#visionary">visionary</a><a href="#cloudzero">cloudzero</a><a href="#cummins">cummins</a><a href="#concept">concept</a>
         <button class="hint" id="hint2" type="button">help</button>
@@ -1234,12 +1235,18 @@
     const dockout=document.getElementById("dockout");
     const out=a=>'<div class="out">'+a.map(l=>"<div>"+l+"</div>").join("")+"</div>";
     // Output mirrors into the docked panel so a command run from halfway down
-    // the page answers where you are.
+    // the page answers where you are. Only then: a command run up in the hero
+    // has the hero's own output to live in, and mirroring it used to arm a panel
+    // that sprang open over the first case the moment you scrolled.
+    const dockEl=document.getElementById("dock");
+    const clearDock=()=>{dockout.classList.remove("on");dockout.innerHTML="";};
     function show(label,html){
       cmdline.textContent=label;
       swap.innerHTML=html;
-      dockout.innerHTML='<div class="cmd"><span class="pr">&rsaquo;</span><span>'+esc(label)+"</span></div>"+html;
-      dockout.classList.add("on");
+      if(dockEl&&dockEl.classList.contains("on")){
+        dockout.innerHTML='<div class="cmd"><span class="pr">&rsaquo;</span><span>'+esc(label)+"</span></div>"+html;
+        dockout.classList.add("on");
+      } else clearDock();
     }
 
     // Navigation, not search. A row matches on its own name or its number and
@@ -1305,14 +1312,24 @@
           dockbar=document.querySelector(".dockbar");
     const sync=()=>{ptext.textContent=ptext2.textContent=cin.value;};
 
+    const dockhome=document.getElementById("dockhome");
+    dockhome&&dockhome.addEventListener("click",()=>{clearDock();filter("");});
+
     cin.addEventListener("input",()=>{sync();filter(cin.value);});
     cin.addEventListener("keydown",e=>{
       if(e.key==="ArrowDown"){e.preventDefault();return move(1);}
       if(e.key==="ArrowUp"){e.preventDefault();return move(-1);}
-      if(e.key==="Enter"){e.preventDefault();return activate(current());}
+      if(e.key==="Enter"){
+        e.preventDefault();
+        // cd goes home. It is typed, never a row, so it is caught before the
+        // index selection is consulted.
+        const typed=cin.value.trim().toLowerCase();
+        if(typed==="cd"||typed==="cd ~"||typed==="cd .."){clearDock();cin.value="";sync();filter("");cin.blur();return;}
+        return activate(current());
+      }
       if(e.key==="Escape"){
         e.preventDefault();
-        dockout.classList.remove("on");
+        clearDock();
         if(cin.value){cin.value="";sync();filter("");} else cin.blur();
       }
     });
@@ -1418,6 +1435,10 @@
     }
     if(here!==atSection){
       atSection=here;
+      // A docked answer belongs to where it was asked. Cross into another case
+      // and it goes, rather than trailing the whole page.
+      const dout=document.getElementById("dockout");
+      if(dout){dout.classList.remove("on");dout.innerHTML="";}
       cwd.textContent=here?ROOT+"/"+here:ROOT;
       jumps.forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+here));
     }
