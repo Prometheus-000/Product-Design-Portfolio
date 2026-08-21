@@ -525,12 +525,6 @@
   .qcite{margin-left:6px;font-size:14px;font-weight:600;color:var(--ink-faint);letter-spacing:.02em}
 
   /* Creed — the design principles */
-  .creed{margin-top:34px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
-  .creed .c{border-top:1px solid var(--line);padding-top:18px}
-  .creed .ce{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:13px}
-  .creed .ct{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:11px;letter-spacing:-.01em;line-height:1.25}
-  .creed .c p{font-size:14px;line-height:1.62;color:var(--ink-soft);font-weight:500}
-  @media(max-width:760px){.creed{grid-template-columns:1fr;gap:24px}}
   /* A principle stated plainly — the doc's blockquotes brought into the page.
      A quiet left rule and an eyebrow; the sentence at reading size. No red here:
      the accent stays surgical, reserved for the one live caret. */
@@ -736,7 +730,7 @@
       <div class="beat reveal" id="vz-engine">
         <div class="beat-eyebrow"><span class="bn">05</span> &middot; Serverless as a design choice</div>
         <h3 class="beat-title">The engineering is why the interface can be this.</h3>
-        <p class="beat-pov">Scale here isn&rsquo;t requests per second. It&rsquo;s model size and cost per job. The whole app scales to zero on Modal &mdash; no keep-alive, no idle bill, no lifecycle to manage. One command installs the interface, the API and the GPU jobs at a single address on your own account.</p>
+        <p class="beat-pov">Scale here isn&rsquo;t requests per second. It&rsquo;s model size and cost per job. The app <b>scales to zero</b> &mdash; no keep-alive, no idle bill, no lifecycle. One command puts the interface, the API and the GPU jobs at a single address on your own account.</p>
         <!-- Placeholder host, not the real deployment: the point is that the URL
              returned is yours, not that you can reach mine. -->
         <div class="term">
@@ -746,19 +740,8 @@
           <p class="to"><span class="tk">&check;</span>volume mounted at <b>/workspace</b></p>
           <p class="tu">https://&lt;you&gt;--visionary-web.modal.run</p>
         </div>
-        <p class="pull"><span class="pl">Zero-idle is a UX property</span>Cold starts are paid where you aren&rsquo;t looking. The interpreter warms while you type, and weights download on cheap CPU containers &mdash; never on a rented GPU idling next to a 26 GB pull.</p>
+        <p class="pull"><span class="pl">Zero-idle is a UX property</span>Cold starts are paid where you aren&rsquo;t looking. The interpreter warms while you type. Weights download on cheap CPU containers, never on a rented GPU.</p>
         <p class="vzcap" style="margin-top:30px">One file. Four container images. Separate because <b>the CUDA pins genuinely conflict</b> &mdash; a compromise is paid forever.</p>
-        <div class="dtable">
-          <table>
-            <thead><tr><th>Image</th><th>Base</th><th>Why it&rsquo;s separate</th></tr></thead>
-            <tbody>
-              <tr><th>comfy</th><td>CUDA 13</td><td>Images <b>and</b> video share it. SageAttention is compiled from source for one GPU architecture.</td></tr>
-              <tr><th>trainer</th><td>CUDA 12.4</td><td>A different <i>transformers</i> era. Merging its pins would make every captioner bump re-litigate training.</td></tr>
-              <tr><th>caption · parse</th><td>CUDA 12.8</td><td>vLLM shells out to <i>nvcc</i>, so its CUDA pin is non-negotiable.</td></tr>
-              <tr><th>weights cache</th><td>volume</td><td>Split by <b>write pattern</b>, not tidiness &mdash; committing weights next to captions was the whole cost below.</td></tr>
-            </tbody>
-          </table>
-        </div>
         <div class="membar">
           <div class="mhead">One captioning job, before the split. <b>Two thirds of it was overhead.</b></div>
           <div class="track" role="img" aria-label="A 23 minute job, of which 8 minutes was the work and 15 minutes was committing unchanged model weights to the volume">
@@ -770,25 +753,9 @@
             <span><i class="a"></i>8&nbsp;min · writing 80 captions</span>
             <span><i class="b"></i>15&nbsp;min · committing 17&nbsp;GB of unchanged weights</span>
           </div>
-          <p class="cap">Fifteen of those minutes wrote nothing new. The model cache moved to its own volume and the overhead went to zero &mdash; <b>storage boundaries follow write patterns, not tidiness</b>. The same logic sends a bad file path back as a form error in milliseconds. Captioning runs on Hopper now: <b>a hundred photos in under a minute</b>.</p>
+          <p class="cap">Fifteen of those minutes wrote nothing new. The cache moved to its own volume and the overhead went to zero &mdash; <b>storage boundaries follow write patterns, not tidiness</b>. Captioning runs on Hopper now: <b>a hundred photos in under a minute</b>.</p>
         </div>
-        <div class="creed">
-          <div class="c">
-            <div class="ce">Named, not drifted</div>
-            <div class="ct">Six surface steps, four radii.</div>
-            <p>Six steps replaced 34 white alphas of transcription drift. You can&rsquo;t subtract consistently from 34 alphas. Named &mdash; it&rsquo;s one line.</p>
-          </div>
-          <div class="c">
-            <div class="ce">Copy is a last resort</div>
-            <div class="ct">Design first, then an icon, then words.</div>
-            <p>A bare number is not a value an icon can show. Every hyperparameter field carries its name.</p>
-          </div>
-          <div class="c">
-            <div class="ce">The canvas gets the room</div>
-            <div class="ct">The console is capped at 30%.</div>
-            <p>Enforced in JS. The bar comes out of slack the picture wasn&rsquo;t using. Only the prompt field yields.</p>
-          </div>
-        </div>
+        <p class="vznote">The console is capped at 30% of the screen, enforced in JS. The bar comes out of slack the picture wasn&rsquo;t using.</p>
       </div>
 
       <!-- ACT IV -->
@@ -803,8 +770,8 @@
           <div class="aplist" id="apList" role="tablist" aria-label="The veto list"></div>
           <div class="apdetail" id="apDetail"></div>
         </div>
-        <p class="vznote">A veto list, not a manifesto. Each sentence is written to kill one specific fix &mdash; the one proposed in month four, when something doesn&rsquo;t fit cleanly and the cheapest answer is a panel.</p>
-        <p class="pull"><span class="pl">Built for dreamers is not a tagline</span>A prompt is copy-pasteable. A platform converges on a house style nobody chose. A conversation with a picture doesn&rsquo;t transfer. A model trained on your own photographs learns what <i>you</i> meant. That is why training is Phase&nbsp;1 here &mdash; and the intent stays yours.</p>
+        <p class="vznote">A veto list, not a manifesto. Each sentence kills one specific fix &mdash; the one proposed in month four, when the cheapest answer is a panel.</p>
+        <p class="pull"><span class="pl">Built for dreamers is not a tagline</span>A prompt is copy-pasteable, so a platform converges on a house style nobody chose. A model trained on your own photographs learns what <i>you</i> meant. That is why training is Phase&nbsp;1.</p>
         <a class="cta" href="https://github.com/Prometheus-000/visionary-platform" target="_blank" rel="noopener">
           <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
           Read the source on GitHub
