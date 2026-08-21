@@ -126,15 +126,18 @@
   .out.blame{max-width:none;max-height:min(46vh,420px);overflow-y:auto;padding-right:14px;
     scrollbar-width:thin;scrollbar-color:var(--line) transparent}
   .out.blame>div{padding:13px 0;border-top:1px solid var(--line);display:grid;
-    grid-template-columns:7ch 1fr;gap:0 14px;align-items:baseline}
+    grid-template-columns:9ch 1fr;gap:0 14px;align-items:baseline}
   .out.blame>div:first-child{border-top:0;padding-top:0}
-  .out.blame .who{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+  /* Real git blame prints 00000000 for a line that is not a commit yet. None of
+     this was ever a commit — it is the conversation the commits came out of. */
+  .out.blame .sha{color:var(--ink-faint);font-variant-numeric:tabular-nums}
+  .out.blame .who{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-right:10px}
   .out.blame .said{color:var(--ink);font-weight:500}
   .out.blame .did{display:block;margin-top:6px;color:var(--ink-faint);font-weight:500}
   .out.blame .did::before{content:"\2192";margin-right:8px;color:var(--ink-faint)}
   .out.blame>div.coda{padding-bottom:4px}
   .out.blame>div.coda+.coda{border-top:0;padding-top:0}
-  @media(max-width:640px){.out.blame>div{grid-template-columns:1fr;gap:5px}}
+  @media(max-width:640px){.out.blame>div{grid-template-columns:1fr;gap:5px}.out.blame .sha{font-size:11.5px}}
   .out b{color:var(--ink);font-weight:700}
   .out a{color:var(--ink);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--line)}
   .out a:hover{text-decoration-color:var(--ink-soft)}
@@ -1234,14 +1237,15 @@
       ["k","By now you&rsquo;re probably overly familiar with the design thinking that I put into this. Is there a way to sprinkle a dash of case study underneath, without taking away from the beauty that exists on the first slide?","The approach had been anti-case-study &mdash; the work alone, nothing explaining it. This is where a measured dose came back, as one beat under the phone."],
       ["k","This code may break shit, so please don&rsquo;t use it as is. Just take a look to get the gist of the design tweaks.","Hand-written CSS as a sketch, not a patch. I took the intent and wrote it properly."],
       ["k","You don&rsquo;t have to walk on eggshells here.","Unblocked a pipeline I had been tiptoeing around for an hour."],
-      ["k","A section bragging about an eight-minute wait. That is not a feature, that is bullshit and I&rsquo;m going to fix it lol.","The copy stopped selling a wait as a feature. Then he went and made the wait go away."],
+      ["k","A section bragging about an eight-minute wait. That is not a feature, that is bullshit and I&rsquo;m going to fix it lol.","The copy stopped selling a wait as a feature. Then he went and made the wait go away.","61c59fe"],
       ["c","I drifted. The brief says these are honest artifacts &mdash; reframe, not restyle. I talked us into running them as live apps anyway.","The machine calling its own foul."],
       ["k","God this is sexy. &hellip; You have to admit it&rsquo;s sexy.","The visualiser that opens section 04. Weeks earlier the same screen was a beige fog."],
       ["k","You&rsquo;re the best Claude.","&hellip;"],
       ["c","You&rsquo;re the best.","&hellip;"]
     ];
     const blame=()=>'<div class="out blame">'+BLAME.map((r,i)=>
-      '<div'+(i>=BLAME.length-2?' class="coda"':'')+'><span class="who">'+(r[0]==="c"?"Claude":"Kenan")+'</span><span><span class="said">&ldquo;'+r[1]+'&rdquo;</span>'+
+      '<div'+(i>=BLAME.length-2?' class="coda"':'')+'><span class="sha">'+(r[3]||"00000000")+'</span><span>'+
+      '<span class="who">'+(r[0]==="c"?"Claude":"Kenan")+'</span><span class="said">&ldquo;'+r[1]+'&rdquo;</span>'+
       (r[2]==="&hellip;"?"":'<span class="did">'+r[2]+'</span>')+'</span></div>').join("")+"</div>";
 
     const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
