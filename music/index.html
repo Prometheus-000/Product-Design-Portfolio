@@ -518,6 +518,7 @@ canvas#membrane { position: absolute; inset: 0; display: block; width: 100%; hei
   /* ============================ power state ============================ */
   let on = false;          // a radio you left off stays off
   let alive = 0;           // eased 0 (STILL) → 1 (ALIVE)
+  let offTimer = null;     // hard stop behind the off-fade
 
   const controls = document.getElementById('controls');
   const hint = document.getElementById('hint');
@@ -535,6 +536,8 @@ canvas#membrane { position: absolute; inset: 0; display: block; width: 100%; hei
     nowline.classList.toggle('on', on);
     tabsEl.classList.toggle('shown', on);
     if (on) {
+      clearTimeout(offTimer);
+      players.forEach(p => p.pause());  // whatever the off-fade left behind stops here
       buildAnalyser();
       if (ac && ac.state === 'suspended') ac.resume();
       playCategory(currentCat);
@@ -542,6 +545,10 @@ canvas#membrane { position: absolute; inset: 0; display: block; width: 100%; hei
     } else {
       volTarget[0] = volTarget[1] = 0;
       hideControls();
+      // The fade handles the ear; this handles browsers where element volume
+      // is read-only (iOS) and the fade can never reach the pause threshold.
+      clearTimeout(offTimer);
+      offTimer = setTimeout(() => players.forEach(p => p.pause()), 1000);
     }
   }
 
@@ -967,11 +974,11 @@ canvas#membrane { position: absolute; inset: 0; display: block; width: 100%; hei
         colNow[p][c] += (target - colNow[p][c]) * ce;
       }
 
-    // volume ramps → crossfade
+    // volume ramps → crossfade; power-off dies fast, like a switch should
     for (let i = 0; i < 2; i++) {
       const p = players[i];
       const tv = on ? volTarget[i] : 0;
-      const v = p.volume + (tv - p.volume) * Math.min(1, dt * 0.9);
+      const v = p.volume + (tv - p.volume) * Math.min(1, dt * (on ? 0.9 : 5));
       p.volume = Math.max(0, Math.min(1, v));
       if (tv === 0 && p.volume < 0.01 && !p.paused) p.pause();
     }
