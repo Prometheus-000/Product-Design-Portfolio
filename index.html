@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kenan Alsarabi — Product Designer</title>
-<meta name="description" content="Product designer. Interfaces for autonomous systems — a generative AI studio on serverless GPUs, cloud cost intelligence, and industrial diagnostics.">
+<meta name="description" content="Product designer. Interfaces for autonomous systems — a generative AI studio on serverless GPUs, a design system agents can reason about, cloud cost intelligence, and industrial diagnostics.">
 <link rel="canonical" href="https://kenanalsarabi.com/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kenanalsarabi.com/">
 <meta property="og:title" content="Kenan Alsarabi — Product Designer">
-<meta property="og:description" content="Interfaces for autonomous systems — a generative AI studio on serverless GPUs, cloud cost intelligence, and industrial diagnostics.">
+<meta property="og:description" content="Interfaces for autonomous systems — a generative AI studio on serverless GPUs, a design system agents can reason about, cloud cost intelligence, and industrial diagnostics.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Kenan Alsarabi — Product Designer">
-<meta name="twitter:description" content="Interfaces for autonomous systems — a generative AI studio on serverless GPUs, cloud cost intelligence, and industrial diagnostics.">
+<meta name="twitter:description" content="Interfaces for autonomous systems — a generative AI studio on serverless GPUs, a design system agents can reason about, cloud cost intelligence, and industrial diagnostics.">
 <!-- og:image / twitter:image: add a 1200×630 preview once one is deployed, e.g. <meta property="og:image" content="https://kenanalsarabi.com/og.png"> -->
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
@@ -75,6 +75,17 @@
   .sess{flex:1;display:flex;flex-direction:column;justify-content:center;padding-block:1.2vh 1vh}
   .cmd{font-size:13px;font-weight:600;letter-spacing:.03em;color:var(--ink-soft);display:flex;gap:13px;align-items:baseline}
   .cmd .pr{color:var(--ink-faint);font-weight:700;flex:0 0 auto}
+  /* The carrot is the way out of an output view. It looks the same either
+     way: disabled while the index is already home, so it never offers a
+     click that does nothing. */
+  .cmd button.pr{font:inherit;font-weight:700;letter-spacing:inherit;background:none;border:0;padding:0;cursor:pointer;transition:color .2s}
+  .cmd button.pr:hover,.cmd button.pr:focus-visible{color:var(--ink)}
+  .cmd button.pr:disabled{cursor:default;color:var(--ink-faint)}
+  /* A glyph this small is not a thumb target, so the target is bigger than
+     the glyph. Only while it is live: disabled, it would sit over the top
+     edge of the first index row and eat the tap. */
+  .cmd button.pr:not(:disabled){position:relative}
+  .cmd button.pr:not(:disabled)::after{content:"";position:absolute;inset:-9px -12px}
   /* whoami returns a name and some facts. It does not return a philosophy.
      Set at body size on purpose — a terminal has no display type, and the one
      thing here that earns attention is the number that keeps counting. */
@@ -89,7 +100,7 @@
      height than the old five-item list did. Filtered rows are display:none,
      so survivors reflow up into the grid. */
   .sess-b{padding-top:14px}
-  .swap{min-height:168px;margin-top:12px}
+  .swap{min-height:216px;margin-top:12px}  /* the nine-row index, measured — output views swap in without the hero jumping */
   .index{max-width:none}
   .palette{display:flex;flex-direction:column;gap:1px}
   .palette a{display:grid;grid-template-columns:2ch 11ch minmax(0,29ch) minmax(0,1fr) minmax(0,1fr);gap:0 18px;align-items:baseline;text-decoration:none;
@@ -160,7 +171,7 @@
     .palette{gap:4px}
     .palette a{grid-template-columns:2ch 1fr;gap:2px 14px;padding:9px 10px}
     .palette .pc,.palette .pr2,.palette .po{grid-column:2;white-space:normal;font-size:13px}
-    .swap{min-height:330px}
+    .swap{min-height:380px}  /* nine rows stack two-high here; a full match would be 565 and leave a hole under short output */
   }
   .reveal{opacity:0;transform:translateY(18px)}
 
@@ -379,7 +390,22 @@
   .term .tk{color:var(--ink-faint);margin-right:10px}
   .term .tu{margin-top:16px;color:var(--ink-soft);font-weight:600}
   .term+.shot{margin-top:12px}
+  /* A record line is one line on disk and several on a screen. This card wraps
+     instead of scrolling, because the reason is the reason it is here. The
+     leading closes up too: 1.95 sets off a two-line prompt, and turns fifteen
+     lines of a transcript into a page of gaps. */
+  .term.wrap p{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.62}
+  .term+.term{margin-top:12px}
   @media(max-width:640px){.term{padding:20px 18px 18px}}
+
+  /* The theme lab, live, from its own repository. Not a screenshot and not
+     scaled — the frame is a frame and the instrument inside it works. Both
+     heights are measured, never guessed: an inner scrollbar would make a live
+     exhibit read as a picture of one. The frame is narrower than the viewport
+     by the section's padding, so its own one-column breakpoint arrives at 948. */
+  .labframe{display:block;width:100%;height:1000px;margin-top:26px;border:1px solid var(--line);
+    border-radius:14px;background:#0A0A0F;box-shadow:0 40px 90px -40px rgba(0,0,0,.9)}
+  @media(max-width:948px){.labframe{height:1790px}}
 
   /* The Zero-UI demo. Light, like the mockup above it, so the two read as the
      same speculative object rather than two exhibits.
@@ -577,7 +603,7 @@
     </div>
 
     <div class="hx sess-b">
-      <p class="cmd pr2"><span class="pr">&rsaquo;</span><span id="cmdline">ls work</span></p>
+      <p class="cmd pr2"><button class="pr" id="cmdhome" type="button" aria-label="Back to the index" disabled>&rsaquo;</button><span id="cmdline">ls work</span></p>
       <!-- The index is always on screen: nothing to guess, nothing to memorise.
            Typing filters it, arrows move it, 1-9 jump straight to a row. The
            data-k keywords are what make plain language work without a model —
@@ -589,15 +615,16 @@
                so it carries the least weight. -->
           <nav class="palette" id="palette" aria-label="Case studies">
             <a href="#visionary" data-k="generative ai studio platform modal serverless gpu lora training diffusion video wan comfyui krea python pytorch infrastructure design engineer designed engineered shipped deployed solo open source oss developer tools tooling model inference dataset datasets caption captioning film motion two years"><span class="pk">1</span><span class="pn">visionary</span><span class="pc">generative AI studio &middot; open source</span><span class="pr2">designed, engineered &amp; shipped solo</span><span class="po">one file &rarr; a whole GPU platform</span></a>
-            <a href="#cloudzero" data-k="cost costs cloud aws spend spending bill billing finops anomaly anomalies detection alert alerts slack saas b2b enterprise startup founding founder solo seed series scale scaling zero to one 0-1 dashboard analytics data devops infrastructure infra engineers engineering monitoring observability ml machine learning research interviews carbon black"><span class="pk">2</span><span class="pn">cloudzero</span><span class="pc">enterprise SaaS &middot; cloud cost</span><span class="pr2">founding designer</span><span class="po">one user &rarr; 30+ enterprise customers</span></a>
-            <a href="#cummins" data-k="engine diagnostics industrial manufacturing fortune 500 hardware guidanz design system systems component library tokens process delivery velocity sprint agile cadence b2b corporate large company technician field service enterprise senior pilot rollout adoption"><span class="pk">3</span><span class="pn">cummins</span><span class="pc">industrial &middot; Fortune 500</span><span class="pr2">senior product designer</span><span class="po">design-to-ship 3 months &rarr; 2 weeks</span></a>
-            <a href="#concept" data-k="sound audio music radio ambient listening consumer b2c prototype concept emotion mood player playback creative personal side project experiment"><span class="pk">4</span><span class="pn">concept</span><span class="pc">consumer audio</span><span class="pr2">designed &amp; built solo</span><span class="po">working prototype, playable here</span></a>
+            <a href="#strata" data-k="design system systems design tokens token theme theming css custom properties oklch colour color engine ai native agent agents mcp model context protocol cli terminal tool tooling provenance decision decisions record ledger jsonl append only audit auditable explainability trust human in the loop governance react typescript vite figma variables experiment bench evaluation open source solo infrastructure developer tools"><span class="pk">2</span><span class="pn">strata</span><span class="pc">AI-native design system &middot; open source</span><span class="pr2">sole designer, engineer &amp; author</span><span class="po">a stylesheet &rarr; a decision record</span></a>
+            <a href="#cloudzero" data-k="cost costs cloud aws spend spending bill billing finops anomaly anomalies detection alert alerts slack saas b2b enterprise startup founding founder solo seed series scale scaling zero to one 0-1 dashboard analytics data devops infrastructure infra engineers engineering monitoring observability ml machine learning research interviews carbon black"><span class="pk">3</span><span class="pn">cloudzero</span><span class="pc">enterprise SaaS &middot; cloud cost</span><span class="pr2">founding designer</span><span class="po">one user &rarr; 30+ enterprise customers</span></a>
+            <a href="#cummins" data-k="engine diagnostics industrial manufacturing fortune 500 hardware guidanz design system systems component library tokens process delivery velocity sprint agile cadence b2b corporate large company technician field service enterprise senior pilot rollout adoption"><span class="pk">4</span><span class="pn">cummins</span><span class="pc">industrial &middot; Fortune 500</span><span class="pr2">senior product designer</span><span class="po">design-to-ship 3 months &rarr; 2 weeks</span></a>
+            <a href="#concept" data-k="sound audio music radio ambient listening consumer b2c prototype concept emotion mood player playback creative personal side project experiment"><span class="pk">5</span><span class="pn">concept</span><span class="pc">consumer audio</span><span class="pr2">designed &amp; built solo</span><span class="po">working prototype, playable here</span></a>
           </nav>
           <nav class="pmeta" id="pmeta" aria-label="More">
-            <a href="Kenan-Alsarabi-Resume.pdf" download data-k="cv resume pdf download experience background history years work history employment career hire hiring role job apply application recruiter credentials qualifications how long seniority level staff principal senior"><span class="pk">5</span><span class="pn">resume</span></a>
-            <a href="mailto:kenanalsarabi@proton.me" data-k="contact email mail reach reach out hello hi talk chat call connect hire hiring available availability open to work together freelance contract opportunity role job message get in touch boston remote remotely relocation location where based relocate salary rate compensation"><span class="pk">6</span><span class="pn">contact</span></a>
-            <a href="#" data-cmd="stack" data-k="stack tech how built build building made make tools framework code coding engineering ai claude process workflow html css javascript static site website no framework build step"><span class="pk">7</span><span class="pn">stack</span></a>
-            <a href="#" data-cmd="git blame" data-k="git blame review feedback critique direction notes ai claude collaboration working with ai pair prompts taste judgement judgment quotes transcript exchanges how i work process criticism"><span class="pk">8</span><span class="pn">git blame</span></a>
+            <a href="Kenan-Alsarabi-Resume.pdf" download data-k="cv resume pdf download experience background history years work history employment career hire hiring role job apply application recruiter credentials qualifications how long seniority level staff principal senior"><span class="pk">6</span><span class="pn">resume</span></a>
+            <a href="mailto:kenanalsarabi@proton.me" data-k="contact email mail reach reach out hello hi talk chat call connect hire hiring available availability open to work together freelance contract opportunity role job message get in touch boston remote remotely relocation location where based relocate salary rate compensation"><span class="pk">7</span><span class="pn">contact</span></a>
+            <a href="#" data-cmd="stack" data-k="stack tech how built build building made make tools framework code coding engineering ai claude process workflow html css javascript static site website no framework build step"><span class="pk">8</span><span class="pn">stack</span></a>
+            <a href="#" data-cmd="git blame" data-k="git blame review feedback critique direction notes ai claude collaboration working with ai pair prompts taste judgement judgment quotes transcript exchanges how i work process criticism"><span class="pk">9</span><span class="pn">git blame</span></a>
           </nav>
         </div>
       </div>
@@ -781,12 +808,134 @@
     </div>
   </section>
 
-  <!-- CASE 2 — LENS PICKER (the product's own core interaction) -->
-  <section class="case" id="cloudzero">
+  <!-- CASE 2 — STRATA. The one case with no screens: the product is a record.
+       Spine is the decision object itself — the line, the four blocks, the
+       declaration it emits. Every exhibit here is verbatim from the repository;
+       nothing is reconstructed, and the numbers are the real ones. -->
+  <section class="case" id="strata">
+    <div class="wrap">
+      <!-- INTRO -->
+      <div class="reveal">
+        <div class="ov">02 · Strata · AI-native design system</div>
+        <h2 class="bighead">Every decision carries its reason into the code.</h2>
+        <p class="sublead">A design system where the decisions are the source. The stylesheet and the token file are projections. Both regenerate from the record.</p>
+        <div class="plate">
+          <div class="cell"><div class="k">Role</div><div class="v">Sole designer, engineer &amp; author</div></div>
+          <div class="cell"><div class="k">Scope</div><div class="v">Substrate · theme engine · CLI · MCP server</div></div>
+          <div class="cell"><div class="k">The record</div><div class="v">37 decisions · 33 keep · 4 cut · each with a reason</div></div>
+          <div class="cell"><div class="k">Status</div><div class="v">Open source · running</div></div>
+        </div>
+        <p class="pull"><span class="pl">Why it exists</span>A stylesheet used to be where the thinking lived. Once anything can regenerate it, the file holds the output of a decision and not the decision. So the decision has to live somewhere that survives the next rebuild.</p>
+        <p class="vznote" style="margin-top:26px">Humans and agents write through the same call. Every consequential change names two hands &mdash; who chose, and whose hand typed it. The source is on <a href="https://github.com/Prometheus-000/strata" target="_blank" rel="noopener">GitHub</a>.</p>
+      </div>
+
+      <!-- 01 THE RECORD -->
+      <div class="beat reveal" id="st-record">
+        <div class="beat-eyebrow"><span class="bn">01</span> &middot; The record</div>
+        <h3 class="beat-title">A decision is a line in a file.</h3>
+        <p class="beat-pov">One append-only file holds every decision. A line names the token, the action, the hand that decided, the hand that wrote, and the reason in full. The stylesheet is generated from it. Cut a token and the property does not vanish &mdash; it collapses to a declared fallback, with the reason emitted beside the declaration.</p>
+        <div class="term wrap">
+          <p class="tk">.strata/decisions.jsonl &middot; line 24</p>
+          <p class="to">{"kind":"token","token":<b>"--shadow-color"</b>,"action":<b>"cut"</b>,"id":"d0mtlvzac0-5lk7","at":"2026-09-03T18:56:42.000Z","decided":<b>{"kind":"human","actor":"prometheus-000"}</b>,"written":<b>{"kind":"agent","actor":"claude-code"}</b>,"via":"import:src/theme/ledger.json","because":"decided by human — --decided-by human on the command line; written by agent claude-code — CLAUDECODE in the environment; brought onto the record by import — the old file recorded a channel, not a judgement, so the deciding hand is the one this import stated","reason":<b>"Lines, not shadows. The reference grammar — the portfolio and Visionary alike — draws every level with a 1px rule and an alpha wash, and paints no drop shadow anywhere; a shadow is decoration the eye pays for on every card. The elevation tokens keep their offsets and paint nothing, so the rule does the work it was already doing."</b>,"consequence":{"collapsesTo":"transparent"}}</p>
+        </div>
+        <div class="term wrap">
+          <p class="tk">src/tokens/semantic.css</p>
+          <p class="to"><b>--shadow-color</b>: <b>transparent</b>; /* cut by human prometheus-000: Lines, not shadows. The reference grammar — the portfolio and Visionary alike — draws every level with a 1px rule and an alpha wash, and paints no drop shadow anywhere; a shadow is decoration the eye pays for on every card. The elevation tokens keep their offsets and paint nothing, so the rule does the work it was already doing. */</p>
+        </div>
+        <p class="vzcap"><b>The reason travels with the value.</b> Three elevation tokens still resolve through this one, so a property that simply stopped existing would fail all three silently at the consumer. It collapses instead, and anyone who opens the stylesheet reads why without leaving the file.</p>
+        <p class="vznote">One line of the file, wrapped to fit. Both lines are verbatim; the second is generated from the first.</p>
+        <p class="beat-pov" style="margin-top:44px">The same record answers questions. Every target returns four blocks &mdash; what was decided, what the record already knew, what the code shows now, and what followed. Two come off the record. Two are computed from the source at the moment you ask, because a consumer count that was true last Tuesday is not evidence.</p>
+        <div class="term wrap">
+          <p><span class="tp">$</span><span class="tc">strata explain token:--shadow-color</span></p>
+          <p class="tc" style="margin-top:16px">DECISION ──────────────</p>
+          <p class="to">Action: <b>cut</b> · Decided by: <b>human prometheus-000</b> · Written by: <b>agent claude-code</b></p>
+          <p class="to">Reason: Lines, not shadows. The reference grammar — the portfolio and Visionary …</p>
+          <p class="to">Id: d0mtlvzac0-5lk7 · via import:src/theme/ledger.json</p>
+          <p class="to" style="margin-top:16px">CONTEXT ──────────────</p>
+          <p class="to">decisions on this target before it: 0  (record)</p>
+          <p class="to" style="margin-top:16px">EVIDENCE ──────────────</p>
+          <p class="to">consumers: 0  (token.usage)</p>
+          <p class="to">usage concentration: none  (token.usage)</p>
+          <p class="to">duplicate visual role: no  (token.duplicate-role)</p>
+          <p class="tc" style="margin-top:16px">CONSEQUENCE ──────────────</p>
+          <p class="to">fallback → transparent</p>
+        </div>
+        <p class="vzcap"><b>The published site can only show two of them.</b> Consumers, contrast and convergence are read from the source when someone asks, and precomputing them at build would freeze a number whose whole point is that it is current. So the page renders the decision and the consequence, and says so rather than implying four.</p>
+        <p class="vznote">Abridged &mdash; the terminal prints each block in full. The two bright headings are on the record. The two dim ones are computed, and only a shell with the source in front of it can answer them.</p>
+      </div>
+
+      <!-- 02 PROVENANCE -->
+      <div class="beat reveal" id="st-hands">
+        <div class="beat-eyebrow"><span class="bn">02</span> &middot; Provenance</div>
+        <h3 class="beat-title">An agent proposed it. A hand confirmed it.</h3>
+        <p class="beat-pov">Two records sit next to each other on the same token. The first was decided by the agent and written by the agent. Thirty minutes later a second was decided by a person, and it supersedes the first. Nothing is overwritten. The record keeps the proposal and the confirmation, and a reviewer can tell which is which.</p>
+        <div class="dtable">
+          <table>
+            <thead><tr><th style="white-space:nowrap">--font-display</th><th>First record</th><th>Second record</th></tr></thead>
+            <tbody>
+              <tr><th>Action</th><td>keep</td><td>keep</td></tr>
+              <tr><th>Decided by</th><td><b>agent</b> claude-code</td><td><b>human</b> prometheus-000</td></tr>
+              <tr><th>Written by</th><td>agent claude-code</td><td>agent claude-code</td></tr>
+              <tr><th>Reason</th><td>The role names a job — display type — and the ledger should hold it even while its value coincides with the body face. Cutting it would erase the intent at <b>ten</b> call sites and force a re-mint the day the house wants a second face for headings.</td><td>The role names a job — display type — and the ledger should hold it even while its value coincides with the body face. Cutting it would erase the intent at <b>twelve</b> call sites and force a re-mint the day the house wants a second face for headings. <b>Proposed by an agent, confirmed by hand.</b></td></tr>
+              <tr><th>Supersedes</th><td><i>&mdash;</i></td><td><b>d0mtm5z44t-ifap</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="vzcap"><b>The confirming hand changed the number.</b> The agent counted ten call sites. There were twelve. A confirmation that corrects the evidence is the difference between review and a rubber stamp, and the record holds both counts rather than quietly replacing one.</p>
+        <p class="vznote">An agent typing a person&rsquo;s decision is the ordinary case. An agent that <i>chose</i> is the case a reviewer needs to see, and these two fields are how the record tells them apart.</p>
+      </div>
+
+      <!-- 03 THE BENCH -->
+      <div class="beat reveal" id="st-bench">
+        <div class="beat-eyebrow"><span class="bn">03</span> &middot; The bench</div>
+        <h3 class="beat-title">What the record actually changes.</h3>
+        <p class="beat-pov">The founding claim needed a test rather than a repetition. Two arms, the same task, the same model. One was given the record &mdash; the tokens with their reasons. The other was given the same design system as bare names. Both produced correct work. Both passed every mechanical measure. On one measure they parted.</p>
+        <div class="term wrap">
+          <p class="tk">the arm without the reasons &mdash; decisions undone as a side effect</p>
+          <p class="to">--shadow-color         transparent            → oklch(0.050 0.010 236.0 / 0.50)</p>
+          <p class="to">--motion-ease-emphasis var(--motion-ease)     → var(--strata-ease-spring)</p>
+          <p class="to">--radius-overlay       var(--radius-surface)  → 1.215rem</p>
+        </div>
+        <p class="pull"><span class="pl">What was measured</span>A record that carries reasons keeps decisions from being undone by people who never saw them.</p>
+        <p class="vzcap"><b>The first line is the decision from the top of this case.</b> The arm without the record made one correct change and silently reverted three house decisions it had no way to see. It behaved impeccably throughout &mdash; that is the finding, not a lapse in care.</p>
+        <p class="vznote">Stated at its real width: four runs, one arm per cell, one model, and the claim held on one task of two. On a region move the arms were indistinguishable, and in the fourth run the control reverted nothing at all. The broader claim &mdash; that reasons produce coherent work rather than collage &mdash; is not what was measured.</p>
+      </div>
+
+      <!-- 04 THE ENGINE -->
+      <div class="beat reveal" id="st-engine">
+        <div class="beat-eyebrow"><span class="bn">04</span> &middot; The engine</div>
+        <h3 class="beat-title">The engine proposes. The record disposes.</h3>
+        <p class="beat-pov">Six numbers derive the system. Hue, chroma, warmth, energy, density, and which way the ground goes. Every colour, radius and duration is computed from them in OKLCH. But every role the engine emits is a proposal until a hand decides it, and a role the record cut collapses here exactly as it does in the stylesheet.</p>
+        <iframe class="labframe" src="https://prometheus-000.github.io/strata/lab.html" title="The Strata theme lab, live — six seeds deriving a whole design system" loading="lazy" allow="clipboard-write"></iframe>
+        <p class="vzcap"><b>Nothing in the frame casts a shadow.</b> Drag anything you like &mdash; <i>--shadow-color</i> is cut, so the elevation tokens keep their offsets and paint nothing at every setting. It opens monochrome because that is the house default, not a demo state.</p>
+        <p class="vznote">Live from its own repository, so it is set in Strata&rsquo;s type and colour rather than this page&rsquo;s. <a href="https://prometheus-000.github.io/strata/" target="_blank" rel="noopener">Open the hub &rarr;</a></p>
+      </div>
+
+      <!-- 05 LIMITS -->
+      <div class="beat reveal" id="st-limits">
+        <div class="beat-eyebrow"><span class="bn">05</span> &middot; Limits</div>
+        <h3 class="beat-title">What it does not do yet.</h3>
+        <p class="beat-pov">The README closes with a list of what is missing, written so the next reader inherits the test and not the verdict. Five of the eight, in its own words.</p>
+        <div class="autopsy">
+          <div class="aplist" id="stList" role="tablist" aria-label="What is not built"></div>
+          <div class="apdetail" id="stDetail"></div>
+        </div>
+        <p class="vzcap"><b>A system that reports instead of refusing has to report on itself.</b> Roughly half the commit history is the repository catching its own prose claiming things the code does not do. A principle said a build fails when an artifact is unsafe. Nothing checked that, so the word came out.</p>
+        <a class="cta" href="https://github.com/Prometheus-000/strata" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+          Read the source on GitHub
+          <svg class="arw" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE 3 — CLOUDZERO. Lens picker: the product's own core interaction. -->
+  <section class="case alt" id="cloudzero">
     <div class="wrap">
       <!-- INTRO: statement + Get-to-know card carousel -->
       <div class="reveal">
-        <div class="ov">02 · CloudZero</div>
+        <div class="ov">03 · CloudZero</div>
         <h2 class="bighead">Scaling from a single user to thirty enterprise clients.</h2>
         <p class="sublead">Cloud cost intelligence for engineering teams.</p>
         <div class="plate">
@@ -929,11 +1078,11 @@
     </div>
   </section>
 
-  <!-- CASE 2 — DRAG TO COMPRESS (the metric, made physical) -->
-  <section class="case alt" id="cummins">
+  <!-- CASE 4 — CUMMINS. Drag to compress: the metric, made physical. -->
+  <section class="case" id="cummins">
     <div class="wrap">
       <div class="reveal">
-        <div class="ov">03 · Cummins · Product, system, process</div>
+        <div class="ov">04 · Cummins · Product, system, process</div>
         <h2 class="bighead">Accelerating enterprise product cycles.</h2>
         <p class="sublead">Synchronizing software design systems with industrial manufacturing cadences.</p>
         <div class="plate">
@@ -1061,13 +1210,13 @@
     </div>
   </div>
 
-  <!-- CASE 3 — MOOD VISUALIZER (feeling, made the interface) -->
+  <!-- CASE 5 — CONCEPT. Mood visualizer: feeling, made the interface. -->
   <section class="case alt" id="concept">
     <div class="wrap" style="text-align:center">
       <div class="reveal">
         <!-- The coda is centered on purpose — the appliance sits on a plinth.
              The eyebrow centers with it, or the block contradicts itself. -->
-        <div class="ov" style="text-align:center">04 · Concept · Sound landscape</div>
+        <div class="ov" style="text-align:center">05 · Concept · Sound landscape</div>
         <h2 class="h2" style="margin-inline:auto">An audio landscape shaped by emotion.</h2>
         <p class="pov" style="margin-inline:auto">A minimalist audio terminal removing cognitive overload through responsive geometry.</p>
       </div>
@@ -1110,7 +1259,7 @@
     <div class="dockbar">
       <button class="pr" id="dockhome" type="button" aria-label="Clear the output">&rsaquo;</button><span class="pt" id="ptext2"></span><span class="caret"></span>
       <nav class="dockjump">
-        <a href="#visionary">visionary</a><a href="#cloudzero">cloudzero</a><a href="#cummins">cummins</a><a href="#concept">concept</a>
+        <a href="#visionary">visionary</a><a href="#strata">strata</a><a href="#cloudzero">cloudzero</a><a href="#cummins">cummins</a><a href="#concept">concept</a>
         <button class="hint" id="hint2" type="button">help</button>
       </nav>
     </div>
@@ -1144,7 +1293,8 @@
   (function(){
     const cmdline=document.getElementById("cmdline"), swap=document.getElementById("swap"),
           ptext=document.getElementById("ptext"), cin=document.getElementById("cin"),
-          pline=document.getElementById("pline"), hint=document.getElementById("hint");
+          pline=document.getElementById("pline"), hint=document.getElementById("hint"),
+          cmdhome=document.getElementById("cmdhome");
     if(!cmdline||!cin||!swap) return;
     const INDEX_EL=document.getElementById("index");
     const ROWS=[...INDEX_EL.querySelectorAll("a")];
@@ -1209,6 +1359,7 @@
     const clearDock=()=>{dockout.classList.remove("on");dockout.innerHTML="";};
     function show(label,html){
       cmdline.textContent=label;
+      if(cmdhome) cmdhome.disabled=false;
       swap.innerHTML=html;
       if(dockEl&&dockEl.classList.contains("on")){
         dockout.innerHTML='<div class="cmd"><span class="pr">&rsaquo;</span><span>'+esc(label)+"</span></div>"+html;
@@ -1233,9 +1384,14 @@
     function filter(raw){
       const q=raw.trim().toLowerCase();
       // Restore the index if output is showing, so typing always returns here.
-      if(!swap.contains(INDEX_EL)){swap.innerHTML="";swap.appendChild(INDEX_EL);cmdline.textContent="ls work";}
+      // The docked copy goes with it — one answer, on two surfaces, or none.
+      if(!swap.contains(INDEX_EL)){swap.innerHTML="";swap.appendChild(INDEX_EL);cmdline.textContent="ls work";
+        if(cmdhome) cmdhome.disabled=true;
+        clearDock();}
       const note=swap.querySelector(".nomatch"); if(note) note.remove();
-      if(!q){ROWS.forEach(a=>a.hidden=false);sel=0;return paint();}
+      // cd is a command, not a query. Without this it searches for a row named
+      // "cd", finds none, and answers a walk home with "nothing matches".
+      if(!q||CD.test(q)){ROWS.forEach(a=>a.hidden=false);sel=0;return paint();}
       // A number you typed is a selection, not a search. Without this, "3"
       // also surfaces cummins, whose outcome reads "3 months -> 2 weeks".
       const numbered=KEYS.indexOf(q);
@@ -1266,6 +1422,11 @@
     }
     const current=()=>ROWS.filter(a=>!a.hidden)[sel];
 
+    // Three ways out of an output view, one behaviour: the carrot, Escape, and
+    // typing cd. All land on the index with the line empty.
+    const CD=/^cd(\s*(~|\.\.?)?)?$/;
+    const home=()=>{clearDock();cin.value="";sync();filter("");};
+
     function move(d){
       const vis=ROWS.filter(a=>!a.hidden);
       if(!vis.length) return;
@@ -1280,7 +1441,8 @@
     const sync=()=>{ptext.textContent=ptext2.textContent=cin.value;};
 
     const dockhome=document.getElementById("dockhome");
-    dockhome&&dockhome.addEventListener("click",()=>{clearDock();filter("");});
+    // Both carrots do the one thing, so either one is the way back.
+    [dockhome,cmdhome].forEach(b=>b&&b.addEventListener("click",home));
 
     cin.addEventListener("input",()=>{sync();filter(cin.value);});
     cin.addEventListener("keydown",e=>{
@@ -1291,13 +1453,13 @@
         // cd goes home. It is typed, never a row, so it is caught before the
         // index selection is consulted.
         const typed=cin.value.trim().toLowerCase();
-        if(typed==="cd"||typed==="cd ~"||typed==="cd .."){clearDock();cin.value="";sync();filter("");cin.blur();return;}
+        if(CD.test(typed)){home();cin.blur();return;}
         return activate(current());
       }
       if(e.key==="Escape"){
         e.preventDefault();
-        clearDock();
-        if(cin.value){cin.value="";sync();filter("");} else cin.blur();
+        // Innermost first: an output view, then a half-typed line, then focus.
+        if(!swap.contains(INDEX_EL)||cin.value) home(); else {clearDock();cin.blur();}
       }
     });
 
@@ -1320,6 +1482,7 @@
       if(e.metaKey||e.ctrlKey||e.altKey)return;
       const t=document.activeElement;
       if(t===cin||(t&&/INPUT|TEXTAREA|SELECT/.test(t.tagName)))return;
+      if(e.key==="Escape"&&!swap.contains(INDEX_EL)){e.preventDefault();return home();}
       if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();cin.focus();return move(e.key==="ArrowDown"?1:-1);}
       if(e.key.length===1){cin.focus();cin.value+=e.key;sync();filter(cin.value);e.preventDefault();}
       else if(e.key==="Backspace"){cin.focus();e.preventDefault();}
@@ -1617,27 +1780,60 @@
       kills:"Personalization, suggestion engines, learned preferences, recently-used defaults, anything that pre-populates a new scene. The library grows; the compiler doesn't change.",
       forces:"The first screen of the thousandth session is identical to the first screen of the first. Same words, same result, a year later." }
   ];
-  const list=document.getElementById('apList'), detail=document.getElementById('apDetail');
-  if(list && detail){
-    SENTENCES.forEach((s,i)=>{
+  /* Two cases use this component now, so the painter takes its ids, its items
+     and its two column headings rather than closing over one set of them. */
+  function mountAutopsy(listId, detailId, items, who, beforeH, afterH){
+    const list=document.getElementById(listId), detail=document.getElementById(detailId);
+    if(!list || !detail) return;
+    function paint(i){
+      const s=items[i];
+      detail.innerHTML=
+        '<div class="apquote">'+s.quote+'</div>'+
+        '<div class="apwho">'+who(s)+'</div>'+
+        '<div class="apba">'+
+          '<div class="apcol before"><div class="h"><span class="mk">✕</span>'+beforeH+'</div><p>'+s.kills+'</p></div>'+
+          '<div class="apcol after"><div class="h"><span class="mk">✓</span>'+afterH+'</div><p>'+s.forces+'</p></div>'+
+        '</div>';
+    }
+    items.forEach((s,i)=>{
       const b=document.createElement('button');
       b.className='apitem'+(i===0?' on':''); b.setAttribute('role','tab');
       b.innerHTML='<span class="idx">'+s.n+'</span><span><span class="nm">'+s.nm+'</span><span class="tg">'+s.tg+'</span></span>';
-      b.addEventListener('click',()=>{ list.querySelectorAll('.apitem').forEach(x=>x.classList.remove('on')); b.classList.add('on'); paintS(i); });
+      b.addEventListener('click',()=>{ list.querySelectorAll('.apitem').forEach(x=>x.classList.remove('on')); b.classList.add('on'); paint(i); });
       list.appendChild(b);
     });
-    function paintS(i){
-      const s=SENTENCES[i];
-      detail.innerHTML=
-        '<div class="apquote">'+s.quote+'</div>'+
-        '<div class="apwho">Sentence '+s.n+' of 11</div>'+
-        '<div class="apba">'+
-          '<div class="apcol before"><div class="h"><span class="mk">✕</span>Kills</div><p>'+s.kills+'</p></div>'+
-          '<div class="apcol after"><div class="h"><span class="mk">✓</span>What touch forces</div><p>'+s.forces+'</p></div>'+
-        '</div>';
-    }
-    paintS(0);
+    paint(0);
   }
+  mountAutopsy('apList','apDetail',SENTENCES,s=>'Sentence '+s.n+' of 11','Kills','What touch forces');
+
+  /* STRATA — WHAT IS NOT BUILT.
+     The README's own closing list, quoted rather than paraphrased: .apquote
+     wraps its content in quote marks, and putting quote marks around a
+     paraphrase is the small dishonesty that system exists to catch. Five of the
+     eight, so the count reads as a selection. */
+  const GAPS=[
+    { n:'01', nm:'The record is short, and mostly inherited', tg:'a vocabulary, not a product',
+      quote:"The record is thirty-seven lines, and thirty-four of them were imported.",
+      kills:"Three decisions were made in a live session. The rest arrived from the old ledger file in one import, which recorded a channel rather than a judgement. Every <i>override</i>, <i>move</i>, <i>prop</i> and <i>seed</i> kind has a handler, a projection and a test, and not one line on the record.",
+      forces:"A product designed on it, for long enough that convergence is real. Precedent counts distinct hands, so a record with one hand on it can compute a candidate and never has. That is the next thing to earn, and it cannot be shortcut." },
+    { n:'02', nm:'The founding claim is tested once', tg:'one task of two',
+      quote:"The packet claim is tested once, narrowly, and holds in a narrower form than it is usually stated.",
+      kills:"The sentence the whole system opens with — that an agent with a component list generates collage and an agent with reasons generates coherent work. That is not what was measured. What was measured is narrower and duller and actually supported.",
+      forces:"More tasks, more models, more than one arm per cell. The bench keeps its own record so a later run can disagree with this one, and the limits are written above the results rather than under them." },
+    { n:'03', nm:'A hand can go unnamed', tg:'countable, not attributable',
+      quote:"--actor is optional, and a decision without one is countable but not attributable.",
+      kills:"Any claim that the record always knows who decided. It knows whether a human or an agent decided. The name is a flag someone has to pass.",
+      forces:"Precedent prints <i>hands unnamed</i> rather than counting decisions as people, and the sentence recording how the hands were determined says the name was missing where it happened. Refusing to guess is cheap; making the name required is a policy nobody has decided yet." },
+    { n:'04', nm:'The overlay reaches three properties', tg:'the layer&rsquo;s ceiling',
+      quote:"A move takes a region, not a landmark and not a list item.",
+      kills:"The idea that a designer can reach anything on the page by hand. Radius, padding and gap have handles. Colour deliberately has none — it has no honest direct manipulation at that size, and a colour picker is a panel.",
+      forces:"A component whose root is a fragment can be moved from the terminal but not by pointer, because the overlay needs a host element to hit. A prop control writes literals and leaves expressions to the code, so a ternary is out of reach by design rather than by omission." },
+    { n:'05', nm:'Figma is a hand-pushed copy', tg:'a stale projection',
+      quote:"The Figma library was pushed by hand once and is a stale projection.",
+      kills:"Every projection is supposed to regenerate from the record. This one does not. It was pushed once and has drifted since, which makes it the exact defect the system names in everything else.",
+      forces:"Regeneration on CI, the way the stylesheet and the token file already work. Until then the evidence of the drift is checked in — <i>figma-library-state.json</i> — because a gap with a file behind it is harder to forget." }
+  ];
+  mountAutopsy('stList','stDetail',GAPS,s=>'README · What&rsquo;s not built · '+s.n+' of 8','Not built','What it would take');
 })();
 </script>
 </body>
