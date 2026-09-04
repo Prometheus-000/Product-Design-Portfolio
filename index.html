@@ -808,88 +808,72 @@
     </div>
   </section>
 
-  <!-- CASE 2 — STRATA. The one case with no screens: the product is a record.
-       Spine is the decision object itself — the line, the four blocks, the
-       declaration it emits. Every exhibit here is verbatim from the repository;
-       nothing is reconstructed, and the numbers are the real ones. -->
+  <!-- CASE 2 — STRATA. The product is a decision record, so the record line is
+       the one text exhibit that earns its space. Everything between beats is a
+       picture: claim, image, claim, image. Copy is Apple-length by rule — one
+       claim, one short paragraph, one exhibit, move on. -->
   <section class="case" id="strata">
     <div class="wrap">
       <!-- INTRO -->
       <div class="reveal">
         <div class="ov">02 · Strata · AI-native design system</div>
         <h2 class="bighead">Every decision carries its reason into the code.</h2>
-        <p class="sublead">A design system where the decisions are the source. The stylesheet and the token file are projections. Both regenerate from the record.</p>
+        <p class="sublead">The record of decisions is the source. The stylesheet and the token file are projections of it, and both regenerate.</p>
         <div class="plate">
           <div class="cell"><div class="k">Role</div><div class="v">Sole designer, engineer &amp; author</div></div>
           <div class="cell"><div class="k">Scope</div><div class="v">Substrate · theme engine · CLI · MCP server</div></div>
-          <div class="cell"><div class="k">The record</div><div class="v">37 decisions · 33 keep · 4 cut · each with a reason</div></div>
+          <div class="cell"><div class="k">The record</div><div class="v">37 decisions · 33 keep · 4 cut</div></div>
           <div class="cell"><div class="k">Status</div><div class="v">Open source · running</div></div>
         </div>
-        <p class="pull"><span class="pl">Why it exists</span>A stylesheet used to be where the thinking lived. Once anything can regenerate it, the file holds the output of a decision and not the decision. So the decision has to live somewhere that survives the next rebuild.</p>
-        <p class="vznote" style="margin-top:26px">Humans and agents write through the same call. Every consequential change names two hands &mdash; who chose, and whose hand typed it. The source is on <a href="https://github.com/Prometheus-000/strata" target="_blank" rel="noopener">GitHub</a>.</p>
+        <button class="shot" data-cap="<b>The hub.</b> Four surfaces over one record &mdash; the lab, the console, the grammar and the decisions themselves." aria-label="Open the Strata hub screenshot">
+          <img src="assets/strata/hub.webp" alt="The Strata site: a dark page reading Design systems for the generative era, with navigation to the theme lab, console, grammar, record and reference" width="2240" height="918" loading="lazy">
+        </button>
       </div>
 
       <!-- 01 THE RECORD -->
       <div class="beat reveal" id="st-record">
         <div class="beat-eyebrow"><span class="bn">01</span> &middot; The record</div>
         <h3 class="beat-title">A decision is a line in a file.</h3>
-        <p class="beat-pov">One append-only file holds every decision. A line names the token, the action, the hand that decided, the hand that wrote, and the reason in full. The stylesheet is generated from it. Cut a token and the property does not vanish &mdash; it collapses to a declared fallback, with the reason emitted beside the declaration.</p>
+        <p class="beat-pov">One append-only file. Each line names the token, the action, <b>the hand that decided and the hand that wrote</b>, and the reason in full.</p>
         <div class="term wrap">
           <p class="tk">.strata/decisions.jsonl &middot; line 24</p>
-          <p class="to">{"kind":"token","token":<b>"--shadow-color"</b>,"action":<b>"cut"</b>,"id":"d0mtlvzac0-5lk7","at":"2026-09-03T18:56:42.000Z","decided":<b>{"kind":"human","actor":"prometheus-000"}</b>,"written":<b>{"kind":"agent","actor":"claude-code"}</b>,"via":"import:src/theme/ledger.json","because":"decided by human — --decided-by human on the command line; written by agent claude-code — CLAUDECODE in the environment; brought onto the record by import — the old file recorded a channel, not a judgement, so the deciding hand is the one this import stated","reason":<b>"Lines, not shadows. The reference grammar — the portfolio and Visionary alike — draws every level with a 1px rule and an alpha wash, and paints no drop shadow anywhere; a shadow is decoration the eye pays for on every card. The elevation tokens keep their offsets and paint nothing, so the rule does the work it was already doing."</b>,"consequence":{"collapsesTo":"transparent"}}</p>
+          <p class="to">{"kind":"token","token":<b>"--shadow-color"</b>,"action":<b>"cut"</b>,"decided":<b>{"kind":"human","actor":"prometheus-000"}</b>,"written":<b>{"kind":"agent","actor":"claude-code"}</b>,"reason":<b>"Lines, not shadows. The reference grammar — the portfolio and Visionary alike — draws every level with a 1px rule and an alpha wash, and paints no drop shadow anywhere; a shadow is decoration the eye pays for on every card."</b>,"consequence":{"collapsesTo":"transparent"}}</p>
         </div>
-        <div class="term wrap">
-          <p class="tk">src/tokens/semantic.css</p>
-          <p class="to"><b>--shadow-color</b>: <b>transparent</b>; /* cut by human prometheus-000: Lines, not shadows. The reference grammar — the portfolio and Visionary alike — draws every level with a 1px rule and an alpha wash, and paints no drop shadow anywhere; a shadow is decoration the eye pays for on every card. The elevation tokens keep their offsets and paint nothing, so the rule does the work it was already doing. */</p>
-        </div>
-        <p class="vzcap"><b>The reason travels with the value.</b> Three elevation tokens still resolve through this one, so a property that simply stopped existing would fail all three silently at the consumer. It collapses instead, and anyone who opens the stylesheet reads why without leaving the file.</p>
-        <p class="vznote">One line of the file, wrapped to fit. Both lines are verbatim; the second is generated from the first.</p>
-        <p class="beat-pov" style="margin-top:44px">The same record answers questions. Every target returns four blocks &mdash; what was decided, what the record already knew, what the code shows now, and what followed. Two come off the record. Two are computed from the source at the moment you ask, because a consumer count that was true last Tuesday is not evidence.</p>
-        <div class="term wrap">
-          <p><span class="tp">$</span><span class="tc">strata explain token:--shadow-color</span></p>
-          <p class="tc" style="margin-top:16px">DECISION ──────────────</p>
-          <p class="to">Action: <b>cut</b> · Decided by: <b>human prometheus-000</b> · Written by: <b>agent claude-code</b></p>
-          <p class="to">Reason: Lines, not shadows. The reference grammar — the portfolio and Visionary …</p>
-          <p class="to">Id: d0mtlvzac0-5lk7 · via import:src/theme/ledger.json</p>
-          <p class="to" style="margin-top:16px">CONTEXT ──────────────</p>
-          <p class="to">decisions on this target before it: 0  (record)</p>
-          <p class="to" style="margin-top:16px">EVIDENCE ──────────────</p>
-          <p class="to">consumers: 0  (token.usage)</p>
-          <p class="to">usage concentration: none  (token.usage)</p>
-          <p class="to">duplicate visual role: no  (token.duplicate-role)</p>
-          <p class="tc" style="margin-top:16px">CONSEQUENCE ──────────────</p>
-          <p class="to">fallback → transparent</p>
-        </div>
-        <p class="vzcap"><b>The published site can only show two of them.</b> Consumers, contrast and convergence are read from the source when someone asks, and precomputing them at build would freeze a number whose whole point is that it is current. So the page renders the decision and the consequence, and says so rather than implying four.</p>
-        <p class="vznote">Abridged &mdash; the terminal prints each block in full. The two bright headings are on the record. The two dim ones are computed, and only a shell with the source in front of it can answer them.</p>
+        <p class="vzcap">The stylesheet is generated from that line. Cut a token and it does not vanish &mdash; <b>it collapses to a fallback, and the reason is emitted beside the declaration</b>.</p>
+        <p class="vznote">One line, abridged to fit. Ask the record about a target and it answers in four blocks: decision and consequence come off the file, context and evidence are computed from the source when you ask.</p>
+        <button class="shot" data-cap="<b>Composed, not specified.</b> A generation console built from the recipes plus two feature-owned locals. Zero new tokens, and nothing asked permission." aria-label="Open the generation console screenshot">
+          <img src="assets/strata/console.webp" alt="A generation console: a filled prompt with LoRA chips, duration tabs, sampler, width and shift steppers, a Generate button and four result tiles" width="2240" height="1400" loading="lazy">
+        </button>
       </div>
 
       <!-- 02 PROVENANCE -->
       <div class="beat reveal" id="st-hands">
         <div class="beat-eyebrow"><span class="bn">02</span> &middot; Provenance</div>
         <h3 class="beat-title">An agent proposed it. A hand confirmed it.</h3>
-        <p class="beat-pov">Two records sit next to each other on the same token. The first was decided by the agent and written by the agent. Thirty minutes later a second was decided by a person, and it supersedes the first. Nothing is overwritten. The record keeps the proposal and the confirmation, and a reviewer can tell which is which.</p>
+        <p class="beat-pov">Two records on one token, half an hour apart. The second supersedes the first and <b>nothing is overwritten</b>.</p>
         <div class="dtable">
           <table>
             <thead><tr><th style="white-space:nowrap">--font-display</th><th>First record</th><th>Second record</th></tr></thead>
             <tbody>
-              <tr><th>Action</th><td>keep</td><td>keep</td></tr>
               <tr><th>Decided by</th><td><b>agent</b> claude-code</td><td><b>human</b> prometheus-000</td></tr>
               <tr><th>Written by</th><td>agent claude-code</td><td>agent claude-code</td></tr>
-              <tr><th>Reason</th><td>The role names a job — display type — and the ledger should hold it even while its value coincides with the body face. Cutting it would erase the intent at <b>ten</b> call sites and force a re-mint the day the house wants a second face for headings.</td><td>The role names a job — display type — and the ledger should hold it even while its value coincides with the body face. Cutting it would erase the intent at <b>twelve</b> call sites and force a re-mint the day the house wants a second face for headings. <b>Proposed by an agent, confirmed by hand.</b></td></tr>
-              <tr><th>Supersedes</th><td><i>&mdash;</i></td><td><b>d0mtm5z44t-ifap</b></td></tr>
+              <tr><th>Call sites</th><td>ten</td><td><b>twelve</b></td></tr>
+              <tr><th>Closes</th><td><i>&mdash;</i></td><td><b>Proposed by an agent, confirmed by hand.</b></td></tr>
+              <tr><th>Supersedes</th><td><i>&mdash;</i></td><td>d0mtm5z44t-ifap</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="vzcap"><b>The confirming hand changed the number.</b> The agent counted ten call sites. There were twelve. A confirmation that corrects the evidence is the difference between review and a rubber stamp, and the record holds both counts rather than quietly replacing one.</p>
-        <p class="vznote">An agent typing a person&rsquo;s decision is the ordinary case. An agent that <i>chose</i> is the case a reviewer needs to see, and these two fields are how the record tells them apart.</p>
+        <p class="vzcap"><b>The confirming hand changed the number.</b> The agent counted ten call sites. There were twelve. That is the difference between a review and a rubber stamp, and the record keeps both counts.</p>
+        <button class="shot" data-cap="<b>The recipe inventory.</b> Layer 2, every variant and state. A component enters the system after proving itself three times, so the inventory stays small." aria-label="Open the component inventory screenshot">
+          <img src="assets/strata/recipes.webp" alt="Component specimen sheets: button variants and sizes, an input with a validation error, switches and status badges, a card, tabs, and a dialog row" width="2240" height="1400" loading="lazy">
+        </button>
       </div>
 
       <!-- 03 THE BENCH -->
       <div class="beat reveal" id="st-bench">
         <div class="beat-eyebrow"><span class="bn">03</span> &middot; The bench</div>
         <h3 class="beat-title">What the record actually changes.</h3>
-        <p class="beat-pov">The founding claim needed a test rather than a repetition. Two arms, the same task, the same model. One was given the record &mdash; the tokens with their reasons. The other was given the same design system as bare names. Both produced correct work. Both passed every mechanical measure. On one measure they parted.</p>
+        <p class="beat-pov">Two arms, one task, one model. One got the reasons. One got the same system as bare names. Both produced correct work. On one measure they parted.</p>
         <div class="term wrap">
           <p class="tk">the arm without the reasons &mdash; decisions undone as a side effect</p>
           <p class="to">--shadow-color         transparent            → oklch(0.050 0.010 236.0 / 0.50)</p>
@@ -897,17 +881,17 @@
           <p class="to">--radius-overlay       var(--radius-surface)  → 1.215rem</p>
         </div>
         <p class="pull"><span class="pl">What was measured</span>A record that carries reasons keeps decisions from being undone by people who never saw them.</p>
-        <p class="vzcap"><b>The first line is the decision from the top of this case.</b> The arm without the record made one correct change and silently reverted three house decisions it had no way to see. It behaved impeccably throughout &mdash; that is the finding, not a lapse in care.</p>
-        <p class="vznote">Stated at its real width: four runs, one arm per cell, one model, and the claim held on one task of two. On a region move the arms were indistinguishable, and in the fourth run the control reverted nothing at all. The broader claim &mdash; that reasons produce coherent work rather than collage &mdash; is not what was measured.</p>
+        <p class="vzcap"><b>The first line is the decision from the top of this case.</b> The control behaved impeccably throughout. That is the finding, not a lapse in care.</p>
+        <p class="vznote">Four runs, one arm per cell, one model. The claim held on one task of two, and in the fourth run the control reverted nothing at all. The broader claim &mdash; that reasons produce coherent work rather than collage &mdash; is not what was measured.</p>
       </div>
 
       <!-- 04 THE ENGINE -->
       <div class="beat reveal" id="st-engine">
         <div class="beat-eyebrow"><span class="bn">04</span> &middot; The engine</div>
         <h3 class="beat-title">The engine proposes. The record disposes.</h3>
-        <p class="beat-pov">Six numbers derive the system. Hue, chroma, warmth, energy, density, and which way the ground goes. Every colour, radius and duration is computed from them in OKLCH. But every role the engine emits is a proposal until a hand decides it, and a role the record cut collapses here exactly as it does in the stylesheet.</p>
+        <p class="beat-pov">Six numbers derive every colour, radius and duration in OKLCH. <b>Every role the engine emits is a proposal until a hand decides it.</b></p>
         <iframe class="labframe" src="https://prometheus-000.github.io/strata/lab.html" title="The Strata theme lab, live — six seeds deriving a whole design system" loading="lazy" allow="clipboard-write"></iframe>
-        <p class="vzcap"><b>Nothing in the frame casts a shadow.</b> Drag anything you like &mdash; <i>--shadow-color</i> is cut, so the elevation tokens keep their offsets and paint nothing at every setting. It opens monochrome because that is the house default, not a demo state.</p>
+        <p class="vzcap"><b>Nothing in the frame casts a shadow.</b> Drag anything you like &mdash; that token is cut, so the elevation roles keep their offsets and paint nothing at every setting.</p>
         <p class="vznote">Live from its own repository, so it is set in Strata&rsquo;s type and colour rather than this page&rsquo;s. <a href="https://prometheus-000.github.io/strata/" target="_blank" rel="noopener">Open the hub &rarr;</a></p>
       </div>
 
@@ -915,12 +899,12 @@
       <div class="beat reveal" id="st-limits">
         <div class="beat-eyebrow"><span class="bn">05</span> &middot; Limits</div>
         <h3 class="beat-title">What it does not do yet.</h3>
-        <p class="beat-pov">The README closes with a list of what is missing, written so the next reader inherits the test and not the verdict. Five of the eight, in its own words.</p>
+        <p class="beat-pov">The README closes with what is missing, written so the next reader inherits the test and not the verdict. Five of the eight.</p>
         <div class="autopsy">
           <div class="aplist" id="stList" role="tablist" aria-label="What is not built"></div>
           <div class="apdetail" id="stDetail"></div>
         </div>
-        <p class="vzcap"><b>A system that reports instead of refusing has to report on itself.</b> Roughly half the commit history is the repository catching its own prose claiming things the code does not do. A principle said a build fails when an artifact is unsafe. Nothing checked that, so the word came out.</p>
+        <p class="vzcap"><b>A system that reports instead of refusing has to report on itself.</b> A principle said a build fails when an artifact is unsafe. Nothing checked that, so the word came out.</p>
         <a class="cta" href="https://github.com/Prometheus-000/strata" target="_blank" rel="noopener">
           <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
           Read the source on GitHub
