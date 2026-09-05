@@ -638,9 +638,10 @@
     </div>
   </header>
 
-  <!-- CASE 1 — VISIONARY. Rebuilt from docs/case-study-visionary.md: the
-       semantic layer, spatial regions, the image/video continuum, and the
-       serverless posture where the engineering decisions are the UX decisions.
+  <!-- CASE 1 — VISIONARY. Checked against the platform README and docs/decisions.md
+       (the case-study doc was retired 2026-09-05): pills not paragraphs, spatial
+       regions, the image/video continuum, and the serverless posture where the
+       engineering decisions are the UX decisions.
        The pictures are from the September shoots (Visionary Demo/): UI stills of
        the real build, renders it made, and one finished eight-second take. Rule:
        never two text blocks in a row — a claim, a picture, a claim. Never a shot
@@ -655,13 +656,13 @@
         <p class="sublead">A studio for training models and making stills and video. One command installs it on your own GPUs. I designed it, engineered it and deployed it.</p>
         <div class="plate">
           <div class="cell"><div class="k">Role</div><div class="v">Design engineer &mdash; sole designer &amp; builder</div></div>
-          <div class="cell"><div class="k">Scope</div><div class="v">Product · UX · Python · written with an AI pair</div></div>
-          <div class="cell"><div class="k">Stack</div><div class="v">Modal · ComfyUI · vLLM · PyTorch · serverless GPU</div></div>
+          <div class="cell"><div class="k">Scope</div><div class="v">Product · UX · Python · TypeScript · written with an AI pair</div></div>
+          <div class="cell"><div class="k">Stack</div><div class="v">Modal · ComfyUI · musubi-tuner · React · serverless GPU</div></div>
           <div class="cell"><div class="k">Status</div><div class="v">Deployed and running · open source</div></div>
         </div>
         <p class="pull"><span class="pl">Built for dreamers</span>The person here is a filmmaker, not a prompt engineer. Their job is to describe a picture they already see. The tool&rsquo;s job is to speak whatever dialect each model needs.</p>
-        <button class="shot" data-cap="<b>The shipped strip.</b> Model, ratio, seed, hardware, LoRA &mdash; one bar, assembled from what the chosen model reads." aria-label="Open the studio screenshot">
-          <img src="assets/visionary/generate.webp" alt="The studio on a still: a rendered figure in a chrome and crimson gown fills the canvas, with the prompt and every control in a single bar underneath" width="2200" height="1375">
+        <button class="shot" data-cap="<b>The shipped strip.</b> Duration, ratio, LoRA, Shot, the model &mdash; one bar, and Generate. What the model reads is one fold beneath it." aria-label="Open the studio screenshot">
+          <img src="assets/visionary/generate.webp" alt="The studio on a still: a woman in a long red coat on a white salt flat fills the canvas; beneath it the sentence that was typed, one bar of controls, and three pills the shot was built from" width="2200" height="1238">
         </button>
         <p class="vzcap"><b>The canvas is the largest thing on screen</b> because the picture is the reason the page exists. The options sit in a bar underneath.</p>
         <p class="vznote">Deployed on Modal. It scales to zero between sessions, so the first visit pays a cold start. <a href="https://adam8623-work--visionary-web.modal.run/" target="_blank" rel="noopener">Open the studio &rarr;</a></p>
@@ -698,20 +699,24 @@
 
       <div class="vzstage reveal">
         <div class="picker" role="tablist" aria-label="The three moves">
-          <button class="on" id="vt-enhance" role="tab" aria-selected="true" aria-controls="vz-enhance">02 &middot; The prompt enhance</button>
+          <button class="on" id="vt-enhance" role="tab" aria-selected="true" aria-controls="vz-enhance">02 &middot; Pills, not paragraphs</button>
           <button id="vt-regions" role="tab" aria-selected="false" aria-controls="vz-regions">03 &middot; Regions</button>
           <button id="vt-continuum" role="tab" aria-selected="false" aria-controls="vz-continuum">04 &middot; One workspace</button>
         </div>
 
-      <!-- THE SEMANTIC LAYER — the prompt enhance. -->
+      <!-- PILLS, NOT PARAGRAPHS — what replaced the prompt enhance. Two versions of
+           enhance were built, measured blind and removed (docs/decisions.md); the
+           pane keeps the measurement as its receipt and shows what the product does
+           instead: a palette, and the compiled prose one fold away. -->
       <div class="beat on reveal" id="vz-enhance" role="tabpanel" aria-labelledby="vt-enhance">
-        <h3 class="beat-title">Enhancement is usually distrust.</h3>
-        <p class="beat-pov">Most enhance features run your sentence through a model and send the result on. <b>The interpretation replaces your intent silently.</b></p>
-        <button class="shot" data-cap="<b>What the model reads</b> sits under what you wrote &mdash; extreme wide, low, high-key &mdash; as pills you can remove. One &#8984;Z and all of it is gone." aria-label="Open the prompt bar screenshot">
-          <img src="assets/visionary/prompt-bar.webp" alt="The studio with a rendered woman in a red coat on a salt flat; below the canvas, the sentence that was typed, and under it three pills the model derived from it: extreme wide, low, high-key" loading="lazy" width="2200" height="1238">
+        <h3 class="beat-title">Nobody types a text encoder&rsquo;s grammar.</h3>
+        <p class="beat-pov">Framing, light, tone and camera come from a palette of eighty tiles. A tile shows you a dolly-out instead of making you guess the wording. <b>What you type keeps only who is in the shot and what happens.</b></p>
+        <button class="shot cite" data-cap="<b>Light and tone, from a palette of eighty.</b> Each tile animates the move it names. Picking one adds a pill under the sentence; removing the pill removes the words." aria-label="Open the palette screenshot">
+          <img src="assets/visionary/palette.webp" alt="The shot palette, open: rows of small animated tiles labelled window light, golden hour, overcast, hard sun, neon, candlelight, practicals, silhouette, top light, then documentary, noir, 16mm, anamorphic, high-key, desaturated, high contrast" loading="lazy" width="1153" height="1044">
         </button>
-        <p class="vzcap">Your sentence stays in the box you typed it in. <b>What the model reads sits under it as pills</b> &mdash; derived or invented, always visible, gone with one &#8984;Z.</p>
-        <p class="pull"><span class="pl">The hardest-won invariant</span>Your prose is the source of truth. Everything the model adds is a disposable interpretation of it. Dropping it costs nothing.</p>
+        <p class="vzcap"><b>What the model reads is one fold away</b> &mdash; quiet prose, produced by the same code the run uses. Nothing is composed around your sentence that you cannot see.</p>
+        <p class="pull"><span class="pl">Enhance, measured and removed</span>Two versions were built. Rendered blind, the document layer beat the bare sentence 0 times in 30. The rewrite won 3 of 10 and was still not worth a button on every prompt.</p>
+        <p class="vznote">Your prose is the source of truth. The measurement agreed, and the button came out.</p>
       </div>
 
       <!-- SPATIAL REGIONS -->
@@ -728,11 +733,11 @@
       <!-- THE IMAGE ↔ VIDEO CONTINUUM -->
       <div class="beat reveal" id="vz-continuum" role="tabpanel" aria-labelledby="vt-continuum">
         <h3 class="beat-title">Image and video are the same place.</h3>
-        <p class="beat-pov">There is no mode switch. <b>Duration is the control.</b> A still runs Krea 2. Any length routes to a video model.</p>
-        <button class="shot" data-cap="<b>The same strip, on a video model.</b> A shot document instead of a sentence: first frame, last frame, eight seconds. MiniMax-H3 carries its own soundtrack, so there is no audio toggle to disable." aria-label="Open the video workspace screenshot">
+        <p class="beat-pov">Two consoles, one canvas, one gallery. The photographer&rsquo;s runs Krea 2 and the filmmaker&rsquo;s runs MiniMax-H3. <b>Still is a photograph and both answer it.</b> Adding seconds is the only thing that moves you to the other engine.</p>
+        <button class="shot" data-cap="<b>The filmmaker&rsquo;s console.</b> A shot document instead of a sentence &mdash; who is in the shot, what happens, first frame, last frame, eight seconds. MiniMax-H3 carries its own soundtrack, so there is no audio toggle to disable." aria-label="Open the video workspace screenshot">
           <img src="assets/visionary/fl2v.webp" alt="The workspace on a video model: the salt flat two-shot plays in the canvas while a gull crosses the frame; below it the direction, a first-frame thumbnail and the pills the model reads" loading="lazy" width="2200" height="1238">
         </button>
-        <p class="vzcap"><b>The two strips differ by a seconds picker.</b> Someone who wants one image finishes and leaves without learning that motion exists.</p>
+        <p class="vzcap"><b>The model button is the door between them.</b> Someone who wants one image finishes and leaves without learning that motion exists.</p>
         <!-- One finished take, click to play. No autoplay anywhere on this site. -->
         <div class="vclip">
           <div class="screenv" data-clip="assets/visionary/take-fl2v.mp4" aria-label="Play the eight-second take">
@@ -786,12 +791,12 @@
              returned is yours, not that you can reach mine. -->
         <div class="term">
           <p><span class="tp">&rsaquo;</span><span class="tc">modal deploy app.py</span></p>
-          <p class="to"><span class="tk">&check;</span>four images built &mdash; <b>comfy</b>, <b>trainer</b>, <b>captioner</b>, <b>parse</b></p>
+          <p class="to"><span class="tk">&check;</span>four images built &mdash; <b>comfy</b>, <b>trainer</b>, <b>captioner</b>, <b>web</b></p>
           <p class="to"><span class="tk">&check;</span>web endpoint, API and GPU classes registered</p>
-          <p class="to"><span class="tk">&check;</span>volume mounted at <b>/workspace</b></p>
+          <p class="to"><span class="tk">&check;</span>two volumes mounted &mdash; <b>/workspace</b>, <b>/models</b></p>
           <p class="tu">https://&lt;you&gt;--visionary-web.modal.run</p>
         </div>
-        <p class="pull"><span class="pl">Zero-idle is a UX property</span>Cold starts are paid where you aren&rsquo;t looking. The interpreter warms while you type. Weights download on cheap CPU containers, never on a rented GPU.</p>
+        <p class="pull"><span class="pl">Zero-idle is a UX property</span>Cold starts are paid where you aren&rsquo;t looking. Bad inputs are rejected on CPU before a GPU is rented. Weights download on cheap CPU containers, never on a rented GPU.</p>
         <div class="membar">
           <div class="mhead">One captioning job, before the split. <b>Two thirds of it was overhead.</b></div>
           <div class="track" role="img" aria-label="A 23 minute job, of which 8 minutes was the work and 15 minutes was committing unchanged model weights to the volume">
@@ -803,7 +808,7 @@
             <span><i class="a"></i>8&nbsp;min · writing 80 captions</span>
             <span><i class="b"></i>15&nbsp;min · committing 17&nbsp;GB of unchanged weights</span>
           </div>
-          <p class="cap">Fifteen of those minutes wrote nothing new. The cache moved to its own volume. Captioning runs on Hopper now: <b>a hundred photos in under a minute</b>.</p>
+          <p class="cap">Fifteen of those minutes wrote nothing new. <b>The weights moved to their own volume.</b> Nothing derived lives on either.</p>
         </div>
       </div>
 
