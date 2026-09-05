@@ -360,6 +360,11 @@
   .direction{margin-top:20px;font-size:13px;line-height:1.6;color:var(--ink-soft);min-height:44px;transition:opacity .3s;max-width:72ch}
   .direction b{color:var(--ink-faint);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;display:block;margin-bottom:5px}
   .projector .picker{margin-top:22px}
+  /* A single finished take inline in a beat: the projector's screen without the
+     reel under it. The poster is the take's own first frame, so the frame is
+     never empty before it is played. */
+  .vclip{margin-top:26px}
+  .vclip .screenv video{object-fit:cover}
   @media(max-width:640px){.direction{min-height:64px}}
 
   /* ===== CASE 1 — Visionary: the shipped product, its console, the endstate ===== */
@@ -636,8 +641,10 @@
   <!-- CASE 1 — VISIONARY. Rebuilt from docs/case-study-visionary.md: the
        semantic layer, spatial regions, the image/video continuum, and the
        serverless posture where the engineering decisions are the UX decisions.
-       The interactive mockups are gone — the app is live and screenshots stand
-       in until it is embedded. It opens the site because it is the only case
+       The pictures are from the September shoots (Visionary Demo/): UI stills of
+       the real build, renders it made, and one finished eight-second take. Rule:
+       never two text blocks in a row — a claim, a picture, a claim. Never a shot
+       whose canvas is empty. It opens the site because it is the only case
        designed, engineered and deployed by one person, which the hero just claimed. -->
   <section class="case alt" id="visionary">
     <div class="wrap">
@@ -645,7 +652,7 @@
       <div class="reveal">
         <div class="ov">01 · Visionary · Generative AI studio</div>
         <h2 class="bighead">One file is the whole studio.</h2>
-        <p class="sublead">A studio for training models and making stills and video. It installs with one command and runs on your own GPUs. I designed it, engineered it and deployed it.</p>
+        <p class="sublead">A studio for training models and making stills and video. One command installs it on your own GPUs. I designed it, engineered it and deployed it.</p>
         <div class="plate">
           <div class="cell"><div class="k">Role</div><div class="v">Design engineer &mdash; sole designer &amp; builder</div></div>
           <div class="cell"><div class="k">Scope</div><div class="v">Product · UX · Python · written with an AI pair</div></div>
@@ -653,15 +660,11 @@
           <div class="cell"><div class="k">Status</div><div class="v">Deployed and running · open source</div></div>
         </div>
         <p class="pull"><span class="pl">Built for dreamers</span>The person here is a filmmaker, not a prompt engineer. Their job is to describe a picture they already see. The tool&rsquo;s job is to speak whatever dialect each model needs.</p>
-        <p class="vznote" style="margin-top:26px">The recent work moves in one direction &mdash; toward the canvas. The source is on <a href="https://github.com/Prometheus-000/visionary-platform" target="_blank" rel="noopener">GitHub</a>.</p>
-        <!-- A screenshot stands in here until the video demo is ready; the live app
-             stays one click away below. Rule: never use a shot whose canvas is empty
-             (black) — the picture is the argument. -->
         <button class="shot" data-cap="<b>The shipped strip.</b> Model, ratio, seed, hardware, LoRA &mdash; one bar, assembled from what the chosen model reads." aria-label="Open the studio screenshot">
           <img src="assets/visionary/generate.webp" alt="The studio on a still: a rendered figure in a chrome and crimson gown fills the canvas, with the prompt and every control in a single bar underneath" width="2200" height="1375">
         </button>
-        <p class="vzcap"><b>The canvas is the largest thing on screen</b> because the picture is the reason the page exists. A settings column would cost it 384 pixels of the one dimension it can&rsquo;t get back, so the options sit in a bar underneath.</p>
-        <p class="vznote">The app is deployed and live &mdash; it runs on Modal and scales to zero between sessions, so the first visit pays a cold start. <a href="https://adam8623-work--visionary-web.modal.run/" target="_blank" rel="noopener">Open the studio &rarr;</a></p>
+        <p class="vzcap"><b>The canvas is the largest thing on screen</b> because the picture is the reason the page exists. The options sit in a bar underneath.</p>
+        <p class="vznote">Deployed on Modal. It scales to zero between sessions, so the first visit pays a cold start. <a href="https://adam8623-work--visionary-web.modal.run/" target="_blank" rel="noopener">Open the studio &rarr;</a></p>
       </div>
 
 
@@ -672,18 +675,22 @@
       <div class="beat reveal" id="vz-stance">
         <div class="beat-eyebrow"><span class="bn">01</span> &middot; The middle path</div>
         <h3 class="beat-title">Two ways to make these pictures. Both cost the user.</h3>
-        <p class="beat-pov">The interface landscape has settled into two failure modes. Visionary is a refusal of both &mdash; you argue with the picture, and the system owns the prompt.</p>
+        <p class="beat-pov">Two failure modes. Visionary refuses both &mdash; you argue with the picture, and the system owns the prompt.</p>
         <div class="dtable">
           <table>
             <thead><tr><th>Approach</th><th>Optimizes for</th><th>What it costs you</th></tr></thead>
             <tbody>
-              <tr><th>The prompt box</th><td>Approachability</td><td>The prompt <i>is</i> the state. Nothing accumulates and nothing is addressable. A small edit means rewriting the sentence and rerolling the whole picture.</td></tr>
-              <tr><th>The node graph</th><td>Total control</td><td>Engineering wearing an artist&rsquo;s clothes. The graph is the medium and the picture is an afterthought two hundred nodes away.</td></tr>
-              <tr><th><b>Visionary</b></th><td><b>Direct manipulation</b></td><td>Intent is expressed on the canvas, not in a settings column.</td></tr>
+              <tr><th>The prompt box</th><td>Approachability</td><td>The prompt <i>is</i> the state. A small edit rerolls the whole picture.</td></tr>
+              <tr><th>The node graph</th><td>Total control</td><td>Engineering wearing an artist&rsquo;s clothes. The picture is two hundred nodes away.</td></tr>
+              <tr><th><b>Visionary</b></th><td><b>Direct manipulation</b></td><td>Intent is expressed on the canvas.</td></tr>
             </tbody>
           </table>
         </div>
         <p class="pull"><span class="pl">The one standing rule</span>If a gesture cannot say what it means without a label, the answer is a better gesture. Never a control panel.</p>
+        <button class="shot" data-cap="<b>Ines and Halden, one frame.</b> Dawn on a salt flat. Two boxes, two characters, one sentence each." aria-label="Open the salt flat render">
+          <img src="assets/visionary/render-saltflat.webp" alt="A render made in the studio: a woman in a long red coat and a man holding a birdcage stand apart on a white salt flat at dawn, a low sun between them" loading="lazy" width="1344" height="768">
+        </button>
+        <p class="vzcap"><b>Made in it.</b> Two characters, one frame, one sentence each &mdash; the picture the rest of this case is about.</p>
       </div>
 
       <!-- ACT II -->
@@ -696,23 +703,23 @@
           <button id="vt-continuum" role="tab" aria-selected="false" aria-controls="vz-continuum">04 &middot; One workspace</button>
         </div>
 
-      <!-- THE SEMANTIC LAYER — the prompt enhance, with what measurement retired
-           compressed into its close. The pipeline diagram, the score table and the
-           before/after columns are gone; the invariant and the lesson carry it. -->
+      <!-- THE SEMANTIC LAYER — the prompt enhance. -->
       <div class="beat on reveal" id="vz-enhance" role="tabpanel" aria-labelledby="vt-enhance">
         <h3 class="beat-title">Enhancement is usually distrust.</h3>
-        <p class="beat-pov">Most enhance features run your sentence through a model and send the result on. <b>The interpretation replaces your intent silently.</b> A bare fragment reads as keywords &mdash; type <i>the kitchen after the party</i> and you get the party in progress.</p>
-        <p class="vzcap">Here <b>empty diner, 3am</b> grows into the prompt the model was trained to read. Written into the box you type in. The model&rsquo;s own words sit over the top in grey &mdash; derived or invented, always visible. One &#8984;Z and it is gone.</p>
+        <p class="beat-pov">Most enhance features run your sentence through a model and send the result on. <b>The interpretation replaces your intent silently.</b></p>
+        <button class="shot" data-cap="<b>What the model reads</b> sits under what you wrote &mdash; extreme wide, low, high-key &mdash; as pills you can remove. One &#8984;Z and all of it is gone." aria-label="Open the prompt bar screenshot">
+          <img src="assets/visionary/prompt-bar.webp" alt="The studio with a rendered woman in a red coat on a salt flat; below the canvas, the sentence that was typed, and under it three pills the model derived from it: extreme wide, low, high-key" loading="lazy" width="2200" height="1238">
+        </button>
+        <p class="vzcap">Your sentence stays in the box you typed it in. <b>What the model reads sits under it as pills</b> &mdash; derived or invented, always visible, gone with one &#8984;Z.</p>
         <p class="pull"><span class="pl">The hardest-won invariant</span>Your prose is the source of truth. Everything the model adds is a disposable interpretation of it. Dropping it costs nothing.</p>
-        <p class="vznote">The scoring apparatus it replaced reached 0% of renders. Judged by looking &mdash; real prose wins. You cannot measure intent with a diff.</p>
       </div>
 
       <!-- SPATIAL REGIONS -->
       <div class="beat reveal" id="vz-regions" role="tabpanel" aria-labelledby="vt-regions">
         <h3 class="beat-title">A box on the canvas is a character.</h3>
-        <p class="beat-pov">Draw a box on the frame. It masks a LoRA to its own rectangle. <b>Two characters hold one frame</b> without bleeding into each other. Drop a photograph on the box and the rectangle pulls toward that face &mdash; <b>a character with no training run behind it</b>.</p>
+        <p class="beat-pov">Draw a box on the frame. It masks a LoRA to its own rectangle. <b>Two characters hold one frame</b> without bleeding into each other.</p>
         <button class="shot" data-cap="<b>Selection is the open state.</b> A box holds its sentence, its strength, its reference photo and its four coordinates &mdash; rooted in the box&rsquo;s own edge, with no sidebar to dismiss." aria-label="Open the regions screenshot">
-          <img src="assets/visionary/regional.webp" alt="Two figures generated in one frame; a bounding box is drawn over the left figure, and its card shows a prompt, a photo slot, a strength value and four coordinates X, Y, W, H" loading="lazy" width="2200" height="1375">
+          <img src="assets/visionary/boxes.webp" alt="The two-character render with a box drawn over the woman in red; its card, opened at the box's edge, shows her name, her sentence, a LoRA, a strength and four coordinates" loading="lazy" width="2200" height="1238">
         </button>
         <p class="vzcap">Touch a box and it opens where it sits. <b>Dragging teaches the numbers.</b> The numbers never taught the dragging.</p>
         <p class="pull"><span class="pl">Chrome discipline</span>Nothing sits on top of a render. The boxes are reachable at all times and drawn at none.</p>
@@ -721,12 +728,20 @@
       <!-- THE IMAGE ↔ VIDEO CONTINUUM -->
       <div class="beat reveal" id="vz-continuum" role="tabpanel" aria-labelledby="vt-continuum">
         <h3 class="beat-title">Image and video are the same place.</h3>
-        <p class="beat-pov">There is no mode switch. <b>Duration is the control.</b> A still runs Krea 2. Any length routes to a video model. The two strips differ by <b>a seconds picker</b> &mdash; half the application behind a toggle that gated one field.</p>
-        <p class="pull"><span class="pl">Duration starts at zero</span>A still is the default and time is something you add. Someone who wants one image should finish and leave without ever learning that motion exists.</p>
-        <button class="shot" data-cap="<b>Only the controls the model reads.</b> MiniMax-H3 carries its own soundtrack, so there is no audio toggle to disable." aria-label="Open the video screenshot">
-          <img src="assets/visionary/video.webp" alt="The workspace on a video model: a wide cinematic frame of two ships at sea, shot pills compiled beneath the prompt, and a results rail of clips on the right" loading="lazy" width="2200" height="1219">
+        <p class="beat-pov">There is no mode switch. <b>Duration is the control.</b> A still runs Krea 2. Any length routes to a video model.</p>
+        <button class="shot" data-cap="<b>The same strip, on a video model.</b> A shot document instead of a sentence: first frame, last frame, eight seconds. MiniMax-H3 carries its own soundtrack, so there is no audio toggle to disable." aria-label="Open the video workspace screenshot">
+          <img src="assets/visionary/fl2v.webp" alt="The workspace on a video model: the salt flat two-shot plays in the canvas while a gull crosses the frame; below it the direction, a first-frame thumbnail and the pills the model reads" loading="lazy" width="2200" height="1238">
         </button>
-        <p class="vzcap">Stills and clips land in one gallery in the order they were made. <b>To the person who made them they are the same work.</b></p>
+        <p class="vzcap"><b>The two strips differ by a seconds picker.</b> Someone who wants one image finishes and leaves without learning that motion exists.</p>
+        <!-- One finished take, click to play. No autoplay anywhere on this site. -->
+        <div class="vclip">
+          <div class="screenv" data-clip="assets/visionary/take-fl2v.mp4" aria-label="Play the eight-second take">
+            <span class="takebadge">First frame &rarr; last frame · MiniMax-H3 · 8s</span>
+            <span class="playhint">Play</span>
+            <video preload="none" poster="assets/visionary/take-fl2v-poster.webp" playsinline></video>
+          </div>
+        </div>
+        <p class="vznote">The first and last frames are two stills from the same session. The model is given both and asked for the eight seconds between them.</p>
 
         <!-- Optional, and closed. The reel loads nothing until it is opened. -->
         <details class="aside" id="reelAside">
@@ -750,6 +765,15 @@
       </div>
       </div>
 
+      <!-- The gallery sits outside the stage so it is on the page whichever move is
+           selected: three shoots, stills and clips together, in the order made. -->
+      <div class="reveal">
+        <button class="shot" data-cap="<b>One gallery.</b> Stills and clips from three shoots, in the order they were made. To the person who made them they are the same work." aria-label="Open the gallery screenshot">
+          <img src="assets/visionary/library.webp" alt="The gallery: a grid of thumbnails from three shoots — a lighthouse keeper in black and white, a neon-lit motel pool, and figures on a white salt flat — stills and clips together" loading="lazy" width="2200" height="1238">
+        </button>
+        <p class="vzcap"><b>Stills and clips land in one gallery</b> in the order they were made.</p>
+      </div>
+
       <!-- ACT III -->
       <div class="act reveal"><span class="act-n">III</span><span class="act-t">The engine</span><span class="act-d">Why the interface is free to be this.</span></div>
 
@@ -757,7 +781,7 @@
       <div class="beat reveal" id="vz-engine">
         <div class="beat-eyebrow"><span class="bn">05</span> &middot; Serverless as a design choice</div>
         <h3 class="beat-title">The engineering is why the interface can be this.</h3>
-        <p class="beat-pov">Scale here isn&rsquo;t requests per second. It&rsquo;s model size and cost per job. The app <b>scales to zero</b> &mdash; no keep-alive, no idle bill, no lifecycle. One command puts the interface, the API and the GPU jobs at a single address on your own account.</p>
+        <p class="beat-pov">Scale here is model size and cost per job. The app <b>scales to zero</b>. One command puts the interface, the API and the GPU jobs at one address on your own account.</p>
         <!-- Placeholder host, not the real deployment: the point is that the URL
              returned is yours, not that you can reach mine. -->
         <div class="term">
@@ -768,7 +792,6 @@
           <p class="tu">https://&lt;you&gt;--visionary-web.modal.run</p>
         </div>
         <p class="pull"><span class="pl">Zero-idle is a UX property</span>Cold starts are paid where you aren&rsquo;t looking. The interpreter warms while you type. Weights download on cheap CPU containers, never on a rented GPU.</p>
-        <p class="vzcap" style="margin-top:30px">One file. Four container images. Separate because <b>the CUDA pins genuinely conflict</b> &mdash; a compromise is paid forever.</p>
         <div class="membar">
           <div class="mhead">One captioning job, before the split. <b>Two thirds of it was overhead.</b></div>
           <div class="track" role="img" aria-label="A 23 minute job, of which 8 minutes was the work and 15 minutes was committing unchanged model weights to the volume">
@@ -780,9 +803,8 @@
             <span><i class="a"></i>8&nbsp;min · writing 80 captions</span>
             <span><i class="b"></i>15&nbsp;min · committing 17&nbsp;GB of unchanged weights</span>
           </div>
-          <p class="cap">Fifteen of those minutes wrote nothing new. The cache moved to its own volume and the overhead went to zero &mdash; <b>storage boundaries follow write patterns, not tidiness</b>. Captioning runs on Hopper now: <b>a hundred photos in under a minute</b>.</p>
+          <p class="cap">Fifteen of those minutes wrote nothing new. The cache moved to its own volume. Captioning runs on Hopper now: <b>a hundred photos in under a minute</b>.</p>
         </div>
-        <p class="vznote">The console is capped at 30% of the screen, enforced in JS. The bar comes out of slack the picture wasn&rsquo;t using.</p>
       </div>
 
       <!-- ACT IV -->
@@ -792,13 +814,21 @@
       <div class="beat reveal" id="vz-next">
         <div class="beat-eyebrow"><span class="bn">06</span> &middot; The bet</div>
         <h3 class="beat-title">The canvas is where the work is done.</h3>
-        <p class="beat-pov">Not where the result appears. Region prompts, LoRAs and every attachment become one gesture in one place. A photo on a box is that character; a photo on the frame is the scene. What you touch decides the mode. Nothing asks for confirmation, because undo is total.</p>
+        <p class="beat-pov">Region prompts, LoRAs and every attachment become one gesture in one place. What you touch decides the mode. Nothing asks for confirmation, because undo is total.</p>
+        <button class="shot" data-cap="<b>A character is a sheet.</b> Three views, a name, one sentence. Cast her and she is a word you can type into any prompt." aria-label="Open the character sheet screenshot">
+          <img src="assets/visionary/sheet-ines.webp" alt="A white character sheet titled INES, the woman in the red coat: a three-quarter view, a front view and a side view, with a contact strip beneath and a Cast button" loading="lazy" width="2200" height="1238">
+        </button>
+        <p class="vzcap"><b>A character is a sheet</b> &mdash; three views, a name, one sentence. Cast her and she is a word you can type.</p>
         <div class="autopsy">
           <div class="aplist" id="apList" role="tablist" aria-label="The veto list"></div>
           <div class="apdetail" id="apDetail"></div>
         </div>
-        <p class="vznote">A veto list, not a manifesto. Each sentence kills one specific fix &mdash; the one proposed in month four, when the cheapest answer is a panel.</p>
+        <p class="vznote">A veto list, not a manifesto. Each sentence kills one specific fix.</p>
         <p class="pull"><span class="pl">Built for dreamers is not a tagline</span>A prompt is copy-pasteable, so a platform converges on a house style nobody chose. A model trained on your own photographs learns what <i>you</i> meant. That is why training is Phase&nbsp;1.</p>
+        <button class="shot" data-cap="<b>Another world. Same strip.</b>" aria-label="Open the motel pool render">
+          <img src="assets/visionary/render-vacancy.webp" alt="A render made in the studio: a figure in a yellow raincoat sits on a diving board over a turquoise pool at night, a pink neon VACANCY sign glowing on the motel behind" loading="lazy" width="1344" height="768">
+        </button>
+        <p class="vzcap"><b>Another world. Same strip.</b></p>
         <a class="cta" href="https://github.com/Prometheus-000/visionary-platform" target="_blank" rel="noopener">
           <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
           Read the source on GitHub
@@ -1566,7 +1596,8 @@
   const stage=document.querySelector(".vzstage");
   if(stage){
     const tabs=[...stage.querySelectorAll("[role=tab]")],panes=[...stage.querySelectorAll("[role=tabpanel]")];
-    const sel=id=>{tabs.forEach(t=>{const on=t.getAttribute("aria-controls")===id;t.classList.toggle("on",on);t.setAttribute("aria-selected",String(on));});panes.forEach(p=>p.classList.toggle("on",p.id===id));};
+    /* A pane that leaves the stage takes its video with it: nothing keeps playing out of sight. */
+    const sel=id=>{tabs.forEach(t=>{const on=t.getAttribute("aria-controls")===id;t.classList.toggle("on",on);t.setAttribute("aria-selected",String(on));});panes.forEach(p=>{const on=p.id===id;p.classList.toggle("on",on);if(!on)p.querySelectorAll("video").forEach(v=>v.pause());});};
     tabs.forEach(t=>t.addEventListener("click",()=>sel(t.getAttribute("aria-controls"))));
     if(location.hash&&panes.some(p=>p.id===location.hash.slice(1)))sel(location.hash.slice(1));
   }
@@ -1686,6 +1717,16 @@
   /* A .shot is already a <button>, so Enter and Space arrive as clicks and no
      key handling is needed here. */
   document.querySelectorAll('.shot').forEach(s=>s.addEventListener('click',()=>openBox(s)));
+  /* ===== CASE 1 — inline takes: click to play, nothing loads until then ===== */
+  document.querySelectorAll('.screenv[data-clip]').forEach(scr=>{
+    const v=scr.querySelector('video'),hint=scr.querySelector('.playhint');
+    const toggle=()=>{if(!v.getAttribute('src'))v.src=scr.dataset.clip;if(v.paused)v.play().catch(()=>{});else v.pause();};
+    v.addEventListener('play',()=>{scr.classList.add('playing');hint.textContent='Stop';});
+    v.addEventListener('pause',()=>{scr.classList.remove('playing');hint.textContent=v.ended?'Replay':'Play';});
+    scr.addEventListener('click',toggle);
+    scr.setAttribute('role','button');scr.setAttribute('tabindex','0');
+    scr.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();toggle();}});
+  });
   /* ===== CASE 1 — the origin reel (no autoplay — the visitor runs the projector) ===== */
   (function(){
     const v=document.getElementById('reelv'); if(!v) return;
