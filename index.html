@@ -782,11 +782,13 @@
       <!-- ACT III -->
       <div class="act reveal"><span class="act-n">III</span><span class="act-t">The engine</span><span class="act-d">Why the interface is free to be this.</span></div>
 
-      <!-- SERVERLESS AS A DESIGN CHOICE -->
+      <!-- THE ENGINE — the vehicle, and what it is not. The stance is the platform's own
+           CLAUDE.md: the product is the experience, everything else is a receipt; the
+           serverless posture is the current vehicle's receipt, kept in plain view. -->
       <div class="beat reveal" id="vz-engine">
-        <div class="beat-eyebrow"><span class="bn">05</span> &middot; Serverless as a design choice</div>
-        <h3 class="beat-title">The engineering is why the interface can be this.</h3>
-        <p class="beat-pov">Scale here is model size and cost per job. The app <b>scales to zero</b>. One command puts the interface, the API and the GPU jobs at one address on your own account.</p>
+        <div class="beat-eyebrow"><span class="bn">05</span> &middot; The engine</div>
+        <h3 class="beat-title">Modal is the vehicle, not the product.</h3>
+        <p class="beat-pov">One command puts the interface, the API and the GPU jobs at one address. Modal, ComfyUI, MiniMax-H3, the one-file app &mdash; each is a disposable interpretation of a workflow, <b>replaceable the day something serves the experience better</b>.</p>
         <!-- Placeholder host, not the real deployment: the point is that the URL
              returned is yours, not that you can reach mine. -->
         <div class="term">
@@ -796,7 +798,9 @@
           <p class="to"><span class="tk">&check;</span>two volumes mounted &mdash; <b>/workspace</b>, <b>/models</b></p>
           <p class="tu">https://&lt;you&gt;--visionary-web.modal.run</p>
         </div>
-        <p class="pull"><span class="pl">Zero-idle is a UX property</span>Cold starts are paid where you aren&rsquo;t looking. Bad inputs are rejected on CPU before a GPU is rented. Weights download on cheap CPU containers, never on a rented GPU.</p>
+        <p class="vzcap"><b>Zero-idle is a UX property.</b> Cold starts are paid where you aren&rsquo;t looking. Bad inputs are rejected on CPU before a GPU is rented. Weights download on CPU containers, never on a rented GPU.</p>
+        <p class="pull"><span class="pl">The product is the experience</span>Everything else is a receipt. What accumulates is the understanding of the workflow, and it outlives every implementation. <b>Treat radical rebuilds as the environment, not the emergency.</b></p>
+        <p class="vznote">The proof is two beats down: <a href="#vz-decisions">the eleven decisions</a> name no GPU, no model and no framework.</p>
         <div class="membar">
           <div class="mhead">One captioning job, before the split. <b>Two thirds of it was overhead.</b></div>
           <div class="track" role="img" aria-label="A 23 minute job, of which 8 minutes was the work and 15 minutes was committing unchanged model weights to the volume">
