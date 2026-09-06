@@ -412,6 +412,27 @@
     border-radius:14px;background:#0A0A0F;box-shadow:0 40px 90px -40px rgba(0,0,0,.9)}
   @media(max-width:948px){.labframe{height:1790px}}
 
+  /* THE IDENTITY FIELD. Not a picture of the product — the product's own mark,
+     running. It takes the frame the screenshots take so the case keeps one
+     rhythm, but its ground is the page's own black: the canvas is transparent
+     by design, so the field sits on the page rather than in a box. */
+  .field{display:block;width:100%;aspect-ratio:2240/918;margin:26px 0 0;position:relative;
+    border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg);
+    box-shadow:0 40px 90px -40px rgba(0,0,0,.9);cursor:crosshair}
+  .field canvas{display:block;width:100%;height:100%}
+  .fieldtk{position:absolute;left:20px;bottom:15px;font-size:11px;letter-spacing:.02em;
+    color:var(--ink-soft);opacity:.6;pointer-events:none}
+  /* The one control: same record, another theme. In plain view, never a drawer. */
+  .themebar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px}
+  .themebar .tbk{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-right:2px}
+  .tbb{font:inherit;font-size:11.5px;letter-spacing:.01em;color:var(--ink-faint);background:transparent;
+    border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;
+    transition:color .25s var(--ease),border-color .25s var(--ease)}
+  .tbb:hover{color:var(--ink-soft);border-color:rgba(255,255,255,.22)}
+  .tbb.is-on{color:var(--ink);border-color:var(--ink-faint)}
+  @media(max-width:640px){.field{aspect-ratio:4/3}}
+  @media(prefers-reduced-motion:reduce){.field{cursor:default}}
+
   /* The Zero-UI demo. Light, like the mockup above it, so the two read as the
      same speculative object rather than two exhibits.
      Nothing inside the frame is labelled — that is the whole claim. What names
@@ -872,12 +893,24 @@
         <div class="plate">
           <div class="cell"><div class="k">Role</div><div class="v">Sole designer, engineer &amp; author</div></div>
           <div class="cell"><div class="k">Scope</div><div class="v">Substrate · theme engine · CLI · MCP server</div></div>
-          <div class="cell"><div class="k">The record</div><div class="v">37 decisions · 33 keep · 4 cut</div></div>
+          <div class="cell"><div class="k">The record</div><div class="v">37 token decisions · 33 keep · 4 cut</div></div>
           <div class="cell"><div class="k">Status</div><div class="v">Open source · running</div></div>
         </div>
-        <button class="shot" data-cap="<b>The hub.</b> Four surfaces over one record &mdash; the lab, the console, the grammar and the decisions themselves." aria-label="Open the Strata hub screenshot">
-          <img src="assets/strata/hub.webp" alt="The Strata site: a dark page reading Design systems for the generative era, with navigation to the theme lab, console, grammar, record and reference" width="2240" height="918" loading="lazy">
-        </button>
+        <!-- THE IDENTITY, LIVE. Strata has no logo; it has a record, and the mark
+             is that record projected as a field. Drawn here by Strata's own engine
+             from the file in its repository, on this page's ground. It replays once
+             when it arrives, then holds — no autoplay loop. The six presets are the
+             thesis in one control: same record, another theme. -->
+        <figure class="field" id="stField">
+          <canvas id="stCanvas" role="img" aria-label="Strata's identity: every decision on the record drawn as a field, placed by a hash of what it decided about"></canvas>
+          <figcaption class="fieldtk" id="stTk"></figcaption>
+        </figure>
+        <div class="themebar" role="group" aria-label="The theme this field is painted under">
+          <span class="tbk">theme</span>
+          <button class="tbb is-on" data-theme="record">in force</button><button class="tbb" data-theme="Ember">ember</button><button class="tbb" data-theme="Ultraviolet">ultraviolet</button><button class="tbb" data-theme="Meadow">meadow</button><button class="tbb" data-theme="Glacier">glacier</button>
+        </div>
+        <p class="vzcap"><b>The identity is the record.</b> Every decision is a rise placed by a hash of what it decided about, so precedent lands on precedent. A cut travels to its fallback and leaves a hollow. Age spreads and settles; nothing is erased and nothing loops.</p>
+        <p class="vznote">Live from <b>.strata/decisions.jsonl</b>, drawn by the engine that draws Strata&rsquo;s favicon. The theme in force is monochrome by decision; the shipped presets repaint the same record without touching it.</p>
       </div>
 
       <!-- 01 THE RECORD -->
@@ -1878,6 +1911,172 @@
       forces:"Regeneration on CI, the way the stylesheet and the token file already work. Until then the evidence of the drift is checked in — <i>figma-library-state.json</i> — because a gap with a file behind it is harder to forget." }
   ];
   mountAutopsy('stList','stDetail',GAPS,s=>'README · What&rsquo;s not built · '+s.n+' of 8','Not built','What it would take');
+})();
+</script>
+
+<!-- Strata's identity engine: the field, the record adapter, the projections, the
+     theme engine, and the record itself, bundled from the Strata repository.
+     Rebuild with tools/build-identity.sh when the record changes. -->
+<script src="assets/strata/identity.js" defer></script>
+<script>
+(function(){
+  /* THE IDENTITY, RUNNING ON THIS PAGE.
+     Strata's mark is a behaviour, not a drawing: the append-only record projected
+     as a scalar field, painted as a relief and drawn as isolines on top. Every
+     rule here is the engine's — placement, decay, hollows, strata, breath — and
+     this file only supplies the frame, the ground and the clock.
+
+     Three deliberate limits. It replays once when it arrives and then holds, so
+     nothing on this site autoplays in a loop. It stops computing entirely when it
+     is off screen, and idles at 12fps once settled, because a portfolio should not
+     spin a fan. And the pointer disturbs but is never recorded — presence is not a
+     decision, which is the identity's own rule. */
+  const host=document.getElementById('stField');
+  if(!host) return;
+  const cv=document.getElementById('stCanvas'), tk=document.getElementById('stTk');
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function start(){
+    const I=window.StrataIdentity;
+    if(!I){ host.remove(); const b=document.querySelector('.themebar'); if(b) b.remove(); return; }
+    const ctx=cv.getContext('2d'), layer=document.createElement('canvas');
+    const css=getComputedStyle(document.documentElement);
+    const PAGE={bg:css.getPropertyValue('--bg').trim(),ink:css.getPropertyValue('--ink').trim(),
+                faint:css.getPropertyValue('--ink-faint').trim(),line:css.getPropertyValue('--line').trim()};
+    const state=I.stateFrom(I.parseRecord(I.RECORD));
+    const energy=I.OBSIDIAN.energy, density=I.OBSIDIAN.density, levels=I.levelCount('hero',density);
+    const TOTAL=state.events.length;
+    /* Milliseconds per decision. Strata's own page takes most of a second over each
+       one, which is right for a surface you came to watch; here the record is one
+       exhibit among many, so the whole of it arrives in about seven seconds however
+       long the file grows. Tempo is the host's call — the engine only knows sequence. */
+    const PER=Math.min(240,Math.max(60,7000/TOTAL));
+    let theme='record', t=reduced?TOTAL:0, playing=false, settledAt=null, breath, presence=null, target=null;
+    let visible=false, started=false, raf=0, last=0;
+
+    /* Resolve a CSS colour to r,g,b — canvas parses what the painter cannot. */
+    const swatch=document.createElement('canvas'); swatch.width=swatch.height=1;
+    const sctx=swatch.getContext('2d',{willReadFrequently:true});
+    const rgb=c=>{sctx.clearRect(0,0,1,1);sctx.fillStyle=c;sctx.fillRect(0,0,1,1);
+      const d=sctx.getImageData(0,0,1,1).data;return [d[0]/255,d[1]/255,d[2]/255];};
+
+    /* What the theme paints with. The record's theme in force is a light one, and
+       a light theme's monochrome accent is near-black ink — invisible here. This
+       page is dark, so the field is drawn at this page's appearance: the same
+       seven numbers with one bit flipped, which is Strata's own account of how
+       black and white are one theme. */
+    function pictureOf(seeds){
+      const s=seeds.appearance==='light'?I.flipAppearance(seeds):seeds;
+      const tok=I.generateTheme(s);
+      const warmHue=s.warmth>=0?80:240, ch=0.02+Math.abs(s.warmth)*0.05;
+      return {ground:rgb(PAGE.bg), accent:rgb(tok['--accent']), soft:rgb(tok['--accent-soft']),
+              light:rgb('oklch(0.96 '+ch.toFixed(3)+' '+warmHue+')')};
+    }
+    const seedsNow=frame=>theme==='record'?(frame.seeds||I.OBSIDIAN):I.PRESETS[theme];
+
+    /* The relief: height painted from the ground toward the theme's accent and lit
+       from the upper left, the light's colour taken from warmth. A wash, not a
+       fill — the light carries the form, the colour only names the theme. */
+    const l3=(a,b,k)=>[a[0]+(b[0]-a[0])*k,a[1]+(b[1]-a[1])*k,a[2]+(b[2]-a[2])*k], c01=I.clamp01;
+    function paint(grid,n,nx,pic){
+      const W=nx+1,H=n+1; layer.width=W; layer.height=H;
+      const c=layer.getContext('2d'), img=c.createImageData(W,H);
+      const g=pic.ground, acc=pic.accent, soft=pic.soft, light=pic.light, L=[-0.55,-0.55,0.62];
+      for(let j=0;j<H;j++)for(let i=0;i<W;i++){
+        const f=grid[j*W+i];
+        const fx=(grid[j*W+Math.min(nx,i+1)]-grid[j*W+Math.max(0,i-1)])*0.5*n*0.14;
+        const fy=(grid[Math.min(n,j+1)*W+i]-grid[Math.max(0,j-1)*W+i])*0.5*n*0.14;
+        const len=Math.sqrt(fx*fx+fy*fy+1);
+        const lam=c01((-fx*L[0]-fy*L[1]+L[2])/len), h=c01(f/1.3);
+        let col=h<0.45?l3(g,soft,h/0.45):l3(soft,acc,(h-0.45)/0.55);
+        col=l3(g,col,0.7);
+        const lit=0.6+0.55*lam;
+        col=[col[0]*lit*light[0]*1.04,col[1]*lit*light[1]*1.04,col[2]*lit*light[2]*1.04];
+        const hollow=f<-0.03?c01(-f/0.4):0;
+        if(hollow) col=l3(col,[g[0]*0.9,g[1]*0.9,g[2]*0.9],hollow);
+        const o=(j*W+i)*4;
+        img.data[o]=Math.round(c01(col[0])*255); img.data[o+1]=Math.round(c01(col[1])*255);
+        img.data[o+2]=Math.round(c01(col[2])*255);
+        img.data[o+3]=Math.round(255*Math.max(c01(h/0.08),hollow));
+      }
+      c.putImageData(img,0,0);
+    }
+
+    function render(){
+      const r=cv.getBoundingClientRect(), dpr=Math.min(2,devicePixelRatio||1);
+      const w=Math.round(r.width), h=Math.round(r.height);
+      if(!w||!h) return;
+      if(cv.width!==w*dpr||cv.height!==h*dpr){cv.width=w*dpr;cv.height=h*dpr;}
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      const aspect=w/h, n=Math.max(48,Math.min(120,Math.round(h/5)));
+      const fp=presence&&presence.w>0?{p:I.toWorld(presence.p,aspect),w:presence.w}:undefined;
+      const frame=I.frameAt(state,t,{energy,density,n,levels,aspect,breath,presence:fp});
+      ctx.clearRect(0,0,w,h);
+      ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
+      paint(frame.grid,frame.n,frame.nx,pictureOf(seedsNow(frame)));
+      ctx.drawImage(layer,0,0,w,h);
+      /* The drawing on top, quieter than it would be alone: the paint carries the
+         form now. This is the contour projection called directly — the engine's
+         `draw` clears the canvas before it dispatches, which would take the relief
+         with it. */
+      ctx.globalAlpha=0.55; ctx.lineWidth=1; ctx.lineJoin='round'; ctx.lineCap='round';
+      I.drawContours(ctx,frame,{w,h},{ink:PAGE.ink,faint:PAGE.faint,line:PAGE.line,ground:PAGE.bg});
+      ctx.globalAlpha=1;
+      tk.textContent=frame.arrived.length+' of '+TOTAL+' decisions'+(playing?' · arriving':'');
+    }
+
+    function tick(now){
+      raf=requestAnimationFrame(tick);
+      const idle=!playing&&!presence;
+      if(now-last < (idle?83:33)) return;
+      const dt=now-last; last=now;
+      if(!reduced){
+        if(playing){ const next=t+dt/PER; if(next>=TOTAL){t=TOTAL;playing=false;settledAt=now;} else t=next; }
+        else if(t>=TOTAL&&settledAt!==null) breath=(now-settledAt)/1000;
+        else if(t>=TOTAL) settledAt=now;
+        if(target){ const rate=target.w>(presence?presence.w:0)?0.35:0.12;
+          const w=I.lerp(presence?presence.w:0,target.w,rate);
+          if(w<0.01&&target.w===0){target=null;presence=null;} else presence={p:target.p,w:w}; }
+      } else presence=target&&target.w?target:null;
+      render();
+    }
+
+    /* Only run while it is on screen — and decide that by measuring, not by
+       IntersectionObserver: the body is this page's scroll container, and the
+       observer's callbacks do not fire in every host that renders this page.
+       A rect read twice a second is cheaper than a frame we would have thrown
+       away, and it works everywhere. */
+    function poll(){
+      const r=host.getBoundingClientRect();
+      /* A capped margin, not a fraction: on a very tall viewport a percentage
+         band pushes the whole frame into the dead zone and the field never
+         starts. */
+      const m=Math.min(140,innerHeight*0.15);
+      visible = r.bottom > m && r.top < innerHeight-m;
+      if(visible){
+        if(!started){ started=true; if(!reduced) playing=true; }
+        if(!raf){ last=performance.now(); raf=requestAnimationFrame(tick); }
+      } else if(raf){ cancelAnimationFrame(raf); raf=0; }
+    }
+    poll();
+    setInterval(poll,400);
+    addEventListener('resize',poll);
+
+    const unit=e=>{const r=cv.getBoundingClientRect();
+      return I.toUnit([(e.clientX-r.left)/r.height,(e.clientY-r.top)/r.height],r.width/r.height);};
+    cv.addEventListener('pointermove',e=>{ if(e.pointerType==='touch') return; target={p:unit(e),w:1}; });
+    cv.addEventListener('pointerleave',()=>{ if(target) target={p:target.p,w:0}; });
+
+    document.querySelectorAll('.tbb').forEach(b=>{
+      b.addEventListener('click',()=>{
+        theme=b.dataset.theme;
+        document.querySelectorAll('.tbb').forEach(x=>x.classList.toggle('is-on',x===b));
+        render();
+        if(!raf){ last=performance.now(); raf=requestAnimationFrame(tick); }
+      });
+    });
+  }
+  if(window.StrataIdentity) start(); else window.addEventListener('load',start);
 })();
 </script>
 </body>
