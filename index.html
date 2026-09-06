@@ -815,7 +815,7 @@
       <!-- ACT IV -->
       <div class="act reveal"><span class="act-n">IV</span><span class="act-t">The bet</span><span class="act-d">Where it&rsquo;s going, and the wager underneath.</span></div>
 
-      <!-- THE BET — the canvas, the veto list, and the authorship close in one beat -->
+      <!-- THE BET — the canvas and the character sheet. The decisions follow as their own beat. -->
       <div class="beat reveal" id="vz-next">
         <div class="beat-eyebrow"><span class="bn">06</span> &middot; The bet</div>
         <h3 class="beat-title">The canvas is where the work is done.</h3>
@@ -824,12 +824,21 @@
           <img src="assets/visionary/sheet-ines.webp" alt="A white character sheet titled INES, the woman in the red coat: a three-quarter view, a front view and a side view, with a contact strip beneath and a Cast button" loading="lazy" width="2200" height="1238">
         </button>
         <p class="vzcap"><b>A character is a sheet</b> &mdash; three views, a name, one sentence. Cast her and she is a word you can type.</p>
+        <p class="pull"><span class="pl">Built for dreamers is not a tagline</span>A prompt is copy-pasteable, so a platform converges on a house style nobody chose. A model trained on your own photographs learns what <i>you</i> meant. That is why training is Phase&nbsp;1.</p>
+      </div>
+
+      <!-- THE DECISIONS — eleven sentences kept while the interface changed under them.
+           The record is the constant; the screens are what gets regenerated from it,
+           which is the argument case 02 makes in full. Same component the old case used. -->
+      <div class="beat reveal" id="vz-decisions">
+        <div class="beat-eyebrow"><span class="bn">07</span> &middot; The decisions</div>
+        <h3 class="beat-title">Decisions, not a manifesto.</h3>
+        <p class="beat-pov">Eleven sentences. <b>Each one kills one specific fix.</b> Since they were last touched, Enhance came out, a second console came in, the cast and the storyboard arrived. <b>The sentences did not change.</b></p>
         <div class="autopsy">
-          <div class="aplist" id="apList" role="tablist" aria-label="The veto list"></div>
+          <div class="aplist" id="apList" role="tablist" aria-label="The decisions"></div>
           <div class="apdetail" id="apDetail"></div>
         </div>
-        <p class="vznote">A veto list, not a manifesto. Each sentence kills one specific fix.</p>
-        <p class="pull"><span class="pl">Built for dreamers is not a tagline</span>A prompt is copy-pasteable, so a platform converges on a house style nobody chose. A model trained on your own photographs learns what <i>you</i> meant. That is why training is Phase&nbsp;1.</p>
+        <p class="vznote">Six of the eleven, verbatim. The idea grew into <a href="#strata">Strata</a>: when artifacts become regenerable, decisions become infrastructure.</p>
         <button class="shot" data-cap="<b>Another world. Same strip.</b>" aria-label="Open the motel pool render">
           <img src="assets/visionary/render-vacancy.webp" alt="A render made in the studio: a figure in a yellow raincoat sits on a diving board over a turquoise pool at night, a pink neon VACANCY sign glowing on the motel behind" loading="lazy" width="1344" height="768">
         </button>
@@ -1775,10 +1784,10 @@
 
 </script>
 
-<!-- ===== CASE 1 — Visionary: the veto list that keeps the canvas empty ===== -->
+<!-- ===== CASE 1 — Visionary: the decisions that keep the canvas empty ===== -->
 <script>
 (function(){
-  /* THE VETO LIST.
+  /* THE DECISIONS.
      Six of the eleven, on the same component the old case used for its autopsy —
      a list and a detail pane was already the right shape for a sentence, what it
      kills, and what the platform forces in its place. Numbers are the real ones,
@@ -1833,7 +1842,7 @@
     });
     paint(0);
   }
-  mountAutopsy('apList','apDetail',SENTENCES,s=>'Sentence '+s.n+' of 11','Kills','What touch forces');
+  mountAutopsy('apList','apDetail',SENTENCES,s=>'Decision '+s.n+' of 11','Kills','What touch forces');
 
   /* STRATA — WHAT IS NOT BUILT.
      The README's own closing list, quoted rather than paraphrased: .apquote
